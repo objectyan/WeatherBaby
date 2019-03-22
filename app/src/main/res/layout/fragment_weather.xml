@@ -5,6 +5,21 @@
     android:layout_height="match_parent"
     tools:context=".fragment.WeatherFragment">
 
-    <include layout="@layout/fragment_weather_today" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/fragment_weather_today"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            layout="@layout/fragment_weather_timeline"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </FrameLayout>
