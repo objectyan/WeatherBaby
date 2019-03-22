@@ -9,4 +9,6 @@
 
     <color name="icon_enabled">#FFFFFFFF</color>
     <color name="icon_disabled">#FF63727B</color>
+
+    <color name="colorTemp">#FFFFFFFF</color>
 </resources>

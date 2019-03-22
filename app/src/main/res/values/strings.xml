@@ -7,7 +7,4 @@
     <!-- 温度单位 -->
     <string name="Centigrade">°C</string>
     <string name="Fahrenheit">°F</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>

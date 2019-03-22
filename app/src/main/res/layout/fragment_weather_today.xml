@@ -1,39 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent">
+    android:background="@color/transparent"
+    app:cardBackgroundColor="@color/transparent"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
 
-    <TextView
-        android:id="@+id/today_temp_curr"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="100"
-        android:textSize="100dp" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/today_temp_curr_weather"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="100"
-        android:textSize="45dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
-    <TextView
-        android:id="@+id/today_temp_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="100"
-        android:textSize="45dp" />
+            <TextView
+                android:id="@+id/today_temp_curr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="100"
+                android:textColor="@color/colorTemp"
+                android:textSize="100sp" />
 
-    <TextView
-        android:id="@+id/today_temp_atmosphere"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="100"
-        android:textSize="45dp" />
+            <TextView
+                android:id="@+id/today_temp_curr_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-17sp"
+                android:gravity="center"
+                android:text="@string/Centigrade"
+                android:textColor="@color/colorTemp"
+                android:textSize="50sp" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/today_temp_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="晴"
+                android:textColor="@color/colorTemp"
+                android:textSize="35sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/today_temp_curr_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="11"
+                android:textColor="@color/colorTemp"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/today_temp_curr_max_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/Centigrade"
+                android:textColor="@color/colorTemp"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/today_temp_curr_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="/"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/today_temp_curr_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="11"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/today_temp_curr_min_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/Centigrade"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/today_temp_atmosphere"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="空气优"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/today_temp_early_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:id="@+id/today_temp_update_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="更新时间"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
