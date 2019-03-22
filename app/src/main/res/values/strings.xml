@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">天气宝宝</string>
+    <string name="title_activity_main">选择城市</string>
+    <string name="toolbar_menu_settings">设置</string>
+    <string name="city_manage">城市管理</string>
+
+    <!-- 温度单位 -->
+    <string name="Centigrade">°C</string>
+    <string name="Fahrenheit">°F</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
