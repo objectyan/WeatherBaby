@@ -135,12 +135,25 @@
 
             <TextView
                 android:id="@+id/today_temp_update_time"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="更新时间"
                 android:textSize="8sp" />
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.1dp"
+                android:background="@color/colorTips" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/AppTheme.TextViewStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,9 +18,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.TabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="tabIndicatorColor">@color/colorPrimary</item>
+    <style name="AppTheme.TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/colorTips</item>
     </style>
 
 </resources>

@@ -11,4 +11,5 @@
     <color name="icon_disabled">#FF63727B</color>
 
     <color name="colorTemp">#FFFFFFFF</color>
+    <color name="colorTips">#DADADA</color>
 </resources>
