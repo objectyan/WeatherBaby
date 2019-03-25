@@ -7,4 +7,22 @@
     <!-- 温度单位 -->
     <string name="Centigrade">°C</string>
     <string name="Fahrenheit">°F</string>
+
+    <!-- 空气质量 -->
+    <string name="Atmosphere">空气质量</string>
+    <string name="Atmosphere_AQI">污染指数</string>
+    <string name="Atmosphere_PM10">PM10</string>
+    <string name="Atmosphere_PM25">PM2.5</string>
+    <string name="Atmosphere_NO2">NO₂</string>
+    <string name="Atmosphere_SO2">SO₂</string>
+    <string name="Atmosphere_CO">CO</string>
+    <string name="Atmosphere_O3">O₃</string>
+
+    <!-- 舒适度 -->
+    <string name="ComfortDegree">舒适度</string>
+    <string name="ComfortDegree_AirHumidity">空气湿度</string>
+    <string name="ComfortDegree_SendibleTemp">体感温度</string>
+    <string name="ComfortDegree_UltravioletIntensity">紫外线指数</string>
+    <string name="ComfortDegree_Visibility">能见度</string>
+    <string name="ComfortDegree_Pressure">大气压强</string>
 </resources>

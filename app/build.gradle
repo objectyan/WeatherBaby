@@ -38,4 +38,5 @@ dependencies {
     implementation 'me.relex:circleindicator:2.1.0'
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
