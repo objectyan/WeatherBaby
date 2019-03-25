@@ -43,6 +43,8 @@
                 android:gravity="center_vertical"
                 app:max="500"
                 app:min="0"
+                app:progressColor="@color/colorAtmospherePColor"
+                app:backgroundColor="@color/colorAtmosphereBColor"
                 app:title="@string/Atmosphere_AQI" />
 
             <LinearLayout

@@ -3,6 +3,7 @@ package me.objectyan.weatherbaby.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.text.TextPaint;
@@ -17,11 +18,13 @@ import me.objectyan.weatherbaby.R;
  */
 public class ArcView extends View {
     private final float density;
-    private float attr_max;
-    private float attr_min;
+    private float attr_max = 100;
+    private float attr_min = 0;
     private String attr_title;
     private String attr_value;
     private String attr_subValue;
+    private int attt_progressColor = 0xFFFFFFFF;
+    private int attt_backgroundColor = 0x55DADADA;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private RectF rectF = new RectF();
 
@@ -32,12 +35,17 @@ public class ArcView extends View {
         if (isInEditMode()) {
             return;
         }
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcView);
-        attr_max = a.getFloat(R.styleable.ArcView_max, 100f);
-        attr_min = a.getFloat(R.styleable.ArcView_min, 0f);
-        attr_title = a.getString(R.styleable.ArcView_title);
-        attr_value = a.getString(R.styleable.ArcView_value);
-        attr_subValue = a.getString(R.styleable.ArcView_subValue);
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArcView);
+            attr_max = a.getFloat(R.styleable.ArcView_max, attr_max);
+            attr_min = a.getFloat(R.styleable.ArcView_min, attr_min);
+            attr_title = a.getString(R.styleable.ArcView_title);
+            attr_value = a.getString(R.styleable.ArcView_value);
+            attr_subValue = a.getString(R.styleable.ArcView_subValue);
+            attt_progressColor = a.getColor(R.styleable.ArcView_progressColor, attt_progressColor);
+            attt_backgroundColor = a.getColor(R.styleable.ArcView_backgroundColor, attt_backgroundColor);
+            a.recycle();
+        }
     }
 
     @Override
@@ -59,8 +67,8 @@ public class ArcView extends View {
 
         float aqiArcRadius = lineSize * 4f;
         textPaint.setStyle(Paint.Style.STROKE);
-        textPaint.setStrokeWidth(lineSize * 1);
-        textPaint.setColor(0x55ffffff);
+        textPaint.setStrokeWidth(lineSize / 1.5f);
+        textPaint.setColor(attt_backgroundColor);
         rectF.set(-aqiArcRadius, -aqiArcRadius, aqiArcRadius, aqiArcRadius);
         final int saveCount = canvas.save();
         canvas.translate(w / 2f, h / 1.6f);
@@ -72,7 +80,7 @@ public class ArcView extends View {
         if (currAqiPercent >= 0f) {
 
             // draw aqi aqiPercent arc
-            textPaint.setColor(0x99ffffff);
+            textPaint.setColor(attt_progressColor);
             canvas.drawArc(rectF, startAngle, sweepAngle * currAqiPercent, false, textPaint);
 
             textPaint.setStyle(Paint.Style.FILL);
@@ -111,14 +119,14 @@ public class ArcView extends View {
                 }
             }
             // draw max and min
-            textPaint.setTextSize(lineSize * 0.5f);
+            textPaint.setTextSize(lineSize * 0.75f);
             textPaint.setColor(getResources().getColor(R.color.colorTips));
             try {
                 // TODO
                 canvas.drawText(String.valueOf(attr_min), -lineSize * 2.5f, lineSize * 3.6f, textPaint);
             } catch (Exception e) {
             }
-            textPaint.setTextSize(lineSize * 0.5f);
+            textPaint.setTextSize(lineSize * 0.75f);
             textPaint.setColor(getResources().getColor(R.color.colorTips));
             try {
                 // TODO
