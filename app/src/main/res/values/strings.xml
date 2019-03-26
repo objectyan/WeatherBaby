@@ -25,4 +25,10 @@
     <string name="ComfortDegree_UltravioletIntensity">紫外线指数</string>
     <string name="ComfortDegree_Visibility">能见度</string>
     <string name="ComfortDegree_Pressure">大气压强</string>
+
+    <!-- 日出日落 -->
+    <string name="Sunlight">日出日落</string>
+
+    <!-- 风向风力 -->
+    <string name="Wind">风向风力</string>
 </resources>

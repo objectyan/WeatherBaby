@@ -39,6 +39,19 @@
                 layout="@layout/fragment_weather_comfort_degree"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
+
+
+
+            <include
+                layout="@layout/fragment_weather_sunlight"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                layout="@layout/fragment_weather_wind"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
