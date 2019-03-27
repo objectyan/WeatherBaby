@@ -40,15 +40,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
-
-
             <include
-                layout="@layout/fragment_weather_sunlight"
+                layout="@layout/fragment_weather_wind"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
             <include
-                layout="@layout/fragment_weather_wind"
+                layout="@layout/fragment_weather_sunlight"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 

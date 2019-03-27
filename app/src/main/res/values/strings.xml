@@ -31,4 +31,6 @@
 
     <!-- 风向风力 -->
     <string name="Wind">风向风力</string>
+    <string name="Wind_Direction">风向</string>
+    <string name="Wind_Power">风力</string>
 </resources>

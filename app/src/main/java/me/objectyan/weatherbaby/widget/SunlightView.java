@@ -26,6 +26,7 @@ public class SunlightView extends View {
     private final DashPathEffect dashPathEffect;
     private Path sunPath = new Path();
     private RectF sunRectF = new RectF();
+    private Path sunPathCurr = new Path();
     private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private float paintTextOffset;
     final float offsetDegree = 15f;
@@ -63,6 +64,7 @@ public class SunlightView extends View {
             canvas.drawPath(sunPath, paint);
             paint.setPathEffect(null);
             paint.setColor(Color.WHITE);
+
             int saveCount = canvas.save();
             canvas.translate(width / 2f, textSize + sunArcHeight);
             canvas.restoreToCount(saveCount);
@@ -76,6 +78,7 @@ public class SunlightView extends View {
             paint.setStyle(Paint.Style.FILL);
             final float textLeft = width / 2f - sunArcRadius;// sunArcSize;
             paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("日出日落", width / 2f, textSize * 8f + paintTextOffset, paint);
             canvas.drawText(String.format(attr_beginForamt, getDateStr(attr_beginDate, "HH:mm")), textLeft, textSize * 10.5f + paintTextOffset, paint);
             canvas.drawText(String.format(attr_endForamt, getDateStr(attr_endDate, "HH:mm")), width - textLeft, textSize * 10.5f + paintTextOffset, paint);
         } catch (Exception e1) {
@@ -84,28 +87,36 @@ public class SunlightView extends View {
 
         try {
             // draw the sun
-            Integer[] sr = new Integer[]{attr_beginDate.getHours(), attr_beginDate.getMinutes()};// 日出
-            int srTime = Integer.valueOf(sr[0]) * 60 * 60 + Integer.valueOf(sr[1]) * 60 + 0;// 精确到秒
-            Integer[] ss = new Integer[]{attr_endDate.getHours(), attr_endDate.getMinutes()};// 日落
+            Integer[] sr = new Integer[]{attr_beginDate.getHours(), attr_beginDate.getMinutes()};
+            int srTime = Integer.valueOf(sr[0]) * 60 * 60 + Integer.valueOf(sr[1]) * 60 + 0;
+            Integer[] ss = new Integer[]{attr_endDate.getHours(), attr_endDate.getMinutes()};
             int ssTime = Integer.valueOf(ss[0]) * 60 * 60 + Integer.valueOf(ss[1]) * 60 + 0;
             Calendar c = Calendar.getInstance();
 
             int curTime = c.get(Calendar.HOUR_OF_DAY) * 60 * 60 + c.get(Calendar.MINUTE) * 60 + c.get(Calendar.MINUTE);
             if (curTime >= srTime && curTime <= ssTime) {
-                canvas.save();
-                canvas.translate(width / 2f, sunArcRadius + textSize);// 先平移到圆心
                 float percent = (curTime - srTime) / ((float) (ssTime - srTime));
+                sunPathCurr.reset();
+                sunPathCurr.addArc(sunRectF, -165, 150f * percent);
+                paint.setStrokeWidth(density);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(Color.YELLOW);
+                paint.setPathEffect(dashPathEffect);
+                canvas.drawPath(sunPathCurr, paint);
+                paint.setPathEffect(null);
+                canvas.save();
+                canvas.translate(width / 2f, sunArcRadius + textSize);
                 float degree = 15f + 150f * percent;
                 final float sunRadius = density * 4f;
-                canvas.rotate(degree);// 旋转到太阳的角度
+                canvas.rotate(degree);
                 paint.setStyle(Paint.Style.FILL);
-                paint.setStrokeWidth(density * 1.333f);// 宽度是2对应半径是6
-                canvas.translate(-sunArcRadius, 0);// 平移到太阳应该在的位置
-                canvas.rotate(-degree);// 转正方向。。。
+                paint.setStrokeWidth(density * 1.333f);
+                canvas.translate(-sunArcRadius, 0);
+                canvas.rotate(-degree);
                 canvas.drawCircle(0, 0, sunRadius, paint);
                 paint.setStyle(Paint.Style.STROKE);
                 final int light_count = 8;
-                for (int i = 0; i < light_count; i++) {// 画刻度
+                for (int i = 0; i < light_count; i++) {
                     double radians = Math.toRadians(i * (360 / light_count));
                     float x1 = (float) (Math.cos(radians) * sunRadius * 1.6f);
                     float y1 = (float) (Math.sin(radians) * sunRadius * 1.6f);
@@ -113,6 +124,8 @@ public class SunlightView extends View {
                     float y2 = y1 * (1f + 0.4f * 1f);
                     canvas.drawLine(0 + x1, y1, 0 + x2, y2, paint);
                 }
+
+
                 canvas.restore();
             }
 
@@ -128,8 +141,6 @@ public class SunlightView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        // 间距1 图8.5行 间距0.5 字1行 间距1 = 12;
-        // 9.5 10 11 12
         this.width = w;
         this.height = h;
         try {
@@ -144,7 +155,7 @@ public class SunlightView extends View {
             sunRectF.top = textSize;
             sunRectF.right = width - sunArcLeft;
             sunRectF.bottom = sunArcRadius * 2f + textSize;
-            sunPath.addArc(sunRectF, -165, +150);// 圆形的最右端点为0，顺时针sweepAngle
+            sunPath.addArc(sunRectF, -165, +150);
         } catch (Exception e) {
             e.printStackTrace();
         }
