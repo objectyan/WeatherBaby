@@ -1,13 +1,10 @@
 package me.objectyan.weatherbaby.widget;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
@@ -15,7 +12,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -26,10 +22,10 @@ public class WindView extends View {
 
     private int width, height;
     private final float density;
-    private Path fanPath = new Path();// 旋转的风扇的扇叶
-    private Path fanPillarPath = new Path();// 旋转的风扇的柱子
+    private Path fanPath = new Path();
+    private Path fanPillarPath = new Path();
     private final TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-    private float curRotate;// 旋转的风扇的角度
+    private float curRotate;
     private Rect visibleRect = new Rect();
 
     private float attr_speed = 0f;
