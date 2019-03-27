@@ -3,10 +3,22 @@
     <declare-styleable name="ArcView">
         <attr name="min" format="reference|float|integer" />
         <attr name="max" format="reference|float|integer" />
-        <attr name="title" format="reference|string" />
+        <attr name="title" />
         <attr name="value" format="string|reference" />
         <attr name="subValue" format="string|reference" />
         <attr name="backgroundColor" format="color|reference" />
         <attr name="progressColor" format="color|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SunlightView">
+        <attr name="beginForamt" format="string|reference" />
+        <attr name="endForamt" format="string|reference" />
+        <attr name="title" />
+        <attr name="beginDate" format="string|reference" />
+        <attr name="endDate" format="string|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="WindView">
+        <attr name="speed" format="float|reference|integer" />
     </declare-styleable>
 </resources>

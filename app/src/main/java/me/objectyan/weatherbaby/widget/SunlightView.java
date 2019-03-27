@@ -1,6 +1,7 @@
 package me.objectyan.weatherbaby.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -9,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import androidx.core.view.ViewCompat;
+import me.objectyan.weatherbaby.R;
 
 public class SunlightView extends View {
 
@@ -35,6 +38,7 @@ public class SunlightView extends View {
 
     private String attr_beginForamt = "%s";
     private String attr_endForamt = "%s";
+    private String attr_title = "日出日落";
     private Date attr_beginDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-12-14 08:00:00");
     private Date attr_endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-12-14 17:00:00");
 
@@ -48,6 +52,15 @@ public class SunlightView extends View {
         paint.setTextAlign(Paint.Align.CENTER);
         if (isInEditMode()) {
             return;
+        }
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SunlightView);
+            attr_beginForamt = TextUtils.isEmpty(a.getString(R.styleable.SunlightView_beginForamt)) ? attr_beginForamt : a.getString(R.styleable.SunlightView_beginForamt);
+            attr_endForamt = TextUtils.isEmpty(a.getString(R.styleable.SunlightView_endForamt)) ? attr_endForamt : a.getString(R.styleable.SunlightView_endForamt);
+            attr_title = TextUtils.isEmpty(a.getString(R.styleable.SunlightView_title)) ? attr_title : a.getString(R.styleable.SunlightView_title);
+            attr_beginDate = TextUtils.isEmpty(a.getString(R.styleable.SunlightView_beginDate)) ? attr_beginDate : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(a.getString(R.styleable.SunlightView_beginDate));
+            attr_endDate = TextUtils.isEmpty(a.getString(R.styleable.SunlightView_endDate)) ? attr_endDate : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(a.getString(R.styleable.SunlightView_endDate));
+            a.recycle();
         }
     }
 
@@ -78,7 +91,7 @@ public class SunlightView extends View {
             paint.setStyle(Paint.Style.FILL);
             final float textLeft = width / 2f - sunArcRadius;// sunArcSize;
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("日出日落", width / 2f, textSize * 8f + paintTextOffset, paint);
+            canvas.drawText(attr_title, width / 2f, textSize * 8f + paintTextOffset, paint);
             canvas.drawText(String.format(attr_beginForamt, getDateStr(attr_beginDate, "HH:mm")), textLeft, textSize * 10.5f + paintTextOffset, paint);
             canvas.drawText(String.format(attr_endForamt, getDateStr(attr_endDate, "HH:mm")), width - textLeft, textSize * 10.5f + paintTextOffset, paint);
         } catch (Exception e1) {

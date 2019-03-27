@@ -1,8 +1,10 @@
 package me.objectyan.weatherbaby.widget;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -13,10 +15,12 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.core.view.ViewCompat;
+import me.objectyan.weatherbaby.R;
 
 public class WindView extends View {
 
@@ -28,6 +32,8 @@ public class WindView extends View {
     private float curRotate;// 旋转的风扇的角度
     private Rect visibleRect = new Rect();
 
+    private float attr_speed = 0f;
+
     public WindView(Context context, AttributeSet attrs) {
         super(context, attrs);
         density = context.getResources().getDisplayMetrics().density;
@@ -37,6 +43,11 @@ public class WindView extends View {
         paint.setTextAlign(Align.CENTER);
         if (isInEditMode()) {
             return;
+        }
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.WindView);
+            attr_speed = a.getFloat(R.styleable.WindView_speed, attr_speed);
+            a.recycle();
         }
     }
 
@@ -83,14 +94,16 @@ public class WindView extends View {
                 fanPillarPath.close();
                 canvas.drawPath(fanPillarPath, paint);
                 canvas.rotate(curRotate * 360f);
-                float speed = 0f;
-                try {
-                    speed = Float.valueOf(3);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (i == 1) {
+                    float speed = 0f;
+                    try {
+                        speed = Float.valueOf(attr_speed);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    speed = Math.max(speed, .125f);
+                    curRotate += 0.001f * speed;
                 }
-                speed = Math.max(speed, 0.75f);
-                curRotate += 0.001f * speed;
                 if (curRotate > 1f) {
                     curRotate = 0f;
                 }
