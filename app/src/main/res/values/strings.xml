@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">天气宝宝</string>
     <string name="title_activity_main">选择城市</string>
-    <string name="toolbar_menu_settings">设置</string>
     <string name="city_manage">城市管理</string>
+
+    <!-- toolbar -->
+    <string name="toolbar_menu_settings">设置</string>
+    <string name="toolbar_city_manage_edit">编辑</string>
+    <string name="toolbar_city_manage_refresh">刷新</string>
+    <string name="toolbar_city_manage_cancel">取消</string>
+    <string name="toolbar_city_manage_confirm">确定</string>
 
     <!-- 温度单位 -->
     <string name="Centigrade">°C</string>

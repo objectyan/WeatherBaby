@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.menu_header);
         toolbar.setNavigationIcon(R.drawable.ic_toolbar_city_manage);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
