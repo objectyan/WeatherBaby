@@ -30,18 +30,16 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         ViewHolder viewHolder;
         if (convertView == null) {
             view = LayoutInflater.from(this.getContext()).inflate(mResource, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.textView = (TextView) view.findViewById(R.id.text);
+            viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         } else {
             view = convertView;
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.textView.setText("aaaaaaaaa");
         return view;
     }
 
-    private class ViewHolder {
+    class ViewHolder {
         @BindView(R.id.city_name)
         TextView cityName;
         @BindView(R.id.city_weather_min)
