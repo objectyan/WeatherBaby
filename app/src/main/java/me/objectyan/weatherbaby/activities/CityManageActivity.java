@@ -8,10 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.adapter.CityManageAdapter;
+import me.objectyan.weatherbaby.entities.CityInfo;
 
 public class CityManageActivity extends BaseActivity {
 
@@ -24,6 +29,7 @@ public class CityManageActivity extends BaseActivity {
     MenuItem menuCityManageConfirm;
     MenuItem menuCityManageRefresh;
 
+    CityManageAdapter cityManageAdapter;
 
     @Override
     public void initView() {
@@ -32,6 +38,12 @@ public class CityManageActivity extends BaseActivity {
         setSupportActionBar(headerToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        List<CityInfo> array = new ArrayList<>();
+        for (int i = 0; i < 10; i++)
+            array.add(new CityInfo());
+        cityManageAdapter = new CityManageAdapter(this, R.layout.activity_city_manage_item, array);
+        gvCityManage.setAdapter(cityManageAdapter);
     }
 
     @Override
