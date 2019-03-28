@@ -1,32 +1,15 @@
-package me.objectyan.weatherbaby;
+package me.objectyan.weatherbaby.activities;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.objectyan.weatherbaby.adapter.WeatherPagerAdapter;
-import me.objectyan.weatherbaby.fragment.WeatherFragment;
-import me.relex.circleindicator.CircleIndicator;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.List;
+import me.objectyan.weatherbaby.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -40,6 +23,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_main_settings) {
+//            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void initView() {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -48,7 +39,7 @@ public class MainActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CityActivity.class));
+                startActivity(new Intent(getApplicationContext(), CityManageActivity.class));
             }
         });
         ActionBar actionBar = getSupportActionBar();

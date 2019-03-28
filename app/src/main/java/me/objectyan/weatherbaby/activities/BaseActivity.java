@@ -1,11 +1,9 @@
-package me.objectyan.weatherbaby;
+package me.objectyan.weatherbaby.activities;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.Nullable;
-import butterknife.ButterKnife;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
     @Override

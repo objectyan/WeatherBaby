@@ -33,4 +33,8 @@
     <string name="Wind">风向风力</string>
     <string name="Wind_Direction">风向</string>
     <string name="Wind_Power">风力</string>
+
+    <!-- 城市管理 -->
+    <string name="title_activity_city_manage">城市管理</string>
+
 </resources>

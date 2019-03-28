@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3773E7</color>
-
-    <color name="colorPrimaryDark">#3773E7</color>
     <color name="colorAccent">#D81B60</color>
 
     <color name="transparent">#00000000</color>
@@ -13,7 +10,7 @@
 
     <color name="colorTemp">#FFFFFFFF</color>
     <color name="colorTips">#DADADA</color>
-    
+
     <color name="colorAtmospherePColor">#FF40C4FF</color>
     <color name="colorAtmosphereBColor">#FFDADADA</color>
 </resources>
