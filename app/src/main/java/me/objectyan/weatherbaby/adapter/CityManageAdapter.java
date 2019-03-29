@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,9 +49,17 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         TextView cityWeatherMax;
         @BindView(R.id.city_weather)
         TextView cityWeather;
+        @BindView(R.id.set_default)
+        TextView setDefault;
+        @BindView(R.id.city_add)
+        LinearLayout cityAdd;
+        @BindView(R.id.city_loading)
+        LinearLayout cityLoading;
+
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
+
 }

@@ -42,5 +42,6 @@
 
     <!-- 城市管理 -->
     <string name="title_activity_city_manage">城市管理</string>
+    <string name="city_default">设为默认</string>
 
 </resources>
