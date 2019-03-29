@@ -128,5 +128,13 @@
             android:indeterminateTint="@color/colorTemp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/city_delete"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_cancel"
+        android:visibility="gone"
+        tools:ignore="VectorDrawableCompat" />
 
 </androidx.cardview.widget.CardView>
