@@ -62,13 +62,19 @@ public class CityManageActivity extends BaseActivity {
             case R.id.menu_city_manage_edit:
                 menuCityManageEdit.setVisible(false);
                 menuCityManageConfirm.setVisible(true);
+                cityManageAdapter.setIsEdit(true);
+                menuCityManageRefresh.setEnabled(false);
                 break;
             case R.id.menu_city_manage_refresh:
                 menuCityManageRefresh.setIcon(R.drawable.ic_disabled);
+                menuCityManageEdit.setEnabled(false);
+                cityManageAdapter.setRomoveAdd(true);
                 break;
             case R.id.menu_city_manage_confirm:
                 menuCityManageEdit.setVisible(true);
                 menuCityManageConfirm.setVisible(false);
+                cityManageAdapter.setIsEdit(false);
+                menuCityManageRefresh.setEnabled(true);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="153dp"
     app:cardBackgroundColor="@color/transparent">
 
     <LinearLayout
+        android:id="@+id/city_weather_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -80,6 +81,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/set_default_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -91,14 +93,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="@string/city_default"
+                android:text="@string/city_setting_default"
                 android:textColor="@color/colorTemp"
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/city_add"
+        android:id="@+id/city_add_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -114,7 +116,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/city_loading"
+        android:id="@+id/city_loading_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"

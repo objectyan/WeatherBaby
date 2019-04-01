@@ -1,5 +1,142 @@
 package me.objectyan.weatherbaby.entities;
 
 public class CityInfo {
+    private int id;
 
+    private int type = 0;
+
+    private String cityName;
+
+    private String tempHigh;
+
+    private String tempLow;
+
+    private String weatherType;
+
+    private String weatherTypeDay;
+
+    private String weatherTypeNight;
+
+    private String weatherCode;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type |= type;
+    }
+
+    public void removeType(int type) {
+        this.type &= ~type;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getTempHigh() {
+        return tempHigh;
+    }
+
+    public void setTempHigh(String tempHigh) {
+        this.tempHigh = tempHigh;
+    }
+
+    public String getTempLow() {
+        return tempLow;
+    }
+
+    public void setTempLow(String tempLow) {
+        this.tempLow = tempLow;
+    }
+
+    public String getWeatherType() {
+        return weatherType;
+    }
+
+    public void setWeatherType(String weatherType) {
+        this.weatherType = weatherType;
+    }
+
+    public String getWeatherTypeDay() {
+        return weatherTypeDay;
+    }
+
+    public void setWeatherTypeDay(String weatherTypeDay) {
+        this.weatherTypeDay = weatherTypeDay;
+    }
+
+    public String getWeatherTypeNight() {
+        return weatherTypeNight;
+    }
+
+    public void setWeatherTypeNight(String weatherTypeNight) {
+        this.weatherTypeNight = weatherTypeNight;
+    }
+
+    public String getWeatherCode() {
+        return weatherCode;
+    }
+
+    public void setWeatherCode(String weatherCode) {
+        this.weatherCode = weatherCode;
+    }
+
+    public CityInfo() {
+    }
+
+    public CityInfo(int type) {
+        this.type = type;
+    }
+
+    public enum CityType {
+        /**
+         * 默认
+         */
+        None(1 << 0),
+        /**
+         * 定位
+         */
+        Location(1 << 1),
+        /**
+         * 默认
+         */
+        Default(1 << 2),
+        /**
+         * 添加
+         */
+        Add(1 << 3);
+
+        private final int key;
+
+        private CityType(int key) {
+            this.key = key;
+        }
+
+        public static CityType getEnumByKey(int key) {
+            for (CityType temp : CityType.values()) {
+                if (temp.getKey() == key) {
+                    return temp;
+                }
+            }
+            return null;
+        }
+
+        public int getKey() {
+            return key;
+        }
+    }
 }
