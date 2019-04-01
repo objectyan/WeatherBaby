@@ -1,11 +1,15 @@
 package me.objectyan.weatherbaby.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -38,17 +42,12 @@ public class CityManageActivity extends BaseActivity {
         setSupportActionBar(headerToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        List<CityInfo> array = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            array.add(new CityInfo());
-        cityManageAdapter = new CityManageAdapter(this, R.layout.activity_city_manage_item, array);
+        cityManageAdapter = new CityManageAdapter(this, R.layout.activity_city_manage_item, new ArrayList<>());
         gvCityManage.setAdapter(cityManageAdapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_city_manage, menu);
         menuCityManageEdit = menu.findItem(R.id.menu_city_manage_edit);
         menuCityManageConfirm = menu.findItem(R.id.menu_city_manage_confirm);
@@ -82,18 +81,37 @@ public class CityManageActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        List<CityInfo> array = new ArrayList<>();
+        for (int i = 0; i < 15; i++)
+            array.add(new CityInfo());
+        cityManageAdapter.addAll(array);
     }
 
     @Override
     public void initListener() {
+        cityManageAdapter.setOnItemSelectListener(new CityManageAdapter.onCityManageItemClick() {
+            @Override
+            public void addCity() {
+                Intent intent = new Intent(CityManageActivity.this, AddCityActivity.class);
+                startActivityForResult(intent, 1);
+            }
 
+            @Override
+            public void removeCity(CityInfo cityInfo) {
+
+            }
+
+            @Override
+            public void settingDefault(CityInfo cityInfo) {
+
+            }
+        });
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        String result = data.getExtras().getString("result");
+//        Log.i("11111111111", result);
     }
+
 }

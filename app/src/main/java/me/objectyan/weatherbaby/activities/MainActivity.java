@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_main_settings) {
-//            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -37,12 +37,6 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.menu_header);
         toolbar.setNavigationIcon(R.drawable.ic_toolbar_city_manage);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CityManageActivity.class));
-            }
-        });
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
@@ -57,6 +51,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initListener() {
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), CityManageActivity.class));
+            }
+        });
     }
 }

@@ -1,7 +1,9 @@
 package me.objectyan.weatherbaby.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +12,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.activities.AddCityActivity;
 import me.objectyan.weatherbaby.entities.CityInfo;
 
 public class CityManageAdapter extends ArrayAdapter<CityInfo> {
@@ -25,8 +30,6 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
     private int mResource;
 
     private boolean mIsEdit = false;
-
-    private List<CityInfo> mData;
 
     private CityInfo cityInfoByAdd = new CityInfo(CityInfo.CityType.Add.getKey());
 
@@ -94,6 +97,7 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
             @Override
             public void onClick(View v) {
                 remove(cityInfo);
+                cityManageItemClick.removeCity(cityInfo);
             }
         });
 
@@ -106,11 +110,48 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
                 }
                 cityInfo.setType(CityInfo.CityType.Default.getKey());
                 notifyDataSetChanged();
+                cityManageItemClick.removeCity(cityInfo);
+            }
+        });
+
+        viewHolder.cityAddLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cityManageItemClick.addCity();
             }
         });
 
         return view;
     }
+
+
+    /**
+     * 接口回调
+     */
+    public interface onCityManageItemClick {
+        /**
+         * 添加城市
+         */
+        void addCity();
+
+        /**
+         * 删除城市
+         */
+        void removeCity(CityInfo cityInfo);
+
+        /**
+         * 设置默认
+         */
+        void settingDefault(CityInfo cityInfo);
+    }
+
+    private onCityManageItemClick cityManageItemClick;
+
+    public void setOnItemSelectListener(onCityManageItemClick listener) {
+
+        this.cityManageItemClick = listener;
+    }
+
 
     class ViewHolder {
         @BindView(R.id.city_weather_layout)
@@ -140,4 +181,23 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         }
     }
 
+    @Override
+    public void addAll(CityInfo... items) {
+        remove(cityInfoByAdd);
+        super.addAll(items);
+        super.add(cityInfoByAdd);
+    }
+
+    @Override
+    public void addAll(@NonNull Collection<? extends CityInfo> collection) {
+        remove(cityInfoByAdd);
+        super.addAll(collection);
+        super.add(cityInfoByAdd);
+    }
+
+    @Override
+    public void add(@Nullable CityInfo object) {
+        remove(cityInfoByAdd);
+        super.add(object);
+    }
 }
