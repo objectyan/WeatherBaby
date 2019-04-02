@@ -41,7 +41,6 @@ public class MainActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-
     }
 
     @Override

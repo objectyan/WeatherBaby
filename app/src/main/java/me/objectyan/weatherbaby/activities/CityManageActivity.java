@@ -92,7 +92,7 @@ public class CityManageActivity extends BaseActivity {
         cityManageAdapter.setOnItemSelectListener(new CityManageAdapter.onCityManageItemClick() {
             @Override
             public void addCity() {
-                Intent intent = new Intent(CityManageActivity.this, AddCityActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddCityActivity.class);
                 startActivityForResult(intent, 1);
             }
 
