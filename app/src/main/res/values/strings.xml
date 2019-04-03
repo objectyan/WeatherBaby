@@ -45,5 +45,8 @@
     <string name="city_default">默认</string>
     <string name="city_setting_default">设为默认</string>
     <string name="title_activity_add_city">添加城市</string>
+    <string name="input_city_name">搜索城市（中文/拼音）</string>
+    <string name="recommend_city">推荐城市</string>
+    <string name="more_city">更多城市</string>
 
 </resources>

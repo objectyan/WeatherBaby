@@ -98,6 +98,10 @@ public class CityInfo {
     public CityInfo() {
     }
 
+    public CityInfo(String cityName) {
+        this.cityName = cityName;
+    }
+
     public CityInfo(int type) {
         this.type = type;
     }
