@@ -48,5 +48,7 @@
     <string name="input_city_name">搜索城市（中文/拼音）</string>
     <string name="recommend_city">推荐城市</string>
     <string name="more_city">更多城市</string>
+    <string name="city_back">返回</string>
+    <string name="no_matched_city">没有符合条件的城市</string>
 
 </resources>

@@ -1,11 +1,19 @@
 package me.objectyan.weatherbaby.entities;
 
+import java.util.List;
+
 public class CityInfo {
     private int id;
 
     private int type = 0;
 
     private String cityName;
+
+    private String latitude;
+
+    private String longitude;
+
+    private String spell;
 
     private String tempHigh;
 
@@ -18,6 +26,8 @@ public class CityInfo {
     private String weatherTypeNight;
 
     private String weatherCode;
+
+    private List<String> fullPath;
 
     public int getId() {
         return id;
@@ -93,6 +103,38 @@ public class CityInfo {
 
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getSpell() {
+        return spell;
+    }
+
+    public void setSpell(String spell) {
+        this.spell = spell;
+    }
+
+    public List<String> getFullPath() {
+        return fullPath;
+    }
+
+    public void setFullPath(List<String> fullPath) {
+        this.fullPath = fullPath;
     }
 
     public CityInfo() {

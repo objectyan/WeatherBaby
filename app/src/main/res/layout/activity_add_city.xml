@@ -58,32 +58,60 @@
             android:background="@color/colorTips" />
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/search_result"
+    <RelativeLayout
+        android:id="@+id/all_city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:horizontalSpacing="5dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="3"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp"></GridView>
+        android:visibility="gone">
 
-    <LinearLayout
-        android:id="@+id/more_city_and_return_btn"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="15dp">
-
-        <TextView
-            android:id="@+id/more_city_and_return_btn_tv"
+        <GridView
+            android:id="@+id/search_result"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/more_city"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_above="@id/more_city_and_return_btn"
+            android:layout_alignParentTop="true"
+            android:horizontalSpacing="5dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:verticalSpacing="5dp"></GridView>
+
+        <LinearLayout
+            android:id="@+id/more_city_and_return_btn"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/more_city_and_return_btn_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/more_city"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/no_matched_city_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:text="@string/no_matched_city"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/lv_search_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:divider="@color/colorTemp"
+        android:dividerHeight="0.5dp"
+        android:visibility="gone" />
 
 </LinearLayout>

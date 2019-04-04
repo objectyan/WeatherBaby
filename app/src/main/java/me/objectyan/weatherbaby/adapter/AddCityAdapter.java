@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.entities.CityInfo;
@@ -31,22 +33,26 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
         View view;
         ViewHolder viewHolder;
         if (convertView == null) {
-            view = LayoutInflater.from(this.getContext()).inflate(mResource, parent, false);
+            view = LayoutInflater.from(this.getContext()).inflate(R.layout.activity_add_city_item, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         } else {
             view = convertView;
             viewHolder = (ViewHolder) view.getTag();
         }
-
+        CityInfo cityInfo = getItem(position);
+        viewHolder.cityName.setText(cityInfo.getCityName());
         return view;
     }
 
-    public class ViewHolder {
+    class ViewHolder {
+        @BindView(R.id.city_name)
+        TextView cityName;
+        @BindView(R.id.city_weather_layout)
+        LinearLayout cityWeatherLayout;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
-
 }
