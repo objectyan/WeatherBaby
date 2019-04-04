@@ -243,6 +243,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
      *
      * @param query
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void searchCity(String query) {
         List<CityInfo> recommendCities = new ArrayList<>();
         XmlPullParser parser = getResources().getXml(R.xml.city_china);
@@ -272,9 +273,15 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                             cityInfo.setWeatherCode(parser.getAttributeValue(null, "weatherCode"));
                             List<String> fullPath = new ArrayList<>();
                             fullPath.add(country);
-                            if (fullPath.contains(province)) fullPath.add(province);
-                            if (fullPath.contains(city)) fullPath.add(city);
-                            if (fullPath.contains(county)) fullPath.add(county);
+                            String finalProvince = province;
+                            if (fullPath.stream().anyMatch((String s) -> s.contains(finalProvince)))
+                                fullPath.add(province);
+                            String finalCity = city;
+                            if (fullPath.stream().anyMatch((String s) -> s.contains(finalCity)))
+                                fullPath.add(city);
+                            String finalCounty = county;
+                            if (fullPath.stream().anyMatch((String s) -> s.contains(finalCounty)))
+                                fullPath.add(county);
                             cityInfo.setFullPath(fullPath);
                             recommendCities.add(cityInfo);
                             break;
@@ -283,7 +290,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 eventType = parser.next();
             }
             @SuppressLint({"NewApi", "LocalSuppress"})
-            List<CityInfo> result = recommendCities.stream().filter((CityInfo s) -> s.getFullPath().contains(query)).collect(Collectors.toList());
+            List<CityInfo> result = recommendCities.stream().filter((CityInfo s) -> s.getCityName().contains(query) || s.getSpell().contains(query)).collect(Collectors.toList());
             if (result.isEmpty()) {
                 lvSearchCity.setVisibility(View.GONE);
                 noMatchedCityTv.setVisibility(View.VISIBLE);
