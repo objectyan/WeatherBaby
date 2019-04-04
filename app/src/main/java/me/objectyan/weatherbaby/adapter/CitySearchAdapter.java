@@ -16,16 +16,13 @@ import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.entities.CityInfo;
 
-public class AddCityAdapter extends ArrayAdapter<CityInfo> {
+public class CitySearchAdapter extends ArrayAdapter<CityInfo> {
 
     private int mResource;
 
-    private CityInfo cityInfoByLocation = new CityInfo(CityInfo.CityType.Location.getKey());
-
-    public AddCityAdapter(@NonNull Context context, int resource, @NonNull List<CityInfo> objects) {
+    public CitySearchAdapter(@NonNull Context context, int resource, @NonNull List<CityInfo> objects) {
         super(context, resource, objects);
         mResource = resource;
-        add(cityInfoByLocation);
     }
 
     @Override
@@ -46,13 +43,12 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
     }
 
     class ViewHolder {
-        @BindView(R.id.city_name)
+        @BindView(R.id.search_item)
         TextView cityName;
-        @BindView(R.id.city_weather_layout)
-        LinearLayout cityWeatherLayout;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package me.objectyan.weatherbaby.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.AddCityAdapter;
+import me.objectyan.weatherbaby.adapter.CitySearchAdapter;
 import me.objectyan.weatherbaby.entities.CityInfo;
 
 public class AddCityActivity extends BaseActivity implements View.OnClickListener {
@@ -56,6 +58,8 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
     private AddCityAdapter addCityAdapter;
 
+    private CitySearchAdapter citySearchAdapter;
+
     private int currentType = 0;
 
     private boolean isOpenWeather = true;
@@ -72,7 +76,9 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         addCityAdapter = new AddCityAdapter(this, R.layout.activity_add_city_item, new ArrayList<>());
+        citySearchAdapter = new CitySearchAdapter(this, R.layout.activity_add_city_search, new ArrayList());
         searchResult.setAdapter(addCityAdapter);
+        lvSearchCity.setAdapter(citySearchAdapter);
     }
 
     @Override
@@ -106,6 +112,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
             }
 
+            @SuppressLint("NewApi")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String cityName = s.toString();
@@ -117,7 +124,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     allCity.setVisibility(View.GONE);
                     lvSearchCity.setVisibility(View.VISIBLE);
                     noMatchedCityTv.setVisibility(View.GONE);
-
+                    searchCity(cityName);
                 }
             }
 
@@ -236,7 +243,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
      *
      * @param query
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void searchCity(String query) {
         List<CityInfo> recommendCities = new ArrayList<>();
         XmlPullParser parser = getResources().getXml(R.xml.city_china);
@@ -276,8 +282,17 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 }
                 eventType = parser.next();
             }
+            @SuppressLint({"NewApi", "LocalSuppress"})
             List<CityInfo> result = recommendCities.stream().filter((CityInfo s) -> s.getFullPath().contains(query)).collect(Collectors.toList());
-
+            if (result.isEmpty()) {
+                lvSearchCity.setVisibility(View.GONE);
+                noMatchedCityTv.setVisibility(View.VISIBLE);
+            } else {
+                lvSearchCity.setVisibility(View.VISIBLE);
+                noMatchedCityTv.setVisibility(View.GONE);
+                citySearchAdapter.clear();
+                citySearchAdapter.addAll(result);
+            }
         } catch (Exception e) {
             Log.d(LOG_TAG, "initRecommendCities(): " + e.toString());
         }
