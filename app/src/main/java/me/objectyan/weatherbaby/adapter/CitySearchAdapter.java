@@ -42,10 +42,13 @@ public class CitySearchAdapter extends ArrayAdapter<CityInfo> {
         stringBuffer.append(cityInfo.getCityName());
         stringBuffer.append(",");
         for (String item : cityInfo.getFullPath()) {
+            if(item==cityInfo.getCityName()) {
+               break;
+            }
             stringBuffer.append(item);
-            if (!item.equals(cityInfo.getFullPath().get(cityInfo.getFullPath().size() - 1)))
-                stringBuffer.append(",");
+            stringBuffer.append(",");
         }
+        stringBuffer.deleteCharAt(stringBuffer.length()-1);
         viewHolder.cityName.setText(stringBuffer);
         return view;
     }
