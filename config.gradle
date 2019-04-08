@@ -1,0 +1,14 @@
+ext {
+    android = [compileSdkVersion: 28,
+               buildToolsVersion: "28.0.3",
+               applicationId    : "me.objectyan.weatherbaby",
+               minSdkVersion    : 15,
+               targetSdkVersion : 28,
+               versionCode      : 1,
+               versionName      : "1.0.1"]
+
+    HeWeather = [
+            name : "HeWeatherKey",
+            value: "0adfab68ce9a4415821e74b18694dcb7"
+    ]
+}

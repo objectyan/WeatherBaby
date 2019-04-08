@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
+import me.objectyan.weatherbaby.services.HeWeatherApiService;
 
 public class MainActivity extends BaseActivity {
 
@@ -45,7 +47,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        HeWeatherApiService.getInstance().fetchWeather("上海市");
     }
 
     @Override
