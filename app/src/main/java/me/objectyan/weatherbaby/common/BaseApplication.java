@@ -4,12 +4,18 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
+import org.greenrobot.greendao.database.Database;
+
 import androidx.appcompat.app.AppCompatDelegate;
+import me.objectyan.weatherbaby.BuildConfig;
+import me.objectyan.weatherbaby.entities.database.DaoMaster;
+import me.objectyan.weatherbaby.entities.database.DaoSession;
 
 public class BaseApplication extends Application {
 
     private static String sCacheDir;
     private static Context sAppContext;
+    private static DaoSession daoSession;
 
     static {
         AppCompatDelegate.setDefaultNightMode(
@@ -26,6 +32,9 @@ public class BaseApplication extends Application {
         } else {
             sCacheDir = getApplicationContext().getCacheDir().toString();
         }
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, BuildConfig.DataBaseName);
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
     }
 
     private boolean ExistSDCard() {
@@ -38,5 +47,9 @@ public class BaseApplication extends Application {
 
     public static String getAppCacheDir() {
         return sCacheDir;
+    }
+
+    public static DaoSession getDaoSession() {
+        return daoSession;
     }
 }
