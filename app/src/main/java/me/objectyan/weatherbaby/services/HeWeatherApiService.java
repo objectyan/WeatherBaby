@@ -13,6 +13,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.entities.heweather.AirNow;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
 import me.objectyan.weatherbaby.entities.heweather.Weather;
 import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
@@ -115,7 +116,7 @@ public class HeWeatherApiService {
      * @param location
      * @return
      */
-    public Observable<WeatherApi> fetchWeather(String location) {
+    public Observable<Weather> fetchWeather(String location) {
         return sHeWeatherApi.mWeather(location)
                 .flatMap(weather -> {
                     String status = weather.mWeather.get(0).status;
@@ -128,7 +129,7 @@ public class HeWeatherApiService {
                 })
                 .map(weather -> weather.mWeather.get(0))
                 .doOnError(HeWeatherApiService::disposeFailureInfo)
-                .compose(schedulersTransformer());
+                .compose(Util.schedulersTransformer());
     }
 
     /**
@@ -137,7 +138,7 @@ public class HeWeatherApiService {
      * @param location
      * @return
      */
-    public Observable<AirNowApi> fetchAirNow(String location) {
+    public Observable<AirNow> fetchAirNow(String location) {
         return sHeWeatherApi.mAirNow(location)
                 .flatMap(weather -> {
                     String status = weather.mAirNow.get(0).status;
@@ -150,18 +151,6 @@ public class HeWeatherApiService {
                 })
                 .map(weather -> weather.mAirNow.get(0))
                 .doOnError(HeWeatherApiService::disposeFailureInfo)
-                .compose(schedulersTransformer());
-    }
-
-    ObservableTransformer schedulersTransformer() {
-        return new ObservableTransformer() {
-            @Override
-            public ObservableSource apply(Observable upstream) {
-                return upstream
-                        .subscribeOn(Schedulers.io())
-                        .unsubscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread(), true);
-            }
-        };
+                .compose(Util.schedulersTransformer());
     }
 }

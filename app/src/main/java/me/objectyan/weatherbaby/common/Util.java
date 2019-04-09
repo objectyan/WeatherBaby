@@ -13,12 +13,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import androidx.core.app.ActivityCompat;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
@@ -138,5 +144,22 @@ public class Util {
         if (cityBase.getLatitude() != null && cityBase.getLongitude() != null)
             return String.format("%d,%d", cityBase.getLongitude(), cityBase.getLatitude());
         return "auto_ip";
+    }
+
+    public static ObservableTransformer schedulersTransformer() {
+        return new ObservableTransformer() {
+            @Override
+            public ObservableSource apply(Observable upstream) {
+                return upstream
+                        .subscribeOn(Schedulers.io())
+                        .unsubscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread(), true);
+            }
+        };
+    }
+
+    public static String dateToStr(Date date, String format) {
+        SimpleDateFormat formatDate = new SimpleDateFormat(TextUtils.isEmpty(format) ? "yyyy-MM-dd HH:mm:ss" : format);
+        return formatDate.format(date);
     }
 }

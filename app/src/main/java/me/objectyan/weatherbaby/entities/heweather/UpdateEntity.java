@@ -26,7 +26,7 @@ public class UpdateEntity implements Serializable {
      * @return
      */
     public Date getLocalTime() throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//小写的mm表示的是分钟
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
         return sdf.parse(localTime);
     }
 
@@ -36,7 +36,7 @@ public class UpdateEntity implements Serializable {
      * @return
      */
     public Date getUtcTime() throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//小写的mm表示的是分钟
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
         return sdf.parse(utcTime);
     }
 }

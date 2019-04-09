@@ -3,6 +3,7 @@ package me.objectyan.weatherbaby.fragment;
 import android.icu.util.Calendar;
 import android.icu.util.ULocale;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
@@ -128,11 +131,33 @@ public class WeatherFragment extends Fragment {
     }
 
     private void initData() {
-        CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-        if (cityBase.getUpdateTime() == null || cityBase.getUpdateTime().getTime() < Util.getCurrentTimeByUTC().getTime()) {
-//            HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase)).
-        } else {
-
-        }
+        Observable.create(new ObservableOnSubscribe<Long>() {
+            @Override
+            public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
+                CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+                if (cityBase.getUpdateTime() == null) {
+                    HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase))
+                            .doOnNext(weather -> {
+                                cityBase.setUpdateTime(weather.updateEntity.getUtcTime());
+                                cityBase.setLocation(weather.basic.Name);
+                                cityBase.setAdminArea(weather.basic.adminArea);
+                                cityBase.setCid(weather.basic.code);
+                                cityBase.setLatitude(Double.valueOf(weather.basic.latitude));
+                                cityBase.setLongitude(Double.valueOf(weather.basic.longitude));
+                                cityBase.setParentCity(weather.basic.parentCity);
+                                cityBase.setCountry(weather.basic.countryName);
+                                cityBase.setTimeZone(Float.valueOf(weather.basic.timeZone));
+                                cityBaseDao.update(cityBase);
+                            }).doOnComplete(() -> {
+                        emitter.onNext(cityBase.getId());
+                    }).subscribe();
+                } else {
+                    emitter.onNext(cityBase.getId());
+                }
+            }
+        }).doOnNext(cityID -> {
+            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(cityID)).unique();
+            todayTempUpdateTime.setText(Util.dateToStr(cityBase.getUpdateTime(), null));
+        }).subscribe();
     }
 }
