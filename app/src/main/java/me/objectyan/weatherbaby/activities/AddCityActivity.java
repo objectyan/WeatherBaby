@@ -1,6 +1,8 @@
 package me.objectyan.weatherbaby.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.annotations.Until;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -31,100 +35,125 @@ import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.AddCityAdapter;
 import me.objectyan.weatherbaby.adapter.CitySearchAdapter;
+import me.objectyan.weatherbaby.common.BaseApplication;
+import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.database.CityBase;
+import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 
 public class AddCityActivity extends BaseActivity implements View.OnClickListener {
 
-                        private static final String LOG_TAG = "AddCityActivity";
+    private static final String LOG_TAG = "AddCityActivity";
 
-                        @BindView(R.id.header_toolbar)
-                        Toolbar headerToolbar;
-                        @BindView(R.id.search_city)
-                        EditText searchCity;
-                        @BindView(R.id.search_bar_text)
-                        TextView searchBarText;
-                        @BindView(R.id.search_result)
-                        GridView searchResult;
-                        @BindView(R.id.more_city_and_return_btn_tv)
-                        TextView moreCityAndReturnBtnTv;
-                        @BindView(R.id.more_city_and_return_btn)
-                        LinearLayout moreCityAndReturnBtn;
-                        @BindView(R.id.all_city)
-                        RelativeLayout allCity;
-                        @BindView(R.id.no_matched_city_tv)
-                        TextView noMatchedCityTv;
-                        @BindView(R.id.lv_search_city)
-                        ListView lvSearchCity;
+    @BindView(R.id.header_toolbar)
+    Toolbar headerToolbar;
+    @BindView(R.id.search_city)
+    EditText searchCity;
+    @BindView(R.id.search_bar_text)
+    TextView searchBarText;
+    @BindView(R.id.search_result)
+    GridView searchResult;
+    @BindView(R.id.more_city_and_return_btn_tv)
+    TextView moreCityAndReturnBtnTv;
+    @BindView(R.id.more_city_and_return_btn)
+    LinearLayout moreCityAndReturnBtn;
+    @BindView(R.id.all_city)
+    RelativeLayout allCity;
+    @BindView(R.id.no_matched_city_tv)
+    TextView noMatchedCityTv;
+    @BindView(R.id.lv_search_city)
+    ListView lvSearchCity;
 
-                        private AddCityAdapter addCityAdapter;
+    private AddCityAdapter addCityAdapter;
 
-                        private CitySearchAdapter citySearchAdapter;
+    private CitySearchAdapter citySearchAdapter;
 
-                        private int currentType = 0;
+    private int currentType = 0;
 
-                        private boolean isOpenWeather = true;
+    private boolean isOpenWeather = true;
 
-                        private String mSelectedProvince;
+    private String mSelectedProvince;
 
-                        private String mSelectedCity;
+    private String mSelectedCity;
 
-                        @Override
-                        public void initView() {
-                            setContentView(R.layout.activity_add_city);
-                            ButterKnife.bind(this);
-                            setSupportActionBar(headerToolbar);
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                            getSupportActionBar().setHomeButtonEnabled(true);
-                            addCityAdapter = new AddCityAdapter(this, R.layout.activity_add_city_item, new ArrayList<>());
-                            citySearchAdapter = new CitySearchAdapter(this, R.layout.activity_add_city_search, new ArrayList());
-                            searchResult.setAdapter(addCityAdapter);
-                            lvSearchCity.setAdapter(citySearchAdapter);
+    private CityBaseDao cityBaseDao;
+
+    @Override
+    public void initView() {
+        setContentView(R.layout.activity_add_city);
+        ButterKnife.bind(this);
+        setSupportActionBar(headerToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        addCityAdapter = new AddCityAdapter(this, R.layout.activity_add_city_item, new ArrayList<>());
+        citySearchAdapter = new CitySearchAdapter(this, R.layout.activity_add_city_search, new ArrayList());
+        searchResult.setAdapter(addCityAdapter);
+        lvSearchCity.setAdapter(citySearchAdapter);
+        cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
+    }
+
+    @Override
+    public void initData() {
+        initRecommendCities();
+    }
+
+    @Override
+    public void initListener() {
+        moreCityAndReturnBtn.setOnClickListener(this);
+        searchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CityInfo cityInfo = (CityInfo) parent.getItemAtPosition(position);
+                if (isOpenWeather) {
+                    CityBase cityBase = Util.cityInfoToBase(cityInfo);
+                    if (cityInfo.isLocation()) {
+                        Location location = Util.getCurrentLocation();
+                        if (location == null) {
+                            return;
                         }
+                        cityBase.setLatitude(location.getLatitude());
+                        cityBase.setLongitude(location.getLongitude());
+                        cityBase.setLocation(getString(R.string.current_location_addresss));
+                    }
+                    cityBase.setId(null);
+                    cityBase.setSort(0);
+                    cityBaseDao.insert(cityBase);
+                    Log.d(LOG_TAG, "Inserted new CityBase, ID: " + cityBase.getId());
+                    Intent intent = new Intent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setClass(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("currentCityID", cityBase.getId());
+                    startActivity(intent);
+                } else {
+                    currentType += 1;
+                    if (currentType == 1) {
+                        mSelectedProvince = cityInfo.getCityName();
+                    } else if (currentType == 2) {
+                        mSelectedCity = cityInfo.getCityName();
+                    }
+                    queryCityByType(currentType, cityInfo.getCityName());
+                }
+            }
+        });
+        searchCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                        @Override
-                        public void initData() {
-                            initRecommendCities();
-                        }
+            }
 
-                        @Override
-                        public void initListener() {
-                            moreCityAndReturnBtn.setOnClickListener(this);
-                            searchResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    CityInfo cityInfo = (CityInfo) parent.getItemAtPosition(position);
-                                    if (isOpenWeather) {
-                                        Toast.makeText(getApplicationContext(), "打开首页", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        currentType += 1;
-                                        if (currentType == 1) {
-                                            mSelectedProvince = cityInfo.getCityName();
-                                        } else if (currentType == 2) {
-                                            mSelectedCity = cityInfo.getCityName();
-                                        }
-                                        queryCityByType(currentType, cityInfo.getCityName());
-                                    }
-                                }
-                            });
-                            searchCity.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                }
-
-                                @SuppressLint("NewApi")
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    String cityName = s.toString();
-                                    if (TextUtils.isEmpty(cityName)) {
-                                        allCity.setVisibility(View.VISIBLE);
-                                        noMatchedCityTv.setVisibility(View.GONE);
-                                        lvSearchCity.setVisibility(View.GONE);
-                                    } else {
-                                        allCity.setVisibility(View.GONE);
-                                        lvSearchCity.setVisibility(View.VISIBLE);
-                                        noMatchedCityTv.setVisibility(View.GONE);
-                                        searchCity(cityName);
+            @SuppressLint("NewApi")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String cityName = s.toString();
+                if (TextUtils.isEmpty(cityName)) {
+                    allCity.setVisibility(View.VISIBLE);
+                    noMatchedCityTv.setVisibility(View.GONE);
+                    lvSearchCity.setVisibility(View.GONE);
+                } else {
+                    allCity.setVisibility(View.GONE);
+                    lvSearchCity.setVisibility(View.VISIBLE);
+                    noMatchedCityTv.setVisibility(View.GONE);
+                    searchCity(cityName);
                 }
             }
 
@@ -149,6 +178,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
      */
     private void initRecommendCities() {
         List<CityInfo> recommendCities = new ArrayList<>();
+        recommendCities.add(new CityInfo(CityInfo.CityType.Location.getKey()));
         XmlPullParser parser = getResources().getXml(R.xml.city_china);
         try {
             int eventType = parser.getEventType();
@@ -273,7 +303,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                             cityInfo.setWeatherCode(parser.getAttributeValue(null, "weatherCode"));
                             List<String> fullPath = new ArrayList<>();
                             fullPath.add(country);
-                            if (!fullPath.contains(province))fullPath.add(province);
+                            if (!fullPath.contains(province)) fullPath.add(province);
                             if (!fullPath.contains(city)) fullPath.add(city);
                             if (!fullPath.contains(county)) fullPath.add(county);
                             cityInfo.setFullPath(fullPath);

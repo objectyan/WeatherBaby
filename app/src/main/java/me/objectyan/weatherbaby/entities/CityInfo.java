@@ -3,7 +3,7 @@ package me.objectyan.weatherbaby.entities;
 import java.util.List;
 
 public class CityInfo {
-    private int id;
+    private Long id;
 
     private int type = 0;
 
@@ -29,11 +29,11 @@ public class CityInfo {
 
     private List<String> fullPath;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -146,6 +146,14 @@ public class CityInfo {
 
     public CityInfo(int type) {
         this.type = type;
+    }
+
+    public boolean isLocation() {
+        return (this.type & CityInfo.CityType.Location.getKey()) == CityType.Location.getKey();
+    }
+
+    public boolean isDefault() {
+        return (this.type & CityType.Default.getKey()) == CityType.Default.getKey();
     }
 
     public enum CityType {

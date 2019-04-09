@@ -7,6 +7,8 @@ import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Property;
 
+import java.util.Date;
+
 @Entity(indexes = {
         @Index(value = "isDefault DESC, sort DESC")
 })
@@ -15,8 +17,8 @@ public class CityBase {
     private Long id;
     private String location;
     private String cid;
-    private Double lat;
-    private Double lon;
+    private Double latitude;
+    private Double longitude;
     private String parentCity;
     private String adminArea;
     private String country;
@@ -28,16 +30,20 @@ public class CityBase {
     private Integer cloud;
     @NotNull
     private Integer sort;
+    @NotNull
+    private Boolean isLocation;
+    private Date updateTime;
 
-    @Generated(hash = 156737760)
-    public CityBase(Long id, String location, String cid, Double lat, Double lon, String parentCity,
-                    String adminArea, String country, Float timeZone, @NotNull Boolean isDefault,
-                    Double sendibleTemperature, Double temperature, Integer cloud, @NotNull Integer sort) {
+    @Generated(hash = 1562302126)
+    public CityBase(Long id, String location, String cid, Double latitude, Double longitude,
+                    String parentCity, String adminArea, String country, Float timeZone,
+                    @NotNull Boolean isDefault, Double sendibleTemperature, Double temperature, Integer cloud,
+                    @NotNull Integer sort, @NotNull Boolean isLocation, Date updateTime) {
         this.id = id;
         this.location = location;
         this.cid = cid;
-        this.lat = lat;
-        this.lon = lon;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.parentCity = parentCity;
         this.adminArea = adminArea;
         this.country = country;
@@ -47,6 +53,8 @@ public class CityBase {
         this.temperature = temperature;
         this.cloud = cloud;
         this.sort = sort;
+        this.isLocation = isLocation;
+        this.updateTime = updateTime;
     }
 
     @Generated(hash = 1122040241)
@@ -77,20 +85,20 @@ public class CityBase {
         this.cid = cid;
     }
 
-    public Double getLat() {
-        return this.lat;
+    public Double getLatitude() {
+        return this.latitude;
     }
 
-    public void setLat(Double lat) {
-        this.lat = lat;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public Double getLon() {
-        return this.lon;
+    public Double getLongitude() {
+        return this.longitude;
     }
 
-    public void setLon(Double lon) {
-        this.lon = lon;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getParentCity() {
@@ -117,19 +125,19 @@ public class CityBase {
         this.country = country;
     }
 
-    public float getTimeZone() {
+    public Float getTimeZone() {
         return this.timeZone;
     }
 
-    public void setTimeZone(float timeZone) {
+    public void setTimeZone(Float timeZone) {
         this.timeZone = timeZone;
     }
 
-    public boolean getIsDefault() {
+    public Boolean getIsDefault() {
         return this.isDefault;
     }
 
-    public void setIsDefault(boolean isDefault) {
+    public void setIsDefault(Boolean isDefault) {
         this.isDefault = isDefault;
     }
 
@@ -149,35 +157,35 @@ public class CityBase {
         this.temperature = temperature;
     }
 
-    public int getCloud() {
+    public Integer getCloud() {
         return this.cloud;
-    }
-
-    public void setCloud(int cloud) {
-        this.cloud = cloud;
-    }
-
-    public int getSort() {
-        return this.sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
-
-    public void setTimeZone(Float timeZone) {
-        this.timeZone = timeZone;
-    }
-
-    public void setIsDefault(Boolean isDefault) {
-        this.isDefault = isDefault;
     }
 
     public void setCloud(Integer cloud) {
         this.cloud = cloud;
     }
 
+    public Integer getSort() {
+        return this.sort;
+    }
+
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Boolean getIsLocation() {
+        return this.isLocation;
+    }
+
+    public void setIsLocation(Boolean isLocation) {
+        this.isLocation = isLocation;
+    }
+
+    public Date getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

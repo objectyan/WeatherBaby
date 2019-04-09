@@ -81,7 +81,7 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
             viewHolder.cityWeatherLayout.setVisibility(View.VISIBLE);
         }
 
-        if ((cityInfo.getType() & CityInfo.CityType.Default.getKey()) == CityInfo.CityType.Default.getKey()) {
+        if (cityInfo.isDefault()) {
             viewHolder.setDefault.setText(R.string.city_default);
             viewHolder.setDefaultLayout.setBackgroundResource(R.color.icon_enabled);
             viewHolder.setDefault.setTextColor(ContextCompat.getColor(this.getContext(), R.color.icon_disabled));

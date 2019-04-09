@@ -50,5 +50,10 @@
     <string name="more_city">更多城市</string>
     <string name="city_back">返回</string>
     <string name="no_matched_city">没有符合条件的城市</string>
+    <string name="current_location_addresss">当前城市</string>
+    <string name="toast_not_location">"不存在位置提供器的情况"</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

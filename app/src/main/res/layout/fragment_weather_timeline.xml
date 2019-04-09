@@ -26,61 +26,6 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/fragment_weather_timeline_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
             </LinearLayout>
         </HorizontalScrollView>
 

@@ -41,7 +41,10 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
             viewHolder = (ViewHolder) view.getTag();
         }
         CityInfo cityInfo = getItem(position);
-        viewHolder.cityName.setText(cityInfo.getCityName());
+        if (cityInfo.isLocation())
+            viewHolder.cityName.setText(R.string.current_location_addresss);
+        else
+            viewHolder.cityName.setText(cityInfo.getCityName());
         return view;
     }
 

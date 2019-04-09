@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.CityManageAdapter;
+import me.objectyan.weatherbaby.common.BaseApplication;
+import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.database.CityBase;
+import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 
 public class CityManageActivity extends BaseActivity {
 
@@ -35,6 +41,9 @@ public class CityManageActivity extends BaseActivity {
 
     CityManageAdapter cityManageAdapter;
 
+    private CityBaseDao cityBaseDao;
+    private Query<CityBase> cityBaseQuery;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_city_manage);
@@ -44,6 +53,7 @@ public class CityManageActivity extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         cityManageAdapter = new CityManageAdapter(this, R.layout.activity_city_manage_item, new ArrayList<>());
         gvCityManage.setAdapter(cityManageAdapter);
+        cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
     }
 
     @Override
@@ -81,9 +91,11 @@ public class CityManageActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        cityBaseQuery = cityBaseDao.queryBuilder().build();
         List<CityInfo> array = new ArrayList<>();
-        for (int i = 0; i < 15; i++)
-            array.add(new CityInfo());
+        for (CityBase item : cityBaseQuery.list()) {
+            array.add(Util.cityBaseToInfo(item));
+        }
         cityManageAdapter.addAll(array);
     }
 
