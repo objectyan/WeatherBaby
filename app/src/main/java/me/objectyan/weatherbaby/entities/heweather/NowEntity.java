@@ -9,7 +9,7 @@ public class NowEntity extends BaseWeatherEntity implements Serializable {
      * 体感温度，默认单位：摄氏度
      */
     @SerializedName("fl")
-    public String somatosensory;
+    public Double somatosensory;
 
     /**
      * 降水量
@@ -39,7 +39,7 @@ public class NowEntity extends BaseWeatherEntity implements Serializable {
      * 温度，默认单位：摄氏度
      */
     @SerializedName("tmp")
-    public String temperature;
+    public Double temperature;
 
     /**
      * 云量

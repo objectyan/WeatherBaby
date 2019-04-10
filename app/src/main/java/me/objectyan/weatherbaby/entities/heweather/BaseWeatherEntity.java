@@ -10,19 +10,19 @@ public class BaseWeatherEntity implements Serializable {
      * 相对湿度
      */
     @SerializedName("hum")
-    public String humidity;
+    public Double humidity;
 
     /**
      * 大气压强
      */
     @SerializedName("pres")
-    public String pressure;
+    public Double pressure;
 
     /**
      * 风向360角度
      */
     @SerializedName("wind_deg")
-    public String windDirectionAngle;
+    public Double windDirectionAngle;
 
     /**
      * 风向
@@ -40,6 +40,6 @@ public class BaseWeatherEntity implements Serializable {
      * 风速，公里/小时
      */
     @SerializedName("wind_spd")
-    public String windSpeed;
+    public Double windSpeed;
 
 }

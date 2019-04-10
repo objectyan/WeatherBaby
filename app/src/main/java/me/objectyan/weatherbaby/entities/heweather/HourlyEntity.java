@@ -16,13 +16,13 @@ public class HourlyEntity extends BaseWeatherEntity implements Serializable {
      * 露点温度
      */
     @SerializedName("dew")
-    public String dew;
+    public Double dew;
 
     /**
      * 降水概率，百分比
      */
     @SerializedName("pop")
-    public String precipitationProbability;
+    public Double precipitationProbability;
 
     /**
      * 实况天气状况代码
@@ -40,12 +40,19 @@ public class HourlyEntity extends BaseWeatherEntity implements Serializable {
      * 温度，默认单位：摄氏度
      */
     @SerializedName("tmp")
-    public String temperature;
+    public Double temperature;
 
     /**
      * 云量
      */
     @SerializedName("cloud")
-    public String cloud;
+    public Integer cloud;
 
+    public String getDate() {
+        return time.substring(0, 10);
+    }
+
+    public String getTime() {
+        return time.substring(10);
+    }
 }

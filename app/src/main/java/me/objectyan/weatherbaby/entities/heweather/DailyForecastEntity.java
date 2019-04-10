@@ -75,23 +75,23 @@ public class DailyForecastEntity extends BaseWeatherEntity implements Serializab
      * 紫外线强度指数
      */
     @SerializedName("uv_index")
-    public String ultravioletIndex;
+    public Double ultravioletIndex;
 
     /**
      * 能见度，默认单位：公里
      */
     @SerializedName("vis")
-    public String visibility;
+    public Double visibility;
 
     /**
      * 降水量
      */
     @SerializedName("pcpn")
-    public String precipitation;
+    public Double precipitation;
 
     /**
      * 降水概率，百分比
      */
     @SerializedName("pop")
-    public String precipitationProbability;
+    public Double precipitationProbability;
 }

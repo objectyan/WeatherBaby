@@ -1,31 +1,43 @@
 package me.objectyan.weatherbaby.activities;
 
+import androidx.fragment.app.FragmentManager;
+
 import android.content.Intent;
-import android.location.Location;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.greenrobot.greendao.query.Query;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.adapter.WeatherPagerAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
-import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
-import me.objectyan.weatherbaby.services.HeWeatherApiService;
+import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.header_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.header_title)
+    TextView headerTitle;
+    @BindView(R.id.wpaf_viewpager)
+    ViewPager wpafViewpager;
+    @BindView(R.id.wpaf_indicator)
+    CircleIndicator wpafIndicator;
 
     private CityBaseDao cityBaseDao;
     private Query<CityBase> cityBaseQuery;
+    private WeatherPagerAdapter weatherPagerAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,6 +64,11 @@ public class MainActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
+        FragmentManager fm = getSupportFragmentManager();
+        weatherPagerAdapter = new WeatherPagerAdapter(fm);
+        wpafViewpager.setAdapter(weatherPagerAdapter);
+        wpafIndicator.setViewPager(wpafViewpager);
+        weatherPagerAdapter.registerDataSetObserver(wpafIndicator.getDataSetObserver());
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
     }
 
@@ -73,5 +90,38 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(getApplicationContext(), CityManageActivity.class));
             }
         });
+        wpafViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.e("vp", "滑动中=====position:" + position + "   positionOffset:" + positionOffset + "   positionOffsetPixels:" + positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.e("vp", "显示页改变=====postion:" + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                switch (state) {
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        Log.e("vp", "状态改变=====SCROLL_STATE_IDLE====静止状态");
+                        break;
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                        Log.e("vp", "状态改变=====SCROLL_STATE_DRAGGING==滑动状态");
+                        break;
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        Log.e("vp", "状态改变=====SCROLL_STATE_SETTLING==滑翔状态");
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

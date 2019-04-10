@@ -13,11 +13,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import androidx.core.app.ActivityCompat;
 import io.reactivex.Observable;
@@ -161,5 +163,18 @@ public class Util {
     public static String dateToStr(Date date, String format) {
         SimpleDateFormat formatDate = new SimpleDateFormat(TextUtils.isEmpty(format) ? "yyyy-MM-dd HH:mm:ss" : format);
         return formatDate.format(date);
+    }
+
+    /**
+     * UTC 转 Local
+     *
+     * @param date
+     * @return
+     */
+    public static String utcToLocal(Date date) {
+        SimpleDateFormat localFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//当地时间格式
+        localFormater.setTimeZone(TimeZone.getDefault());
+        String localTime = localFormater.format(date.getTime());
+        return localTime;
     }
 }

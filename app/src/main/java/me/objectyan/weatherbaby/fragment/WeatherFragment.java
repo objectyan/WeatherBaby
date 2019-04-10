@@ -1,9 +1,7 @@
 package me.objectyan.weatherbaby.fragment;
 
-import android.icu.util.Calendar;
-import android.icu.util.ULocale;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +10,7 @@ import android.widget.TextView;
 
 import org.greenrobot.greendao.query.Query;
 
-import java.util.Locale;
-
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +22,11 @@ import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.entities.database.CityDailyForecast;
 import me.objectyan.weatherbaby.entities.database.CityDailyForecastDao;
+import me.objectyan.weatherbaby.entities.database.CityHourlyForecast;
 import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
+import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 import me.objectyan.weatherbaby.services.HeWeatherApiService;
 import me.objectyan.weatherbaby.widget.ArcView;
@@ -88,6 +88,8 @@ public class WeatherFragment extends Fragment {
     TextView windDirection;
     @BindView(R.id.wind_power)
     TextView windPower;
+    @BindView(R.id.fragment_weather_timeline)
+    CardView fragmentWeatherTimeline;
 
     private Long mCityID;
 
@@ -100,6 +102,9 @@ public class WeatherFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public Long getCityID() {
+        return mCityID;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,17 +130,18 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
-        ButterKnife.bind(view);
+        ButterKnife.bind(this, view);
         initData();
         return view;
     }
 
     private void initData() {
         Observable.create(new ObservableOnSubscribe<Long>() {
+            @SuppressLint("NewApi")
             @Override
             public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-                if (cityBase.getUpdateTime() == null) {
+                if (cityBase.getUpdateTime() == null || true) {
                     HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase))
                             .doOnNext(weather -> {
                                 cityBase.setUpdateTime(weather.updateEntity.getUtcTime());
@@ -147,7 +153,77 @@ public class WeatherFragment extends Fragment {
                                 cityBase.setParentCity(weather.basic.parentCity);
                                 cityBase.setCountry(weather.basic.countryName);
                                 cityBase.setTimeZone(Float.valueOf(weather.basic.timeZone));
+                                cityBase.setCondCode(weather.nowEntity.condCode);
+                                cityBase.setCondTxt(weather.nowEntity.condTxt);
+                                cityBase.setSendibleTemperature(weather.nowEntity.somatosensory);
+                                cityBase.setTemperature(weather.nowEntity.temperature);
                                 cityBaseDao.update(cityBase);
+                                if (weather.dailyForecastEntities != null) {
+                                    cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID))
+                                            .buildDelete().executeDeleteWithoutDetachingEntities();
+                                    weather.dailyForecastEntities.forEach(item -> {
+                                        CityDailyForecast cityDailyForecast = new CityDailyForecast();
+                                        cityDailyForecast.setCityID(mCityID);
+                                        cityDailyForecast.setCondCodeDay(item.condCodeDay);
+                                        cityDailyForecast.setCondCodeEvening(item.condCodeNight);
+                                        cityDailyForecast.setCondTxtDay(item.condTxtDay);
+                                        cityDailyForecast.setCondTxtEvening(item.condTxtNight);
+                                        cityDailyForecast.setDate(item.date);
+                                        cityDailyForecast.setMaximumTemperature(item.temperatureMax);
+                                        cityDailyForecast.setMinimumTemperature(item.temperatureMin);
+                                        cityDailyForecast.setMonthlyRise(item.monthlyRiseTime);
+                                        cityDailyForecast.setMonthlySet(item.monthlySetTime);
+                                        cityDailyForecast.setPrecipitation(item.precipitation);
+                                        cityDailyForecast.setPressure(item.pressure);
+                                        cityDailyForecast.setProbability(item.precipitationProbability);
+                                        cityDailyForecast.setMonthlySet(item.monthlySetTime);
+                                        cityDailyForecast.setRelativeHumidity(item.humidity);
+                                        cityDailyForecast.setSunRise(item.sunRiseTime);
+                                        cityDailyForecast.setSunSet(item.sunSetTime);
+                                        cityDailyForecast.setUltravioletIntensity(item.ultravioletIndex);
+                                        cityDailyForecast.setVisibility(item.visibility);
+                                        cityDailyForecast.setWindDirection(item.windDirection);
+                                        cityDailyForecast.setWindDirectionAngle(item.windDirectionAngle);
+                                        cityDailyForecast.setWindPower(item.windPower);
+                                        cityDailyForecast.setWindSpeed(item.windSpeed);
+                                        cityDailyForecastDao.insert(cityDailyForecast);
+                                    });
+                                }
+                                if (weather.hourlyEntities != null) {
+                                    cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID))
+                                            .buildDelete().executeDeleteWithoutDetachingEntities();
+                                    weather.hourlyEntities.forEach(item -> {
+                                        CityHourlyForecast cityHourlyForecast = new CityHourlyForecast();
+                                        cityHourlyForecast.setCityID(mCityID);
+                                        cityHourlyForecast.setCloud(item.cloud);
+                                        cityHourlyForecast.setCondCode(item.condCode);
+                                        cityHourlyForecast.setCondTxt(item.condTxt);
+                                        cityHourlyForecast.setDate(item.getDate());
+                                        cityHourlyForecast.setDewPoint(item.dew);
+                                        cityHourlyForecast.setPressure(item.pressure);
+                                        cityHourlyForecast.setProbability(item.precipitationProbability);
+                                        cityHourlyForecast.setRelativeHumidity(item.humidity);
+                                        cityHourlyForecast.setTemperature(item.temperature);
+                                        cityHourlyForecast.setTime(item.getTime());
+                                        cityHourlyForecast.setWindDirection(item.windDirection);
+                                        cityHourlyForecast.setWindDirectionAngle(item.windDirectionAngle);
+                                        cityHourlyForecast.setWindPower(item.windPower);
+                                        cityHourlyForecast.setWindSpeed(item.windSpeed);
+                                        cityHourlyForecastDao.insert(cityHourlyForecast);
+                                    });
+                                }
+                                if (weather.lifestyleEntities != null) {
+                                    cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID))
+                                            .buildDelete().executeDeleteWithoutDetachingEntities();
+                                    weather.lifestyleEntities.forEach(item -> {
+                                        CityLifestyleForecast cityLifestyleForecast = new CityLifestyleForecast();
+                                        cityLifestyleForecast.setBriefIntroduction(item.briefLife);
+                                        cityLifestyleForecast.setCityID(mCityID);
+                                        cityLifestyleForecast.setDescription(item.txt);
+                                        cityLifestyleForecast.setType(item.type);
+                                        cityLifestyleForecastDao.insert(cityLifestyleForecast);
+                                    });
+                                }
                             }).doOnComplete(() -> {
                         emitter.onNext(cityBase.getId());
                     }).subscribe();
@@ -157,7 +233,13 @@ public class WeatherFragment extends Fragment {
             }
         }).doOnNext(cityID -> {
             CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(cityID)).unique();
-            todayTempUpdateTime.setText(Util.dateToStr(cityBase.getUpdateTime(), null));
+            Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
+            Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
+            Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
+            todayTempUpdateTime.setText(Util.utcToLocal(cityBase.getUpdateTime()));
+            todayTempCurr.setText(String.valueOf(cityBase.getSendibleTemperature()));
+            todayTempWeather.setText(cityBase.getCondTxt());
+            fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
         }).subscribe();
     }
 }

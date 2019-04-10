@@ -33,12 +33,14 @@ public class CityBase {
     @NotNull
     private Boolean isLocation;
     private Date updateTime;
+    private String condCode;
+    private String condTxt;
 
-    @Generated(hash = 1562302126)
-    public CityBase(Long id, String location, String cid, Double latitude, Double longitude,
-                    String parentCity, String adminArea, String country, Float timeZone,
-                    @NotNull Boolean isDefault, Double sendibleTemperature, Double temperature, Integer cloud,
-                    @NotNull Integer sort, @NotNull Boolean isLocation, Date updateTime) {
+    @Generated(hash = 2035369616)
+    public CityBase(Long id, String location, String cid, Double latitude, Double longitude, String parentCity,
+            String adminArea, String country, Float timeZone, @NotNull Boolean isDefault,
+            Double sendibleTemperature, Double temperature, Integer cloud, @NotNull Integer sort,
+            @NotNull Boolean isLocation, Date updateTime, String condCode, String condTxt) {
         this.id = id;
         this.location = location;
         this.cid = cid;
@@ -55,6 +57,8 @@ public class CityBase {
         this.sort = sort;
         this.isLocation = isLocation;
         this.updateTime = updateTime;
+        this.condCode = condCode;
+        this.condTxt = condTxt;
     }
 
     @Generated(hash = 1122040241)
@@ -187,5 +191,21 @@ public class CityBase {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCondCode() {
+        return this.condCode;
+    }
+
+    public void setCondCode(String condCode) {
+        this.condCode = condCode;
+    }
+
+    public String getCondTxt() {
+        return this.condTxt;
+    }
+
+    public void setCondTxt(String condTxt) {
+        this.condTxt = condTxt;
     }
 }
