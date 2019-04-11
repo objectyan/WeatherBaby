@@ -104,7 +104,6 @@ public class WeatherFragment extends Fragment {
     SunlightView sunlightView;
 
     private Long mCityID;
-    private String mLocation;
 
     private CityBaseDao cityBaseDao;
     private CityDailyForecastDao cityDailyForecastDao;
@@ -119,10 +118,6 @@ public class WeatherFragment extends Fragment {
 
     public Long getCityID() {
         return mCityID;
-    }
-
-    public String getLocation() {
-        return mLocation;
     }
 
     @Override
@@ -305,8 +300,6 @@ public class WeatherFragment extends Fragment {
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
             sunlightView.setSunSet(Util.getDateByTime(cityBase.getSunSet()));
             sunlightView.updateData();
-
-            this.mLocation = cityBase.getLocation();
         }).subscribe();
     }
 }

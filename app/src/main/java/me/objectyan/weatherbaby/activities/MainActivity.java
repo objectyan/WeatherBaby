@@ -1,7 +1,5 @@
 package me.objectyan.weatherbaby.activities;
 
-import androidx.fragment.app.FragmentManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,17 +8,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.greenrobot.greendao.query.Query;
-
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.WeatherPagerAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
-import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.fragment.WeatherFragment;
 import me.relex.circleindicator.CircleIndicator;
@@ -35,6 +32,8 @@ public class MainActivity extends BaseActivity {
     ViewPager wpafViewpager;
     @BindView(R.id.wpaf_indicator)
     CircleIndicator wpafIndicator;
+    @BindView(R.id.image_location)
+    AppCompatImageView imageLocation;
 
     private CityBaseDao cityBaseDao;
     private WeatherPagerAdapter weatherPagerAdapter;
