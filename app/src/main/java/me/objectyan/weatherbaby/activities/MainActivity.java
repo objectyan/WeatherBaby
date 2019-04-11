@@ -92,7 +92,6 @@ public class MainActivity extends BaseActivity {
         wpafViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                headerTitle.setText(((WeatherFragment) weatherPagerAdapter.getItem(position)).getLocation());
                 Log.e("vp", "滑动中=====position:" + position + "   positionOffset:" + positionOffset + "   positionOffsetPixels:" + positionOffsetPixels);
             }
 
