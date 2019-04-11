@@ -152,7 +152,7 @@ public class ArcView extends View {
     public void setDensity(Double density) {
         this.density = density.floatValue();
         if (this.attr_isPercentage)
-            this.attr_value = (this.density / this.attr_max * 100) + "%";
+            this.attr_value = String.format("%.1f", (this.density / this.attr_max * 100)) + "%";
         invalidate();
     }
 
