@@ -91,6 +91,7 @@ public class CityManageActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        cityManageAdapter.clear();
         cityBaseQuery = cityBaseDao.queryBuilder().build();
         List<CityInfo> array = new ArrayList<>();
         for (CityBase item : cityBaseQuery.list()) {
@@ -110,12 +111,10 @@ public class CityManageActivity extends BaseActivity {
 
             @Override
             public void removeCity(CityInfo cityInfo) {
-
             }
 
             @Override
             public void settingDefault(CityInfo cityInfo) {
-
             }
         });
     }

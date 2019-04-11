@@ -22,6 +22,7 @@ import me.objectyan.weatherbaby.adapter.WeatherPagerAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.fragment.WeatherFragment;
 import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends BaseActivity {
@@ -36,7 +37,6 @@ public class MainActivity extends BaseActivity {
     CircleIndicator wpafIndicator;
 
     private CityBaseDao cityBaseDao;
-    private Query<CityBase> cityBaseQuery;
     private WeatherPagerAdapter weatherPagerAdapter;
 
     @Override
@@ -93,6 +93,7 @@ public class MainActivity extends BaseActivity {
         wpafViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                headerTitle.setText(((WeatherFragment) weatherPagerAdapter.getItem(position)).getLocation());
                 Log.e("vp", "滑动中=====position:" + position + "   positionOffset:" + positionOffset + "   positionOffsetPixels:" + positionOffsetPixels);
             }
 

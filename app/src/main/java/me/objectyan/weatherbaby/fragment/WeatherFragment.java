@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,19 @@ import android.widget.TextView;
 
 import org.greenrobot.greendao.query.Query;
 
+import java.util.Date;
+
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.adapter.WeatherForecastAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.database.CityBase;
@@ -30,6 +36,8 @@ import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 import me.objectyan.weatherbaby.services.HeWeatherApiService;
 import me.objectyan.weatherbaby.widget.ArcView;
+import me.objectyan.weatherbaby.widget.SunlightView;
+import me.objectyan.weatherbaby.widget.WindView;
 
 public class WeatherFragment extends Fragment {
 
@@ -59,7 +67,7 @@ public class WeatherFragment extends Fragment {
     @BindView(R.id.timeline_items)
     LinearLayout timelineItems;
     @BindView(R.id.forecast_items)
-    LinearLayout forecastItems;
+    RecyclerView forecastItems;
     @BindView(R.id.atmosphere_chart)
     ArcView atmosphereChart;
     @BindView(R.id.atmosphere_PM10)
@@ -90,13 +98,20 @@ public class WeatherFragment extends Fragment {
     TextView windPower;
     @BindView(R.id.fragment_weather_timeline)
     CardView fragmentWeatherTimeline;
+    @BindView(R.id.wind_view)
+    WindView windWiew;
+    @BindView(R.id.sunlight_view)
+    SunlightView sunlightView;
 
     private Long mCityID;
+    private String mLocation;
 
     private CityBaseDao cityBaseDao;
     private CityDailyForecastDao cityDailyForecastDao;
     private CityHourlyForecastDao cityHourlyForecastDao;
     private CityLifestyleForecastDao cityLifestyleForecastDao;
+
+    private WeatherForecastAdapter weatherForecastAdapter;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -104,6 +119,10 @@ public class WeatherFragment extends Fragment {
 
     public Long getCityID() {
         return mCityID;
+    }
+
+    public String getLocation() {
+        return mLocation;
     }
 
     @Override
@@ -131,6 +150,9 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
+        weatherForecastAdapter = new WeatherForecastAdapter(mCityID);
+        forecastItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        forecastItems.setAdapter(weatherForecastAdapter);
         initData();
         return view;
     }
@@ -141,7 +163,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-                if (cityBase.getUpdateTime() == null || true) {
+                if (cityBase.getUpdateTime() == null) {
                     HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase))
                             .doOnNext(weather -> {
                                 cityBase.setUpdateTime(weather.updateEntity.getUtcTime());
@@ -157,6 +179,18 @@ public class WeatherFragment extends Fragment {
                                 cityBase.setCondTxt(weather.nowEntity.condTxt);
                                 cityBase.setSendibleTemperature(weather.nowEntity.somatosensory);
                                 cityBase.setTemperature(weather.nowEntity.temperature);
+                                cityBase.setWindDirection(weather.nowEntity.windDirection);
+                                cityBase.setWindPower(weather.nowEntity.windPower);
+                                cityBase.setWindSpeed(weather.nowEntity.windSpeed);
+                                cityBase.setTempHigh(0d);
+                                cityBase.setTempLow(0d);
+                                cityBase.setHumidity(weather.nowEntity.humidity);
+                                cityBase.setPrecipitation(weather.nowEntity.precipitation);
+                                cityBase.setCloud(weather.nowEntity.cloud);
+                                cityBase.setPrecipitationProbability(0d);
+                                cityBase.setPressure(weather.nowEntity.pressure);
+                                cityBase.setUltravioletIndex(0d);
+                                cityBase.setVisibility(weather.nowEntity.visibility);
                                 cityBaseDao.update(cityBase);
                                 if (weather.dailyForecastEntities != null) {
                                     cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID))
@@ -186,6 +220,17 @@ public class WeatherFragment extends Fragment {
                                         cityDailyForecast.setWindDirectionAngle(item.windDirectionAngle);
                                         cityDailyForecast.setWindPower(item.windPower);
                                         cityDailyForecast.setWindSpeed(item.windSpeed);
+                                        if (Util.dateToStr(new Date(), "yyyy-MM-dd").equals(item.date)) {
+                                            cityBase.setTempHigh(item.temperatureMax);
+                                            cityBase.setTempLow(item.temperatureMin);
+                                            cityBase.setPrecipitationProbability(item.precipitationProbability);
+                                            cityBase.setUltravioletIndex(item.ultravioletIndex);
+                                            cityBase.setSunRise(item.sunRiseTime);
+                                            cityBase.setSunSet(item.sunSetTime);
+                                            cityBase.setMonthlyRise(item.monthlyRiseTime);
+                                            cityBase.setMonthlySet(item.monthlySetTime);
+                                            cityBaseDao.update(cityBase);
+                                        }
                                         cityDailyForecastDao.insert(cityDailyForecast);
                                     });
                                 }
@@ -237,9 +282,31 @@ public class WeatherFragment extends Fragment {
             Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
             Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
             todayTempUpdateTime.setText(Util.utcToLocal(cityBase.getUpdateTime()));
-            todayTempCurr.setText(String.valueOf(cityBase.getSendibleTemperature()));
+            todayTempCurr.setText(String.valueOf(cityBase.getTemperature()));
             todayTempWeather.setText(cityBase.getCondTxt());
             fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
+            todayTempCurrMax.setText(String.valueOf(cityBase.getTempHigh()));
+            todayTempCurrMin.setText(String.valueOf(cityBase.getTempLow()));
+
+            windDirection.setText(cityBase.getWindDirection());
+            windPower.setText(cityBase.getWindPower());
+            windWiew.setSpeed(cityBase.getWindSpeed());
+
+            comfortDegreeSendibleTemp.setText(String.valueOf(cityBase.getSendibleTemperature()));
+            comfortDegreeChart.setDensity(cityBase.getHumidity());
+            comfortDegreeUltravioletIntensity.setText(String.valueOf(cityBase.getUltravioletIndex()));
+            comfortDegreePressure.setText(String.valueOf(cityBase.getPressure()));
+            comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
+
+            weatherForecastAdapter.updateData();
+
+            sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
+            sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
+            sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
+            sunlightView.setSunSet(Util.getDateByTime(cityBase.getSunSet()));
+            sunlightView.updateData();
+
+            this.mLocation = cityBase.getLocation();
         }).subscribe();
     }
 }

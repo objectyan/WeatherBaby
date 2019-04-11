@@ -21,6 +21,7 @@ import java.util.Date;
 
 import androidx.core.view.ViewCompat;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.common.BaseApplication;
 
 public class SunlightView extends View {
 
@@ -38,7 +39,7 @@ public class SunlightView extends View {
 
     private String attr_beginForamt = "%s";
     private String attr_endForamt = "%s";
-    private String attr_title = "日出日落";
+    private String attr_title = BaseApplication.getAppContext().getString(R.string.Alternates);
     private Date attr_beginDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-12-14 08:00:00");
     private Date attr_endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-12-14 17:00:00");
 
@@ -187,4 +188,55 @@ public class SunlightView extends View {
         return formatter.format(date);
     }
 
+    public void setSunRise(Date sunRise) {
+        this.sunRise = sunRise;
+    }
+
+    public void setSunSet(Date sunSet) {
+        this.sunSet = sunSet;
+    }
+
+    public void setMonthlyRise(Date monthlyRise) {
+        this.monthlyRise = monthlyRise;
+    }
+
+    public void setMonthlySet(Date monthlySet) {
+        this.monthlySet = monthlySet;
+    }
+
+    private Date sunRise;
+    private Date sunSet;
+    private Date monthlyRise;
+    private Date monthlySet;
+
+    public void updateData() {
+        Date currentDate = new Date();
+        if (sunRise.getTime() < sunSet.getTime()) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(sunSet);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            sunSet = c.getTime();
+        }
+        if (monthlyRise.getTime() < monthlySet.getTime()) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(monthlySet);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            monthlySet = c.getTime();
+        }
+        if (currentDate.getTime() >= sunRise.getTime() && currentDate.getTime() <= sunSet.getTime()) {
+            // 日出
+            this.attr_title = BaseApplication.getAppContext().getString(R.string.Sunlight);
+            this.attr_beginDate = sunRise;
+            this.attr_endDate = sunSet;
+        } else if (currentDate.getTime() >= monthlyRise.getTime() && currentDate.getTime() <= monthlySet.getTime()) {
+            // 月出
+            this.attr_beginDate = monthlyRise;
+            this.attr_endDate = monthlySet;
+            this.attr_title = BaseApplication.getAppContext().getString(R.string.Monthly);
+        } else {
+            // 昼夜交替中
+            this.attr_title = BaseApplication.getAppContext().getString(R.string.Alternates);
+        }
+        invalidate();
+    }
 }

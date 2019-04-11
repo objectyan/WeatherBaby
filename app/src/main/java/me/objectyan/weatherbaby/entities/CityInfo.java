@@ -2,6 +2,8 @@ package me.objectyan.weatherbaby.entities;
 
 import java.util.List;
 
+import me.objectyan.weatherbaby.common.Util;
+
 public class CityInfo {
     private Long id;
 
@@ -15,11 +17,9 @@ public class CityInfo {
 
     private String spell;
 
-    private String tempHigh;
+    private Double tempHigh;
 
-    private String tempLow;
-
-    private String weatherType;
+    private Double tempLow;
 
     private String weatherTypeDay;
 
@@ -28,6 +28,8 @@ public class CityInfo {
     private String weatherCode;
 
     private List<String> fullPath;
+
+    private String weatherTypeTxt;
 
     public Long getId() {
         return id;
@@ -57,28 +59,24 @@ public class CityInfo {
         this.cityName = cityName;
     }
 
-    public String getTempHigh() {
+    public Double getTempHigh() {
         return tempHigh;
     }
 
-    public void setTempHigh(String tempHigh) {
+    public void setTempHigh(Double tempHigh) {
         this.tempHigh = tempHigh;
     }
 
-    public String getTempLow() {
+    public Double getTempLow() {
         return tempLow;
     }
 
-    public void setTempLow(String tempLow) {
+    public void setTempLow(Double tempLow) {
         this.tempLow = tempLow;
     }
 
     public String getWeatherType() {
-        return weatherType;
-    }
-
-    public void setWeatherType(String weatherType) {
-        this.weatherType = weatherType;
+        return Util.isDay() ? this.weatherTypeDay : this.weatherTypeNight;
     }
 
     public String getWeatherTypeDay() {
@@ -192,5 +190,13 @@ public class CityInfo {
         public int getKey() {
             return key;
         }
+    }
+
+    public String getWeatherTypeTxt() {
+        return weatherTypeTxt;
+    }
+
+    public void setWeatherTypeTxt(String weatherTypeTxt) {
+        this.weatherTypeTxt = weatherTypeTxt;
     }
 }

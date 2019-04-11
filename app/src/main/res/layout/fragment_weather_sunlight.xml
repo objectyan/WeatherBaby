@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/Sunlight"
+                android:text="@string/Alternates"
                 android:textColor="@color/colorTemp"
                 android:textSize="15sp" />
 
@@ -36,6 +36,7 @@
             android:paddingBottom="15dp">
 
             <me.objectyan.weatherbaby.widget.SunlightView
+                android:id="@+id/sunlight_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

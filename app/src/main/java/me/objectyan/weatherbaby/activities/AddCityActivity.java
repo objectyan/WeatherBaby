@@ -117,6 +117,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                     }
                     cityBase.setId(null);
                     cityBase.setSort(0);
+                    cityBase.setIsDefault(cityBaseDao.loadAll().isEmpty());
                     cityBaseDao.insert(cityBase);
                     Log.d(LOG_TAG, "Inserted new CityBase, ID: " + cityBase.getId());
                     Intent intent = new Intent();

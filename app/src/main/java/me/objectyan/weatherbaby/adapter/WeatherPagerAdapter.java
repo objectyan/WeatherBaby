@@ -35,7 +35,7 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         fragmentList = new ArrayList<>();
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
         for (CityBase item :
-                cityBaseDao.queryBuilder().build().list())
+                cityBaseDao.queryBuilder().orderDesc(CityBaseDao.Properties.IsDefault, CityBaseDao.Properties.Sort).build().list())
             fragmentList.add(WeatherFragment.newInstance(item.getId()));
     }
 

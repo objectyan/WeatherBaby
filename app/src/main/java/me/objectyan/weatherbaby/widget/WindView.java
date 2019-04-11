@@ -139,4 +139,8 @@ public class WindView extends View {
         this.height = h;
     }
 
+    public void setSpeed(Double speed) {
+        this.attr_speed = speed.floatValue();
+        invalidate();
+    }
 }

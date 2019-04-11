@@ -13,14 +13,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forecast_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

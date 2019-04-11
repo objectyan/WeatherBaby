@@ -14,8 +14,8 @@ public class CityDailyForecast {
     private String sunSet;
     private String monthlyRise;
     private String monthlySet;
-    private String maximumTemperature;
-    private String minimumTemperature;
+    private Double maximumTemperature;
+    private Double minimumTemperature;
     private String condCodeDay;
     private String condCodeEvening;
     private String condTxtDay;
@@ -31,10 +31,10 @@ public class CityDailyForecast {
     private Double ultravioletIntensity;
     private Double visibility;
 
-    @Generated(hash = 1489292921)
+    @Generated(hash = 2078776974)
     public CityDailyForecast(Long id, Long cityID, String date, String sunRise,
                              String sunSet, String monthlyRise, String monthlySet,
-                             String maximumTemperature, String minimumTemperature,
+                             Double maximumTemperature, Double minimumTemperature,
                              String condCodeDay, String condCodeEvening, String condTxtDay,
                              String condTxtEvening, Double windDirectionAngle, String windDirection,
                              String windPower, Double windSpeed, Double relativeHumidity,
@@ -125,19 +125,19 @@ public class CityDailyForecast {
         this.monthlySet = monthlySet;
     }
 
-    public String getMaximumTemperature() {
+    public Double getMaximumTemperature() {
         return this.maximumTemperature;
     }
 
-    public void setMaximumTemperature(String maximumTemperature) {
+    public void setMaximumTemperature(Double maximumTemperature) {
         this.maximumTemperature = maximumTemperature;
     }
 
-    public String getMinimumTemperature() {
+    public Double getMinimumTemperature() {
         return this.minimumTemperature;
     }
 
-    public void setMinimumTemperature(String minimumTemperature) {
+    public void setMinimumTemperature(Double minimumTemperature) {
         this.minimumTemperature = minimumTemperature;
     }
 

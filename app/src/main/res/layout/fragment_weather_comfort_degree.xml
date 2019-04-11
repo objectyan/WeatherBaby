@@ -41,6 +41,7 @@
                 android:layout_height="150dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                app:isPercentage="true"
                 app:max="100"
                 app:min="0"
                 app:title="@string/ComfortDegree_AirHumidity" />

@@ -1,5 +1,7 @@
 package me.objectyan.weatherbaby.entities.database;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
@@ -35,12 +37,32 @@ public class CityBase {
     private Date updateTime;
     private String condCode;
     private String condTxt;
+    private Double tempHigh;
+    private Double tempLow;
+    private String windDirection;
+    private String windPower;
+    private Double windSpeed;
+    private Double humidity;
+    private Double pressure;
+    private Double precipitation;
+    private Double visibility;
+    private Double ultravioletIndex;
+    private Double precipitationProbability;
+    private String sunRise;
+    private String sunSet;
+    private String monthlyRise;
+    private String monthlySet;
 
-    @Generated(hash = 2035369616)
-    public CityBase(Long id, String location, String cid, Double latitude, Double longitude, String parentCity,
-            String adminArea, String country, Float timeZone, @NotNull Boolean isDefault,
-            Double sendibleTemperature, Double temperature, Integer cloud, @NotNull Integer sort,
-            @NotNull Boolean isLocation, Date updateTime, String condCode, String condTxt) {
+    @Generated(hash = 1138162050)
+    public CityBase(Long id, String location, String cid, Double latitude, Double longitude,
+            String parentCity, String adminArea, String country, Float timeZone,
+            @NotNull Boolean isDefault, Double sendibleTemperature, Double temperature,
+            Integer cloud, @NotNull Integer sort, @NotNull Boolean isLocation,
+            Date updateTime, String condCode, String condTxt, Double tempHigh, Double tempLow,
+            String windDirection, String windPower, Double windSpeed, Double humidity,
+            Double pressure, Double precipitation, Double visibility, Double ultravioletIndex,
+            Double precipitationProbability, String sunRise, String sunSet,
+            String monthlyRise, String monthlySet) {
         this.id = id;
         this.location = location;
         this.cid = cid;
@@ -59,6 +81,21 @@ public class CityBase {
         this.updateTime = updateTime;
         this.condCode = condCode;
         this.condTxt = condTxt;
+        this.tempHigh = tempHigh;
+        this.tempLow = tempLow;
+        this.windDirection = windDirection;
+        this.windPower = windPower;
+        this.windSpeed = windSpeed;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.precipitation = precipitation;
+        this.visibility = visibility;
+        this.ultravioletIndex = ultravioletIndex;
+        this.precipitationProbability = precipitationProbability;
+        this.sunRise = sunRise;
+        this.sunSet = sunSet;
+        this.monthlyRise = monthlyRise;
+        this.monthlySet = monthlySet;
     }
 
     @Generated(hash = 1122040241)
@@ -207,5 +244,125 @@ public class CityBase {
 
     public void setCondTxt(String condTxt) {
         this.condTxt = condTxt;
+    }
+
+    public Double getTempHigh() {
+        return this.tempHigh;
+    }
+
+    public void setTempHigh(Double tempHigh) {
+        this.tempHigh = tempHigh;
+    }
+
+    public Double getTempLow() {
+        return this.tempLow;
+    }
+
+    public void setTempLow(Double tempLow) {
+        this.tempLow = tempLow;
+    }
+
+    public String getWindDirection() {
+        return this.windDirection;
+    }
+
+    public void setWindDirection(String windDirection) {
+        this.windDirection = windDirection;
+    }
+
+    public String getWindPower() {
+        return this.windPower;
+    }
+
+    public void setWindPower(String windPower) {
+        this.windPower = windPower;
+    }
+
+    public Double getWindSpeed() {
+        return this.windSpeed;
+    }
+
+    public void setWindSpeed(Double windSpeed) {
+        this.windSpeed = windSpeed;
+    }
+
+    public Double getHumidity() {
+        return this.humidity;
+    }
+
+    public void setHumidity(Double humidity) {
+        this.humidity = humidity;
+    }
+
+    public Double getPressure() {
+        return this.pressure;
+    }
+
+    public void setPressure(Double pressure) {
+        this.pressure = pressure;
+    }
+
+    public Double getPrecipitation() {
+        return this.precipitation;
+    }
+
+    public void setPrecipitation(Double precipitation) {
+        this.precipitation = precipitation;
+    }
+
+    public Double getVisibility() {
+        return this.visibility;
+    }
+
+    public void setVisibility(Double visibility) {
+        this.visibility = visibility;
+    }
+
+    public Double getUltravioletIndex() {
+        return this.ultravioletIndex;
+    }
+
+    public void setUltravioletIndex(Double ultravioletIndex) {
+        this.ultravioletIndex = ultravioletIndex;
+    }
+
+    public Double getPrecipitationProbability() {
+        return this.precipitationProbability;
+    }
+
+    public void setPrecipitationProbability(Double precipitationProbability) {
+        this.precipitationProbability = precipitationProbability;
+    }
+
+    public String getSunRise() {
+        return this.sunRise;
+    }
+
+    public void setSunRise(String sunRise) {
+        this.sunRise = sunRise;
+    }
+
+    public String getSunSet() {
+        return this.sunSet;
+    }
+
+    public void setSunSet(String sunSet) {
+        this.sunSet = sunSet;
+    }
+
+    public String getMonthlyRise() {
+        return this.monthlyRise;
+    }
+
+    public void setMonthlyRise(String monthlyRise) {
+        this.monthlyRise = monthlyRise;
+    }
+
+    public String getMonthlySet() {
+        return this.monthlySet;
+    }
+
+    public void setMonthlySet(String monthlySet) {
+        this.monthlySet = monthlySet;
     }
 }

@@ -15,13 +15,13 @@ public class NowEntity extends BaseWeatherEntity implements Serializable {
      * 降水量
      */
     @SerializedName("pcpn")
-    public String precipitation;
+    public Double precipitation;
 
     /**
      * 能见度，默认单位：公里
      */
     @SerializedName("vis")
-    public String visibility;
+    public Double visibility;
 
     /**
      * 实况天气状况代码
@@ -45,6 +45,6 @@ public class NowEntity extends BaseWeatherEntity implements Serializable {
      * 云量
      */
     @SerializedName("cloud")
-    public String cloud;
+    public Integer cloud;
 
 }

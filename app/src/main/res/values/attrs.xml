@@ -8,6 +8,7 @@
         <attr name="subValue" format="string|reference" />
         <attr name="backgroundColor" format="color|reference" />
         <attr name="progressColor" format="color|reference" />
+        <attr name="isPercentage" format="boolean|reference" />
     </declare-styleable>
 
     <declare-styleable name="SunlightView">

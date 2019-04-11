@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,6 +14,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -78,6 +81,11 @@ public class Util {
         cityInfo.setType(CityInfo.CityType.None.getKey());
         if (cityBase.getIsDefault()) cityInfo.setType(CityInfo.CityType.Default.getKey());
         if (cityBase.getIsLocation()) cityInfo.setType(CityInfo.CityType.Location.getKey());
+        cityInfo.setWeatherTypeDay(cityBase.getCondCode());
+        cityInfo.setWeatherTypeNight(cityBase.getCondCode());
+        cityInfo.setWeatherTypeTxt(cityBase.getCondTxt());
+        cityInfo.setTempHigh(cityBase.getTempHigh());
+        cityInfo.setTempLow(cityBase.getTempLow());
         return cityInfo;
     }
 
@@ -176,5 +184,126 @@ public class Util {
         localFormater.setTimeZone(TimeZone.getDefault());
         String localTime = localFormater.format(date.getTime());
         return localTime;
+    }
+
+    /**
+     * 获取和风天气图片
+     *
+     * @param weatherCode
+     * @return
+     */
+    public static Drawable getHeWeatherIcon(String weatherCode) {
+        try {
+            InputStream is = BaseApplication.getAppContext().getResources().getAssets().open(String.format("icon-heweather/%s.png", weatherCode));
+            return Drawable.createFromStream(is, null);
+        } catch (IOException e) {
+            if (e != null) {
+                e.printStackTrace();
+            }
+        } catch (OutOfMemoryError e) {
+            if (e != null) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 判断白天与晚上
+     *
+     * @return
+     */
+    public static boolean isDay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String hour = sdf.format(new Date());
+        int k = Integer.parseInt(hour);
+        if ((k >= 0 && k < 6) || (k >= 18 && k < 24)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 字符串转时间
+     *
+     * @param strDate
+     * @return
+     * @throws ParseException
+     */
+    public static Date strToDate(String strDate) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.parse(strDate);
+    }
+
+    /**
+     * 时间格式化为 12月14日 明天
+     *
+     * @param date
+     * @return
+     */
+    public static String getDateByFormat(String date) {
+        String format = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(dateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String month = String.valueOf(c.get(Calendar.MONTH) + 1);
+        String day = String.valueOf(c.get(Calendar.DATE));
+        return String.format(format, month, day, getWeek(date));
+    }
+
+    /**
+     * 获取星期几
+     *
+     * @param time
+     * @return
+     */
+    public static String getWeek(String time) {
+        String Week = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(format.parse(time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int wek = c.get(Calendar.DAY_OF_WEEK);
+        if (wek == 1) {
+            Week += "星期日";
+        }
+        if (wek == 2) {
+            Week += "星期一";
+        }
+        if (wek == 3) {
+            Week += "星期二";
+        }
+        if (wek == 4) {
+            Week += "星期三";
+        }
+        if (wek == 5) {
+            Week += "星期四";
+        }
+        if (wek == 6) {
+            Week += "星期五";
+        }
+        if (wek == 7) {
+            Week += "星期六";
+        }
+        return Week;
+    }
+
+    public static Date getDateByTime(String time) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR, Integer.valueOf(time.split(":")[0]));
+        c.set(Calendar.MINUTE, Integer.valueOf(time.split(":")[1]));
+        return c.getTime();
     }
 }

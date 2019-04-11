@@ -17,12 +17,13 @@ import me.objectyan.weatherbaby.R;
  * 弧形框
  */
 public class ArcView extends View {
-    private final float density;
+    private float density;
     private float attr_max = 100;
     private float attr_min = 0;
     private String attr_title;
     private String attr_value;
     private String attr_subValue;
+    private Boolean attr_isPercentage = false;
     private int attt_progressColor = 0xFFFFFFFF;
     private int attt_backgroundColor = 0x55DADADA;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -44,6 +45,7 @@ public class ArcView extends View {
             attr_subValue = a.getString(R.styleable.ArcView_subValue);
             attt_progressColor = a.getColor(R.styleable.ArcView_progressColor, attt_progressColor);
             attt_backgroundColor = a.getColor(R.styleable.ArcView_backgroundColor, attt_backgroundColor);
+            attr_isPercentage = a.getBoolean(R.styleable.ArcView_isPercentage, attr_isPercentage);
             a.recycle();
         }
     }
@@ -59,7 +61,7 @@ public class ArcView extends View {
         float currAqiPercent = -1f;
         try {
             // TODO
-            currAqiPercent = Float.valueOf(250) / attr_max;
+            currAqiPercent = Float.valueOf(density) / attr_max;
             currAqiPercent = Math.min(currAqiPercent, 1f);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,6 +147,27 @@ public class ArcView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    public void setDensity(Double density) {
+        this.density = density.floatValue();
+        if (this.attr_isPercentage)
+            this.attr_value = (this.density / this.attr_max * 100) + "%";
+        invalidate();
+    }
+
+    public void setValue(String value) {
+        if (!this.attr_isPercentage) {
+            this.attr_value = value;
+            invalidate();
+        }
+    }
+
+    public void setSubValue(String subValue) {
+        if (!this.attr_isPercentage) {
+            this.attr_subValue = subValue;
+            invalidate();
+        }
     }
 
 }

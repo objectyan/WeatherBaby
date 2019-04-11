@@ -63,13 +63,13 @@ public class DailyForecastEntity extends BaseWeatherEntity implements Serializab
      * 最高温度
      */
     @SerializedName("tmp_max")
-    public String temperatureMax;
+    public Double temperatureMax;
 
     /**
      * 最低温度
      */
     @SerializedName("tmp_min")
-    public String temperatureMin;
+    public Double temperatureMin;
 
     /**
      * 紫外线强度指数

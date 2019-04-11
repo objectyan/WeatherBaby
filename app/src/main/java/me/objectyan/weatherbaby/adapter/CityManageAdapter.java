@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,18 +13,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.activities.AddCityActivity;
+import me.objectyan.weatherbaby.common.BaseApplication;
+import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.database.CityBase;
+import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 
 public class CityManageAdapter extends ArrayAdapter<CityInfo> {
 
@@ -33,9 +41,12 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
 
     private CityInfo cityInfoByAdd = new CityInfo(CityInfo.CityType.Add.getKey());
 
+    private CityBaseDao cityBaseDao;
+
     public CityManageAdapter(@NonNull Context context, int resource, @NonNull List<CityInfo> objects) {
         super(context, resource, objects);
         mResource = resource;
+        cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
         add(cityInfoByAdd);
     }
 
@@ -79,6 +90,11 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         } else {
             viewHolder.cityAddLayout.setVisibility(View.GONE);
             viewHolder.cityWeatherLayout.setVisibility(View.VISIBLE);
+            viewHolder.cityName.setText(cityInfo.getCityName());
+            viewHolder.cityWeatherIcon.setImageDrawable(Util.getHeWeatherIcon(cityInfo.getWeatherType()));
+            viewHolder.cityWeather.setText(cityInfo.getWeatherTypeTxt());
+            viewHolder.cityWeatherMax.setText(String.valueOf(cityInfo.getTempHigh()));
+            viewHolder.cityWeatherMin.setText(String.valueOf(cityInfo.getTempLow()));
         }
 
         if (cityInfo.isDefault()) {
@@ -110,7 +126,18 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
                 }
                 cityInfo.setType(CityInfo.CityType.Default.getKey());
                 notifyDataSetChanged();
-                cityManageItemClick.removeCity(cityInfo);
+                List<CityBase> cityBaseQuery = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.notEq(cityInfo.getId()), CityBaseDao.Properties.IsDefault.eq(true)).list();
+                for (CityBase item :
+                        cityBaseQuery) {
+                    item.setIsDefault(false);
+                }
+                cityBaseDao.updateInTx(cityBaseQuery);
+                CityBase cityBase = cityBaseDao.load(cityInfo.getId());
+                if (cityBase != null) {
+                    cityBase.setIsDefault(true);
+                    cityBaseDao.update(cityBase);
+                }
+                cityManageItemClick.settingDefault(cityInfo);
             }
         });
 
@@ -174,6 +201,8 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         ImageView cityDelete;
         @BindView(R.id.set_default_layout)
         LinearLayout setDefaultLayout;
+        @BindView(R.id.city_weather_icon)
+        AppCompatImageView cityWeatherIcon;
 
 
         ViewHolder(View view) {
