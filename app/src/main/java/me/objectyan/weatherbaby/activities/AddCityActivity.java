@@ -37,6 +37,7 @@ import me.objectyan.weatherbaby.adapter.AddCityAdapter;
 import me.objectyan.weatherbaby.adapter.CitySearchAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
@@ -105,26 +106,7 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CityInfo cityInfo = (CityInfo) parent.getItemAtPosition(position);
                 if (isOpenWeather) {
-                    CityBase cityBase = Util.cityInfoToBase(cityInfo);
-                    if (cityInfo.isLocation()) {
-                        Location location = Util.getCurrentLocation();
-                        if (location == null) {
-                            return;
-                        }
-                        cityBase.setLatitude(location.getLatitude());
-                        cityBase.setLongitude(location.getLongitude());
-                        cityBase.setLocation(getString(R.string.current_location_addresss));
-                    }
-                    cityBase.setId(null);
-                    cityBase.setSort(0);
-                    cityBase.setIsDefault(cityBaseDao.loadAll().isEmpty());
-                    cityBaseDao.insert(cityBase);
-                    Log.d(LOG_TAG, "Inserted new CityBase, ID: " + cityBase.getId());
-                    Intent intent = new Intent();
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setClass(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("currentCityID", cityBase.getId());
-                    startActivity(intent);
+                    startWeatherActivity(cityInfo);
                 } else {
                     currentType += 1;
                     if (currentType == 1) {
@@ -163,13 +145,36 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
             }
         });
+        lvSearchCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CityInfo cityInfo = citySearchAdapter.getItem(position);
+                startWeatherActivity(cityInfo);
+            }
+        });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    private void startWeatherActivity(CityInfo cityInfo) {
+        CityBase cityBase = Util.cityInfoToBase(cityInfo);
+        if (cityInfo.isLocation()) {
+            Location location = Util.getCurrentLocation();
+            if (location == null) {
+                return;
+            }
+            cityBase.setLatitude(location.getLatitude());
+            cityBase.setLongitude(location.getLongitude());
+            cityBase.setLocation(getString(R.string.current_location_addresss));
+        }
+        cityBase.setId(null);
+        cityBase.setSort(0);
+        cityBase.setIsDefault(cityBaseDao.loadAll().isEmpty());
+        cityBaseDao.insert(cityBase);
+        Log.d(LOG_TAG, "Inserted new CityBase, ID: " + cityBase.getId());
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(getApplicationContext(), MainActivity.class);
+        Util.setDefaultCityID(cityBase.getId());
+        startActivity(intent);
     }
 
     /**

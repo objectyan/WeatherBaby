@@ -2,7 +2,10 @@ package me.objectyan.weatherbaby.common;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
@@ -10,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -192,24 +196,26 @@ public class Util {
      * @param weatherCode
      * @return
      */
+    @androidx.annotation.RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Drawable getHeWeatherIcon(String weatherCode) {
-        try {
-            InputStream is = BaseApplication.getAppContext().getResources().getAssets().open(String.format("icon-heweather/%s.png", weatherCode));
-            return Drawable.createFromStream(is, null);
-        } catch (IOException e) {
-            if (e != null) {
-                e.printStackTrace();
+        if (!TextUtils.isEmpty(weatherCode))
+            try {
+                InputStream is = BaseApplication.getAppContext().getResources().getAssets().open(String.format("icon-heweather/%s.png", weatherCode));
+                return Drawable.createFromStream(is, null);
+            } catch (IOException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            } catch (OutOfMemoryError e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
             }
-        } catch (OutOfMemoryError e) {
-            if (e != null) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            if (e != null) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+        return BaseApplication.getAppContext().getDrawable(R.drawable.ic_disabled);
     }
 
     /**
@@ -305,5 +311,29 @@ public class Util {
         c.set(Calendar.HOUR, Integer.valueOf(time.split(":")[0]));
         c.set(Calendar.MINUTE, Integer.valueOf(time.split(":")[1]));
         return c.getTime();
+    }
+
+    /**
+     * 获取默认城市编号
+     *
+     * @return
+     */
+    public static Long getDefaultCityID() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getLong(WeatherBabyConstants.SHARE_DEFAULT_CITY_ID, 0);
+    }
+
+    /**
+     * 设置默认城市编号
+     *
+     * @param cityID
+     */
+    public static void setDefaultCityID(Long cityID) {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putLong(WeatherBabyConstants.SHARE_DEFAULT_CITY_ID, cityID);
+        editor.apply();
     }
 }

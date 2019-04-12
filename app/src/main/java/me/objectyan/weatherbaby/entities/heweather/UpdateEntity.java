@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class UpdateEntity implements Serializable {
     /**
@@ -37,6 +39,7 @@ public class UpdateEntity implements Serializable {
      */
     public Date getUtcTime() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.parse(utcTime);
     }
 }

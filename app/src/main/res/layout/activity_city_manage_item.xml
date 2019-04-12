@@ -15,11 +15,19 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_location"
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_location" />
 
             <TextView
                 android:id="@+id/city_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/city_manage"
@@ -163,10 +171,10 @@
 
     <ImageView
         android:id="@+id/city_delete"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_margin="8dp"
-        android:src="@drawable/ic_cancel"
+        android:src="@drawable/ic_delete"
         android:visibility="gone"
         tools:ignore="VectorDrawableCompat" />
 

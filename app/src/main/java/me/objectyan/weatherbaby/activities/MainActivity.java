@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +19,9 @@ import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.WeatherPagerAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
+import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.common.WeatherBabyConstants;
+import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.fragment.WeatherFragment;
 import me.relex.circleindicator.CircleIndicator;
@@ -69,6 +73,7 @@ public class MainActivity extends BaseActivity {
         wpafIndicator.setViewPager(wpafViewpager);
         weatherPagerAdapter.registerDataSetObserver(wpafIndicator.getDataSetObserver());
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
+        wpafViewpager.setCurrentItem(weatherPagerAdapter.getDefaultItem(Util.getDefaultCityID()));
     }
 
     @Override
@@ -77,7 +82,7 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setClass(this, CityManageActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, WeatherBabyConstants.MAIN_REQUEST_CITY_MANAGE);
         }
     }
 
@@ -86,41 +91,38 @@ public class MainActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CityManageActivity.class));
+                startActivityForResult(new Intent(getApplicationContext(), CityManageActivity.class), WeatherBabyConstants.MAIN_REQUEST_CITY_MANAGE);
             }
         });
         wpafViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("vp", "滑动中=====position:" + position + "   positionOffset:" + positionOffset + "   positionOffsetPixels:" + positionOffsetPixels);
+                imageLocation.setVisibility(View.GONE);
+                headerTitle.setText(R.string.loading);
+                CityInfo cityInfo = ((WeatherFragment) weatherPagerAdapter.getItem(position)).getCityInfo();
+                if (cityInfo != null) {
+                    imageLocation.setVisibility(cityInfo.isLocation() ? View.VISIBLE : View.GONE);
+                    headerTitle.setText(cityInfo.getCityName());
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
-                Log.e("vp", "显示页改变=====postion:" + position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                switch (state) {
-                    case ViewPager.SCROLL_STATE_IDLE:
-                        Log.e("vp", "状态改变=====SCROLL_STATE_IDLE====静止状态");
-                        break;
-                    case ViewPager.SCROLL_STATE_DRAGGING:
-                        Log.e("vp", "状态改变=====SCROLL_STATE_DRAGGING==滑动状态");
-                        break;
-                    case ViewPager.SCROLL_STATE_SETTLING:
-                        Log.e("vp", "状态改变=====SCROLL_STATE_SETTLING==滑翔状态");
-                        break;
-                }
             }
         });
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        weatherPagerAdapter.refreshData();
+        // 城市管理关闭回调
+        if (requestCode == WeatherBabyConstants.MAIN_REQUEST_CITY_MANAGE) {
+            wpafViewpager.setCurrentItem(weatherPagerAdapter.getDefaultItem(Util.getDefaultCityID()));
+        }
     }
 }

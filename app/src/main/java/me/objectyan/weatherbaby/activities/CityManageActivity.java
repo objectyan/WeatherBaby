@@ -27,6 +27,7 @@ import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.services.CityManageService;
 
 public class CityManageActivity extends BaseActivity {
 
@@ -78,6 +79,7 @@ public class CityManageActivity extends BaseActivity {
                 menuCityManageRefresh.setIcon(R.drawable.ic_disabled);
                 menuCityManageEdit.setEnabled(false);
                 cityManageAdapter.setRomoveAdd(true);
+                refreshAll();
                 break;
             case R.id.menu_city_manage_confirm:
                 menuCityManageEdit.setVisible(true);
@@ -87,6 +89,26 @@ public class CityManageActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshAll() {
+        List<Long> refreshCity = new ArrayList<>();
+        for (int i = 0; i < cityManageAdapter.getCount(); i++) {
+            refreshCity.add(cityManageAdapter.getItem(i).getId());
+        }
+        cityManageAdapter.setRefreshCity(refreshCity);
+        for (Long cityID : refreshCity) {
+            CityManageService.refreshCityInfo(cityID).doOnNext(cid -> {
+                refreshCity.remove(cityID);
+                cityManageAdapter.updateCityInfo(cityID);
+                cityManageAdapter.setRefreshCity(refreshCity);
+                if (refreshCity.isEmpty()) {
+                    menuCityManageRefresh.setIcon(R.drawable.ic_refresh);
+                    menuCityManageEdit.setEnabled(true);
+                    cityManageAdapter.setRomoveAdd(false);
+                }
+            }).subscribe();
+        }
     }
 
     @Override
@@ -115,6 +137,16 @@ public class CityManageActivity extends BaseActivity {
 
             @Override
             public void settingDefault(CityInfo cityInfo) {
+
+            }
+
+            @Override
+            public void openHome(CityInfo cityInfo) {
+                Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClass(getApplicationContext(), MainActivity.class);
+                Util.setDefaultCityID(cityInfo.getId());
+                startActivity(intent);
             }
         });
     }

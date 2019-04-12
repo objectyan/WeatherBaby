@@ -154,6 +154,10 @@ public class CityInfo {
         return (this.type & CityType.Default.getKey()) == CityType.Default.getKey();
     }
 
+    public boolean isAdd() {
+        return (this.type & CityType.Add.getKey()) == CityType.Add.getKey();
+    }
+
     public enum CityType {
         /**
          * 默认

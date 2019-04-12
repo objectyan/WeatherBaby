@@ -26,6 +26,7 @@ import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.WeatherForecastAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.entities.database.CityDailyForecast;
@@ -34,6 +35,7 @@ import me.objectyan.weatherbaby.entities.database.CityHourlyForecast;
 import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
+import me.objectyan.weatherbaby.services.CityManageService;
 import me.objectyan.weatherbaby.services.HeWeatherApiService;
 import me.objectyan.weatherbaby.widget.ArcView;
 import me.objectyan.weatherbaby.widget.SunlightView;
@@ -113,11 +115,20 @@ public class WeatherFragment extends Fragment {
     private WeatherForecastAdapter weatherForecastAdapter;
 
     public WeatherFragment() {
-        // Required empty public constructor
+        cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
+        cityDailyForecastDao = BaseApplication.getDaoSession().getCityDailyForecastDao();
+        cityHourlyForecastDao = BaseApplication.getDaoSession().getCityHourlyForecastDao();
+        cityLifestyleForecastDao = BaseApplication.getDaoSession().getCityLifestyleForecastDao();
     }
 
     public Long getCityID() {
         return mCityID;
+    }
+
+    public CityInfo getCityInfo() {
+        if (mCityID != null)
+            return Util.cityBaseToInfo(cityBaseDao.load(mCityID));
+        return null;
     }
 
     @Override
@@ -126,10 +137,6 @@ public class WeatherFragment extends Fragment {
         if (getArguments() != null) {
             mCityID = getArguments().getLong(ARG_CITYID);
         }
-        cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
-        cityDailyForecastDao = BaseApplication.getDaoSession().getCityDailyForecastDao();
-        cityHourlyForecastDao = BaseApplication.getDaoSession().getCityHourlyForecastDao();
-        cityLifestyleForecastDao = BaseApplication.getDaoSession().getCityLifestyleForecastDao();
     }
 
     public static WeatherFragment newInstance(Long cityID) {
@@ -137,6 +144,7 @@ public class WeatherFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(ARG_CITYID, cityID);
         fragment.setArguments(args);
+        fragment.mCityID = cityID;
         return fragment;
     }
 
@@ -159,114 +167,9 @@ public class WeatherFragment extends Fragment {
             public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
                 if (cityBase.getUpdateTime() == null) {
-                    HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase))
-                            .doOnNext(weather -> {
-                                cityBase.setUpdateTime(weather.updateEntity.getUtcTime());
-                                cityBase.setLocation(weather.basic.Name);
-                                cityBase.setAdminArea(weather.basic.adminArea);
-                                cityBase.setCid(weather.basic.code);
-                                cityBase.setLatitude(Double.valueOf(weather.basic.latitude));
-                                cityBase.setLongitude(Double.valueOf(weather.basic.longitude));
-                                cityBase.setParentCity(weather.basic.parentCity);
-                                cityBase.setCountry(weather.basic.countryName);
-                                cityBase.setTimeZone(Float.valueOf(weather.basic.timeZone));
-                                cityBase.setCondCode(weather.nowEntity.condCode);
-                                cityBase.setCondTxt(weather.nowEntity.condTxt);
-                                cityBase.setSendibleTemperature(weather.nowEntity.somatosensory);
-                                cityBase.setTemperature(weather.nowEntity.temperature);
-                                cityBase.setWindDirection(weather.nowEntity.windDirection);
-                                cityBase.setWindPower(weather.nowEntity.windPower);
-                                cityBase.setWindSpeed(weather.nowEntity.windSpeed);
-                                cityBase.setTempHigh(0d);
-                                cityBase.setTempLow(0d);
-                                cityBase.setHumidity(weather.nowEntity.humidity);
-                                cityBase.setPrecipitation(weather.nowEntity.precipitation);
-                                cityBase.setCloud(weather.nowEntity.cloud);
-                                cityBase.setPrecipitationProbability(0d);
-                                cityBase.setPressure(weather.nowEntity.pressure);
-                                cityBase.setUltravioletIndex(0d);
-                                cityBase.setVisibility(weather.nowEntity.visibility);
-                                cityBaseDao.update(cityBase);
-                                if (weather.dailyForecastEntities != null) {
-                                    cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID))
-                                            .buildDelete().executeDeleteWithoutDetachingEntities();
-                                    weather.dailyForecastEntities.forEach(item -> {
-                                        CityDailyForecast cityDailyForecast = new CityDailyForecast();
-                                        cityDailyForecast.setCityID(mCityID);
-                                        cityDailyForecast.setCondCodeDay(item.condCodeDay);
-                                        cityDailyForecast.setCondCodeEvening(item.condCodeNight);
-                                        cityDailyForecast.setCondTxtDay(item.condTxtDay);
-                                        cityDailyForecast.setCondTxtEvening(item.condTxtNight);
-                                        cityDailyForecast.setDate(item.date);
-                                        cityDailyForecast.setMaximumTemperature(item.temperatureMax);
-                                        cityDailyForecast.setMinimumTemperature(item.temperatureMin);
-                                        cityDailyForecast.setMonthlyRise(item.monthlyRiseTime);
-                                        cityDailyForecast.setMonthlySet(item.monthlySetTime);
-                                        cityDailyForecast.setPrecipitation(item.precipitation);
-                                        cityDailyForecast.setPressure(item.pressure);
-                                        cityDailyForecast.setProbability(item.precipitationProbability);
-                                        cityDailyForecast.setMonthlySet(item.monthlySetTime);
-                                        cityDailyForecast.setRelativeHumidity(item.humidity);
-                                        cityDailyForecast.setSunRise(item.sunRiseTime);
-                                        cityDailyForecast.setSunSet(item.sunSetTime);
-                                        cityDailyForecast.setUltravioletIntensity(item.ultravioletIndex);
-                                        cityDailyForecast.setVisibility(item.visibility);
-                                        cityDailyForecast.setWindDirection(item.windDirection);
-                                        cityDailyForecast.setWindDirectionAngle(item.windDirectionAngle);
-                                        cityDailyForecast.setWindPower(item.windPower);
-                                        cityDailyForecast.setWindSpeed(item.windSpeed);
-                                        if (Util.dateToStr(new Date(), "yyyy-MM-dd").equals(item.date)) {
-                                            cityBase.setTempHigh(item.temperatureMax);
-                                            cityBase.setTempLow(item.temperatureMin);
-                                            cityBase.setPrecipitationProbability(item.precipitationProbability);
-                                            cityBase.setUltravioletIndex(item.ultravioletIndex);
-                                            cityBase.setSunRise(item.sunRiseTime);
-                                            cityBase.setSunSet(item.sunSetTime);
-                                            cityBase.setMonthlyRise(item.monthlyRiseTime);
-                                            cityBase.setMonthlySet(item.monthlySetTime);
-                                            cityBaseDao.update(cityBase);
-                                        }
-                                        cityDailyForecastDao.insert(cityDailyForecast);
-                                    });
-                                }
-                                if (weather.hourlyEntities != null) {
-                                    cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID))
-                                            .buildDelete().executeDeleteWithoutDetachingEntities();
-                                    weather.hourlyEntities.forEach(item -> {
-                                        CityHourlyForecast cityHourlyForecast = new CityHourlyForecast();
-                                        cityHourlyForecast.setCityID(mCityID);
-                                        cityHourlyForecast.setCloud(item.cloud);
-                                        cityHourlyForecast.setCondCode(item.condCode);
-                                        cityHourlyForecast.setCondTxt(item.condTxt);
-                                        cityHourlyForecast.setDate(item.getDate());
-                                        cityHourlyForecast.setDewPoint(item.dew);
-                                        cityHourlyForecast.setPressure(item.pressure);
-                                        cityHourlyForecast.setProbability(item.precipitationProbability);
-                                        cityHourlyForecast.setRelativeHumidity(item.humidity);
-                                        cityHourlyForecast.setTemperature(item.temperature);
-                                        cityHourlyForecast.setTime(item.getTime());
-                                        cityHourlyForecast.setWindDirection(item.windDirection);
-                                        cityHourlyForecast.setWindDirectionAngle(item.windDirectionAngle);
-                                        cityHourlyForecast.setWindPower(item.windPower);
-                                        cityHourlyForecast.setWindSpeed(item.windSpeed);
-                                        cityHourlyForecastDao.insert(cityHourlyForecast);
-                                    });
-                                }
-                                if (weather.lifestyleEntities != null) {
-                                    cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID))
-                                            .buildDelete().executeDeleteWithoutDetachingEntities();
-                                    weather.lifestyleEntities.forEach(item -> {
-                                        CityLifestyleForecast cityLifestyleForecast = new CityLifestyleForecast();
-                                        cityLifestyleForecast.setBriefIntroduction(item.briefLife);
-                                        cityLifestyleForecast.setCityID(mCityID);
-                                        cityLifestyleForecast.setDescription(item.txt);
-                                        cityLifestyleForecast.setType(item.type);
-                                        cityLifestyleForecastDao.insert(cityLifestyleForecast);
-                                    });
-                                }
-                            }).doOnComplete(() -> {
+                    CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
-                    }).subscribe();
+                    });
                 } else {
                     emitter.onNext(cityBase.getId());
                 }
@@ -282,19 +185,15 @@ public class WeatherFragment extends Fragment {
             fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
             todayTempCurrMax.setText(String.valueOf(cityBase.getTempHigh()));
             todayTempCurrMin.setText(String.valueOf(cityBase.getTempLow()));
-
             windDirection.setText(cityBase.getWindDirection());
             windPower.setText(cityBase.getWindPower());
             windWiew.setSpeed(cityBase.getWindSpeed());
-
             comfortDegreeSendibleTemp.setText(String.valueOf(cityBase.getSendibleTemperature()));
             comfortDegreeChart.setDensity(cityBase.getHumidity());
             comfortDegreeUltravioletIntensity.setText(String.valueOf(cityBase.getUltravioletIndex()));
             comfortDegreePressure.setText(String.valueOf(cityBase.getPressure()));
             comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
-
             weatherForecastAdapter.updateData();
-
             sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
             sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));

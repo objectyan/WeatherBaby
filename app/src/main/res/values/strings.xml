@@ -56,5 +56,6 @@
     <string name="toast_not_location">"不存在位置提供器的情况"</string>
     <string name="forecast_item_date_format">%s月%s日 %s</string>
 
+    <string name="loading">加载中...</string>
 
 </resources>
