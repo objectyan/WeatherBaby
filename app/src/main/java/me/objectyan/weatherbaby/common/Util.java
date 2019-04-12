@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import androidx.annotation.RequiresApi;
+import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -63,8 +65,16 @@ public class Util {
         Toast.makeText(BaseApplication.getAppContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showShort(@StringRes int resId) {
+        Toast.makeText(BaseApplication.getAppContext(), resId, Toast.LENGTH_SHORT).show();
+    }
+
     public static void showLong(String msg) {
         Toast.makeText(BaseApplication.getAppContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    public static void showLong(@StringRes int resId) {
+        Toast.makeText(BaseApplication.getAppContext(), resId, Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -113,22 +123,29 @@ public class Util {
         return cityBase;
     }
 
-    @SuppressLint("MissingPermission")
     public static Location getCurrentLocation() {
         LocationManager locationManager = (LocationManager) BaseApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 返回所有已知的位置提供者的名称列表，包括未获准访问或调用活动目前已停用的。
         String provider = null;
-        List<String> lp = locationManager.getAllProviders();
-        for (String item : lp) {
-            Log.i(LOG_TAG, "可用位置服务：" + item);
+        List<String> locationManagerAllProviders = locationManager.getAllProviders();
+        if (locationManagerAllProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+            provider = LocationManager.NETWORK_PROVIDER; // 网络定位
+        } else if (locationManagerAllProviders.contains(LocationManager.GPS_PROVIDER)) {
+            provider = LocationManager.GPS_PROVIDER; // GPS定位
         }
         Criteria criteria = new Criteria();
         criteria.setCostAllowed(false);
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         if (provider != null) {
+            if (ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
             return locationManager.getLastKnownLocation(provider);
         } else {
-            Toast.makeText(BaseApplication.getAppContext(), R.string.toast_not_location, Toast.LENGTH_SHORT).show();
+            Util.showShort(R.string.toast_not_location);
             return null;
         }
     }
@@ -153,7 +170,10 @@ public class Util {
      * @return
      */
     public static String getCityName(CityBase cityBase) {
-        if (!TextUtils.isEmpty(cityBase.getLocation())) return cityBase.getLocation();
+        if (!TextUtils.isEmpty(cityBase.getLocation())
+                && !cityBase.getLocation().equals(
+                BaseApplication.getAppContext().getString(R.string.current_location_addresss)))
+            return cityBase.getLocation();
         if (!TextUtils.isEmpty(cityBase.getCid())) return cityBase.getCid();
         if (cityBase.getLatitude() != null && cityBase.getLongitude() != null)
             return String.format("%d,%d", cityBase.getLongitude(), cityBase.getLatitude());

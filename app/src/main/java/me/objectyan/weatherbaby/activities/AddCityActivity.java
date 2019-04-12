@@ -41,6 +41,7 @@ import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.services.CityManageService;
 
 public class AddCityActivity extends BaseActivity implements View.OnClickListener {
 
@@ -155,15 +156,22 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void startWeatherActivity(CityInfo cityInfo) {
+        if (CityManageService.isDisabled(cityInfo.getCityName())) {
+            Util.showShort(getString(R.string.city_already_exists, cityInfo.getCityName()));
+            return;
+        }
         CityBase cityBase = Util.cityInfoToBase(cityInfo);
         if (cityInfo.isLocation()) {
+
             Location location = Util.getCurrentLocation();
             if (location == null) {
-                return;
+                Util.showShort(R.string.no_location);
+            } else {
+                cityBase.setLatitude(location.getLatitude());
+                cityBase.setLongitude(location.getLongitude());
             }
-            cityBase.setLatitude(location.getLatitude());
-            cityBase.setLongitude(location.getLongitude());
             cityBase.setLocation(getString(R.string.current_location_addresss));
+            cityBase.setIsLocation(true);
         }
         cityBase.setId(null);
         cityBase.setSort(0);

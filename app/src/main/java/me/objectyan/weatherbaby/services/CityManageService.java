@@ -150,4 +150,28 @@ public class CityManageService {
             }
         });
     }
+
+    /**
+     * 根据城市编号判断可继续添加 除 默认定位
+     *
+     * @param cityName
+     * @return
+     */
+    public static Boolean isDisabled(String cityName) {
+        CityBaseDao cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
+        if (cityBaseDao.loadAll().isEmpty()) return false;
+        return cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Location.eq(cityName),
+                CityBaseDao.Properties.IsLocation.eq(false)).buildCount().count() > 0;
+    }
+
+    /**
+     * 是否含有定位信息
+     *
+     * @return
+     */
+    public static Boolean hasLocation() {
+        CityBaseDao cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
+        if (cityBaseDao.loadAll().isEmpty()) return false;
+        return cityBaseDao.queryBuilder().where(CityBaseDao.Properties.IsLocation.eq(true)).buildCount().count() > 0;
+    }
 }

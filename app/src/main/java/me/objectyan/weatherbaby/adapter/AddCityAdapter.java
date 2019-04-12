@@ -14,7 +14,10 @@ import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.services.CityManageService;
 
 public class AddCityAdapter extends ArrayAdapter<CityInfo> {
 
@@ -25,7 +28,8 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
     public AddCityAdapter(@NonNull Context context, int resource, @NonNull List<CityInfo> objects) {
         super(context, resource, objects);
         mResource = resource;
-        add(cityInfoByLocation);
+        if (!CityManageService.hasLocation())
+            add(cityInfoByLocation);
     }
 
     @Override
