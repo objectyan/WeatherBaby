@@ -101,13 +101,9 @@ public class SunlightView extends View {
 
         try {
             // draw the sun
-            Integer[] sr = new Integer[]{attr_beginDate.getHours(), attr_beginDate.getMinutes()};
-            int srTime = Integer.valueOf(sr[0]) * 60 * 60 + Integer.valueOf(sr[1]) * 60 + 0;
-            Integer[] ss = new Integer[]{attr_endDate.getHours(), attr_endDate.getMinutes()};
-            int ssTime = Integer.valueOf(ss[0]) * 60 * 60 + Integer.valueOf(ss[1]) * 60 + 0;
-            Calendar c = Calendar.getInstance();
-
-            int curTime = c.get(Calendar.HOUR_OF_DAY) * 60 * 60 + c.get(Calendar.MINUTE) * 60 + c.get(Calendar.MINUTE);
+            long srTime = attr_beginDate.getTime();
+            long ssTime = attr_endDate.getTime();
+            long curTime = Calendar.getInstance().getTime().getTime();
             if (curTime >= srTime && curTime <= ssTime) {
                 float percent = (curTime - srTime) / ((float) (ssTime - srTime));
                 sunPathCurr.reset();
@@ -211,13 +207,13 @@ public class SunlightView extends View {
 
     public void updateData() {
         Date currentDate = new Date();
-        if (sunRise.getTime() < sunSet.getTime()) {
+        if (sunRise.getTime() > sunSet.getTime()) {
             Calendar c = Calendar.getInstance();
             c.setTime(sunSet);
             c.add(Calendar.DAY_OF_MONTH, 1);
             sunSet = c.getTime();
         }
-        if (monthlyRise.getTime() < monthlySet.getTime()) {
+        if (monthlyRise.getTime() > monthlySet.getTime()) {
             Calendar c = Calendar.getInstance();
             c.setTime(monthlySet);
             c.add(Calendar.DAY_OF_MONTH, 1);

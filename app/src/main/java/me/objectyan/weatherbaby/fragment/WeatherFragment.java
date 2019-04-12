@@ -169,7 +169,7 @@ public class WeatherFragment extends Fragment {
                 if (cityBase.getUpdateTime() == null) {
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
-                    });
+                    }).subscribe();
                 } else {
                     emitter.onNext(cityBase.getId());
                 }

@@ -328,7 +328,7 @@ public class Util {
 
     public static Date getDateByTime(String time) {
         Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR, Integer.valueOf(time.split(":")[0]));
+        c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.split(":")[0]));
         c.set(Calendar.MINUTE, Integer.valueOf(time.split(":")[1]));
         return c.getTime();
     }
