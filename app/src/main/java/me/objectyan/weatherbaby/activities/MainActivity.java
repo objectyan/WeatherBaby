@@ -27,6 +27,7 @@ import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.fragment.WeatherFragment;
+import me.objectyan.weatherbaby.services.AutoUpdateService;
 import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends BaseActivity {
@@ -80,6 +81,7 @@ public class MainActivity extends BaseActivity {
                         Util.setSettingsUpdateInterval(updateInterval[which]);
                         dialog.dismiss();
                         weatherPagerAdapter.refreshSettingForData();
+                        startService(new Intent(getApplicationContext(), AutoUpdateService.class));
                     }
                 });
         singleChoiceDialog.show();
@@ -124,6 +126,7 @@ public class MainActivity extends BaseActivity {
         weatherPagerAdapter.registerDataSetObserver(wpafIndicator.getDataSetObserver());
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
         wpafViewpager.setCurrentItem(weatherPagerAdapter.getDefaultItem(Util.getDefaultCityID()));
+        startService(new Intent(this, AutoUpdateService.class));
     }
 
     @Override
