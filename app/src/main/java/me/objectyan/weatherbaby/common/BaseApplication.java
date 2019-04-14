@@ -1,15 +1,20 @@
 package me.objectyan.weatherbaby.common;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import org.greenrobot.greendao.database.Database;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import io.reactivex.plugins.RxJavaPlugins;
 import me.objectyan.weatherbaby.BuildConfig;
+import me.objectyan.weatherbaby.activities.MainActivity;
 import me.objectyan.weatherbaby.entities.database.DaoMaster;
 import me.objectyan.weatherbaby.entities.database.DaoSession;
 

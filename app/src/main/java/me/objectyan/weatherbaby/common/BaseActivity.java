@@ -1,4 +1,4 @@
-package me.objectyan.weatherbaby.activities;
+package me.objectyan.weatherbaby.common;
 
 import android.os.Bundle;
 import android.view.Menu;

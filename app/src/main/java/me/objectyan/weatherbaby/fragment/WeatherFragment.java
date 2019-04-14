@@ -2,7 +2,6 @@ package me.objectyan.weatherbaby.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -36,7 +36,6 @@ import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 import me.objectyan.weatherbaby.services.CityManageService;
-import me.objectyan.weatherbaby.services.HeWeatherApiService;
 import me.objectyan.weatherbaby.widget.ArcView;
 import me.objectyan.weatherbaby.widget.SunlightView;
 import me.objectyan.weatherbaby.widget.WindView;
@@ -104,6 +103,8 @@ public class WeatherFragment extends Fragment {
     WindView windWiew;
     @BindView(R.id.sunlight_view)
     SunlightView sunlightView;
+    @BindView(R.id.swipe_weather_layout)
+    SwipeRefreshLayout swipeWeatherLayout;
 
     private Long mCityID;
 
@@ -156,17 +157,26 @@ public class WeatherFragment extends Fragment {
         weatherForecastAdapter = new WeatherForecastAdapter(mCityID);
         forecastItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
         forecastItems.setAdapter(weatherForecastAdapter);
-        initData();
+        swipeWeatherLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData(true);
+            }
+        });
+        initData(false);
         return view;
     }
 
-    private void initData() {
+    private void initData(Boolean isRefresh) {
         Observable.create(new ObservableOnSubscribe<Long>() {
             @SuppressLint("NewApi")
             @Override
             public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-                if ((cityBase.getUpdateTime() == null || true) && Util.isNetworkConnected()) {
+                if ((cityBase.getUpdateTime() == null ||
+                        cityBase.getUpdateTime().getTime() < new Date().getTime() ||
+                        isRefresh) && Util.isNetworkConnected()) {
+                    swipeWeatherLayout.setRefreshing(true);
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
                     }).subscribe();
@@ -209,6 +219,7 @@ public class WeatherFragment extends Fragment {
             atmosphereNO2.setText(String.valueOf(cityBase.getNo2()));
             atmosphereO3.setText(String.valueOf(cityBase.getO3()));
             atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
+            swipeWeatherLayout.setRefreshing(false);
         }).subscribe();
     }
 }

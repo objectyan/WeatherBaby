@@ -10,6 +10,11 @@ public class WeatherBabyConstants {
     public static final int MAIN_REQUEST_CITY_MANAGE = 1;
 
     /**
+     * 主页城市地图定位
+     */
+    public static final int REQUEST_PERMISSION_LOCATION = 2;
+
+    /**
      * 城市编号
      */
     public static final String CITY_ID = "CURRENT_CITY_ID";

@@ -37,6 +37,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.activities.MainActivity;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 
@@ -138,7 +139,7 @@ public class Util {
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                return null;
+              return null;
             }
             return locationManager.getLastKnownLocation(provider);
         } else {

@@ -1,11 +1,12 @@
 package me.objectyan.weatherbaby.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,38 +19,32 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.annotations.Until;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.AddCityAdapter;
 import me.objectyan.weatherbaby.adapter.CitySearchAdapter;
+import me.objectyan.weatherbaby.common.BaseActivity;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
-import me.objectyan.weatherbaby.entities.heweather.BaseWeatherEntity;
 import me.objectyan.weatherbaby.entities.heweather.BasicEntity;
-import me.objectyan.weatherbaby.entities.heweather.LifestyleEntity;
 import me.objectyan.weatherbaby.services.CityManageService;
 import me.objectyan.weatherbaby.services.HeWeatherApiService;
 
@@ -177,7 +172,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
         CityBase cityBase = Util.cityInfoToBase(cityInfo);
         if (cityInfo.isLocation()) {
-
             Location location = Util.getCurrentLocation();
             if (location == null) {
                 Util.showLong(R.string.no_location);

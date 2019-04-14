@@ -1,15 +1,8 @@
 package me.objectyan.weatherbaby.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.greenrobot.greendao.query.Query;
@@ -22,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.CityManageAdapter;
+import me.objectyan.weatherbaby.common.BaseActivity;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
