@@ -1,8 +1,11 @@
 package me.objectyan.weatherbaby.services;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -13,8 +16,10 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.heweather.AirNow;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
+import me.objectyan.weatherbaby.entities.heweather.BasicEntity;
 import me.objectyan.weatherbaby.entities.heweather.Weather;
 import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
 import okhttp3.Cache;
@@ -50,14 +55,14 @@ public class HeWeatherApiService {
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 50);
         Interceptor cacheInterceptor = chain -> {
             Request request = chain.request();
-            if (!Util.isNetworkConnected(BaseApplication.getAppContext())) {
+            if (!Util.isNetworkConnected()) {
                 request = request.newBuilder()
                         .cacheControl(CacheControl.FORCE_CACHE)
                         .build();
             }
             Response response = chain.proceed(request);
             Response.Builder newBuilder = response.newBuilder();
-            if (Util.isNetworkConnected(BaseApplication.getAppContext())) {
+            if (Util.isNetworkConnected()) {
                 int maxAge = 0;
                 // 有网络时 设置缓存超时时间0个小时
                 newBuilder.header("Cache-Control", "public, max-age=" + maxAge);
@@ -150,6 +155,21 @@ public class HeWeatherApiService {
                     return Observable.just(weather);
                 })
                 .map(weather -> weather.mAirNow.get(0))
+                .doOnError(HeWeatherApiService::disposeFailureInfo)
+                .compose(Util.schedulersTransformer());
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    public Observable<List<BasicEntity>> fetchTopCityInfo() {
+        return sHeWeatherApi.mTopCityInfo(Util.getTopCityByGroup(), Util.getTopCityByNumber())
+                .flatMap(topCity -> {
+                    String status = topCity.mTopCity.get(0).status;
+                    if ("no more requests".equals(status)) {
+                        return Observable.error(new RuntimeException("/(ㄒoㄒ)/~~,API免费次数已用完"));
+                    }
+                    return Observable.just(topCity);
+                })
+                .map(weather -> weather.mTopCity.get(0).basic)
                 .doOnError(HeWeatherApiService::disposeFailureInfo)
                 .compose(Util.schedulersTransformer());
     }

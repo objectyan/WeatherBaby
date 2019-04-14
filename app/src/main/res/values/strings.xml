@@ -59,6 +59,8 @@
     <string name="loading">加载中...</string>
     <string name="city_already_exists">城市（%1$s）已添加</string>
     <string name="no_location">没有定位信息.
-        使用网络地址定位</string>
+        使用当前网络地址定位</string>
+    <string name="city_already_exists_location">当前定位城市已添加</string>
+    <string name="today_temp_air">空气</string>
 
 </resources>

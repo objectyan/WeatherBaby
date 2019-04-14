@@ -1,6 +1,8 @@
 package me.objectyan.weatherbaby.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
+import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
@@ -28,10 +31,10 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
     public AddCityAdapter(@NonNull Context context, int resource, @NonNull List<CityInfo> objects) {
         super(context, resource, objects);
         mResource = resource;
-        if (!CityManageService.hasLocation())
-            add(cityInfoByLocation);
+        add(cityInfoByLocation);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
@@ -49,6 +52,9 @@ public class AddCityAdapter extends ArrayAdapter<CityInfo> {
             viewHolder.cityName.setText(R.string.current_location_addresss);
         else
             viewHolder.cityName.setText(cityInfo.getCityName());
+        if ((cityInfo.isLocation() && CityManageService.hasLocation())
+                || CityManageService.isDisabled(cityInfo.getCityName()))
+            viewHolder.cityName.setTextColor(BaseApplication.getAppContext().getColor(R.color.icon_disabled));
         return view;
     }
 

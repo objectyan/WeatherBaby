@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AirNow implements Serializable {
     @SerializedName("air_now_city")
-    public AirNow airNow;
+    public AirNowCityEntity airNow;
 
     @SerializedName("basic")
     public BasicEntity basic;

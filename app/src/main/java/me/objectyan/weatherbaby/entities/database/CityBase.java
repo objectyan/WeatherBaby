@@ -52,17 +52,29 @@ public class CityBase {
     private String sunSet;
     private String monthlyRise;
     private String monthlySet;
+    private Double aqi;
+    private String majorPollutants;
+    private String airQuality;
+    private Double pm10;
+    private Double pm25;
+    private Double no2;
+    private Double so2;
+    private Double co;
+    private Double o3;
 
-    @Generated(hash = 1138162050)
-    public CityBase(Long id, String location, String cid, Double latitude, Double longitude,
-            String parentCity, String adminArea, String country, Float timeZone,
-            @NotNull Boolean isDefault, Double sendibleTemperature, Double temperature,
-            Integer cloud, @NotNull Integer sort, @NotNull Boolean isLocation,
-            Date updateTime, String condCode, String condTxt, Double tempHigh, Double tempLow,
-            String windDirection, String windPower, Double windSpeed, Double humidity,
-            Double pressure, Double precipitation, Double visibility, Double ultravioletIndex,
-            Double precipitationProbability, String sunRise, String sunSet,
-            String monthlyRise, String monthlySet) {
+    @Generated(hash = 1276293912)
+    public CityBase(Long id, String location, String cid, Double latitude,
+                    Double longitude, String parentCity, String adminArea, String country,
+                    Float timeZone, @NotNull Boolean isDefault, Double sendibleTemperature,
+                    Double temperature, Integer cloud, @NotNull Integer sort,
+                    @NotNull Boolean isLocation, Date updateTime, String condCode,
+                    String condTxt, Double tempHigh, Double tempLow, String windDirection,
+                    String windPower, Double windSpeed, Double humidity, Double pressure,
+                    Double precipitation, Double visibility, Double ultravioletIndex,
+                    Double precipitationProbability, String sunRise, String sunSet,
+                    String monthlyRise, String monthlySet, Double aqi,
+                    String majorPollutants, String airQuality, Double pm10, Double pm25,
+                    Double no2, Double so2, Double co, Double o3) {
         this.id = id;
         this.location = location;
         this.cid = cid;
@@ -96,6 +108,15 @@ public class CityBase {
         this.sunSet = sunSet;
         this.monthlyRise = monthlyRise;
         this.monthlySet = monthlySet;
+        this.aqi = aqi;
+        this.majorPollutants = majorPollutants;
+        this.airQuality = airQuality;
+        this.pm10 = pm10;
+        this.pm25 = pm25;
+        this.no2 = no2;
+        this.so2 = so2;
+        this.co = co;
+        this.o3 = o3;
     }
 
     @Generated(hash = 1122040241)
@@ -364,5 +385,77 @@ public class CityBase {
 
     public void setMonthlySet(String monthlySet) {
         this.monthlySet = monthlySet;
+    }
+
+    public Double getAqi() {
+        return this.aqi;
+    }
+
+    public void setAqi(Double aqi) {
+        this.aqi = aqi;
+    }
+
+    public String getMajorPollutants() {
+        return this.majorPollutants;
+    }
+
+    public void setMajorPollutants(String majorPollutants) {
+        this.majorPollutants = majorPollutants;
+    }
+
+    public String getAirQuality() {
+        return this.airQuality;
+    }
+
+    public void setAirQuality(String airQuality) {
+        this.airQuality = airQuality;
+    }
+
+    public Double getPm10() {
+        return this.pm10;
+    }
+
+    public void setPm10(Double pm10) {
+        this.pm10 = pm10;
+    }
+
+    public Double getPm25() {
+        return this.pm25;
+    }
+
+    public void setPm25(Double pm25) {
+        this.pm25 = pm25;
+    }
+
+    public Double getNo2() {
+        return this.no2;
+    }
+
+    public void setNo2(Double no2) {
+        this.no2 = no2;
+    }
+
+    public Double getSo2() {
+        return this.so2;
+    }
+
+    public void setSo2(Double so2) {
+        this.so2 = so2;
+    }
+
+    public Double getCo() {
+        return this.co;
+    }
+
+    public void setCo(Double co) {
+        this.co = co;
+    }
+
+    public Double getO3() {
+        return this.o3;
+    }
+
+    public void setO3(Double o3) {
+        this.o3 = o3;
     }
 }

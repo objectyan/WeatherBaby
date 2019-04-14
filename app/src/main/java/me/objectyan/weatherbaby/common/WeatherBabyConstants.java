@@ -23,4 +23,14 @@ public class WeatherBabyConstants {
      * sharedPreferences属性 默认城市编号
      */
     public static final String SHARE_DEFAULT_CITY_ID = "DEFAULT_CITY_ID";
+
+    /**
+     * sharedPreferences属性 热门城市分组
+     */
+    public static final String SHARE_TOP_CITY_GROUP = "TOP_CITY_GROUP";
+
+    /**
+     * sharedPreferences属性 热门城市数量
+     */
+    public static final String SHARE_TOP_CITY_NUMBER = "TOP_CITY_NUMBER";
 }

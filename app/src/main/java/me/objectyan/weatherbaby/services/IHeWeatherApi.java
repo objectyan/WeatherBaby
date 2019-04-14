@@ -3,6 +3,7 @@ package me.objectyan.weatherbaby.services;
 import io.reactivex.Observable;
 import me.objectyan.weatherbaby.BuildConfig;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
+import me.objectyan.weatherbaby.entities.heweather.TopCityApi;
 import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -36,4 +37,16 @@ public interface IHeWeatherApi {
      */
     @GET("weather?key=" + BuildConfig.HeWeatherKey)
     Observable<WeatherApi> mWeather(@Query("location") String location);
+
+    /**
+     * 热门城市列表
+     *
+     * @param group  特殊值：world，返回全球热门城市
+     *               特殊值：cn，返回中国热门城市
+     *               特殊值：overseas，查询海外热门城市（不含中国）
+     * @param number 可选1-50个
+     * @return
+     */
+    @GET("https://search.heweather.net/top?key=" + BuildConfig.HeWeatherKey)
+    Observable<TopCityApi> mTopCityInfo(@Query("group") String group, @Query("number") int number);
 }

@@ -1,6 +1,7 @@
 package me.objectyan.weatherbaby.activities;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -32,6 +33,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.AddCityAdapter;
 import me.objectyan.weatherbaby.adapter.CitySearchAdapter;
@@ -41,7 +47,11 @@ import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
+import me.objectyan.weatherbaby.entities.heweather.BaseWeatherEntity;
+import me.objectyan.weatherbaby.entities.heweather.BasicEntity;
+import me.objectyan.weatherbaby.entities.heweather.LifestyleEntity;
 import me.objectyan.weatherbaby.services.CityManageService;
+import me.objectyan.weatherbaby.services.HeWeatherApiService;
 
 public class AddCityActivity extends BaseActivity implements View.OnClickListener {
 
@@ -156,16 +166,21 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void startWeatherActivity(CityInfo cityInfo) {
+        if (cityInfo.isLocation() && CityManageService.hasLocation()) {
+            Util.showShort(R.string.city_already_exists_location);
+            return;
+        }
         if (CityManageService.isDisabled(cityInfo.getCityName())) {
             Util.showShort(getString(R.string.city_already_exists, cityInfo.getCityName()));
             return;
         }
+
         CityBase cityBase = Util.cityInfoToBase(cityInfo);
         if (cityInfo.isLocation()) {
 
             Location location = Util.getCurrentLocation();
             if (location == null) {
-                Util.showShort(R.string.no_location);
+                Util.showLong(R.string.no_location);
             } else {
                 cityBase.setLatitude(location.getLatitude());
                 cityBase.setLongitude(location.getLongitude());
@@ -175,14 +190,20 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
         }
         cityBase.setId(null);
         cityBase.setSort(0);
-        cityBase.setIsDefault(cityBaseDao.loadAll().isEmpty());
+        cityBase.setIsDefault(cityBaseDao.loadAll().
+
+                isEmpty());
         cityBaseDao.insert(cityBase);
         Log.d(LOG_TAG, "Inserted new CityBase, ID: " + cityBase.getId());
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(getApplicationContext(), MainActivity.class);
+        intent.setClass(
+
+                getApplicationContext(), MainActivity.class);
         Util.setDefaultCityID(cityBase.getId());
+
         startActivity(intent);
+
     }
 
     /**
@@ -190,9 +211,45 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
      *
      * @return
      */
+    @TargetApi(Build.VERSION_CODES.N)
     private void initRecommendCities() {
         List<CityInfo> recommendCities = new ArrayList<>();
         recommendCities.add(new CityInfo(CityInfo.CityType.Location.getKey()));
+        Observable.create(new ObservableOnSubscribe<List<BasicEntity>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<BasicEntity>> emitter) throws Exception {
+                if (Util.isNetworkConnected()) {
+                    HeWeatherApiService.getInstance().fetchTopCityInfo().onErrorResumeNext(throwable -> {
+                        return observer -> {
+                            observer.onNext(getLocalTopBaseCity());
+                            observer.onComplete();
+                        };
+                    }).doOnNext(basicEntities -> {
+                        emitter.onNext(basicEntities);
+                    }).subscribe();
+                } else {
+                    emitter.onNext(getLocalTopBaseCity());
+                }
+            }
+        }).doOnNext(basicEntities -> {
+            basicEntities.forEach(basicEntity -> {
+                CityInfo cityInfo = new CityInfo();
+                cityInfo.setCityName(basicEntity.Name);
+                cityInfo.setLatitude(basicEntity.latitude);
+                cityInfo.setLongitude(basicEntity.longitude);
+                cityInfo.setWeatherCode(basicEntity.code);
+                recommendCities.add(cityInfo);
+            });
+        }).doAfterNext(basicEntities -> {
+            searchBarText.setText(R.string.recommend_city);
+            addCityAdapter.clear();
+            addCityAdapter.addAll(recommendCities);
+            moreCityAndReturnBtnTv.setText(R.string.more_city);
+        }).subscribe();
+    }
+
+    private List<BasicEntity> getLocalTopBaseCity() {
+        List<BasicEntity> baseWeatherEntities = new ArrayList<>();
         XmlPullParser parser = getResources().getXml(R.xml.city_china);
         try {
             int eventType = parser.getEventType();
@@ -201,13 +258,12 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 if (eventType == XmlPullParser.START_TAG) {
                     if ("county".equals(parser.getName()) && depth == 0) {
                         depth = parser.getDepth();
-                        CityInfo cityInfo = new CityInfo();
-                        cityInfo.setCityName(parser.getAttributeValue(null, "name"));
-                        cityInfo.setLatitude(parser.getAttributeValue(null, "latitude"));
-                        cityInfo.setLongitude(parser.getAttributeValue(null, "longitude"));
-                        cityInfo.setSpell(parser.getAttributeValue(null, "spell"));
-                        cityInfo.setWeatherCode(parser.getAttributeValue(null, "weatherCode"));
-                        recommendCities.add(cityInfo);
+                        BasicEntity basicEntity = new BasicEntity();
+                        basicEntity.Name = parser.getAttributeValue(null, "name");
+                        basicEntity.latitude = parser.getAttributeValue(null, "latitude");
+                        basicEntity.longitude = parser.getAttributeValue(null, "longitude");
+                        basicEntity.code = parser.getAttributeValue(null, "weatherCode");
+                        baseWeatherEntities.add(basicEntity);
                     }
                 } else if (eventType == XmlPullParser.END_TAG) {
                     if ("province".equals(parser.getName()))
@@ -215,13 +271,10 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
                 }
                 eventType = parser.next();
             }
-            searchBarText.setText(R.string.recommend_city);
-            addCityAdapter.clear();
-            addCityAdapter.addAll(recommendCities);
-            moreCityAndReturnBtnTv.setText(R.string.more_city);
         } catch (Exception e) {
             Log.d(LOG_TAG, "initRecommendCities(): " + e.toString());
         }
+        return baseWeatherEntities;
     }
 
     /**

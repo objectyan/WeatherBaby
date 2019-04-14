@@ -21,11 +21,11 @@ public class AirNowStationEntity extends AirNowCityEntity implements Serializabl
      * 站点纬度
      */
     @SerializedName("lat")
-    public String latitude;
+    public Double latitude;
 
     /**
      * 站点经度
      */
     @SerializedName("lon")
-    public String longitude;
+    public Double longitude;
 }

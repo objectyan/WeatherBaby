@@ -3,6 +3,7 @@ package me.objectyan.weatherbaby.services;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.text.TextUtils;
 
 import java.util.Date;
 
@@ -11,6 +12,8 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.entities.database.CityAirNowStation;
+import me.objectyan.weatherbaby.entities.database.CityAirNowStationDao;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.entities.database.CityDailyForecast;
@@ -36,6 +39,7 @@ public class CityManageService {
                 CityDailyForecastDao cityDailyForecastDao = BaseApplication.getDaoSession().getCityDailyForecastDao();
                 CityHourlyForecastDao cityHourlyForecastDao = BaseApplication.getDaoSession().getCityHourlyForecastDao();
                 CityLifestyleForecastDao cityLifestyleForecastDao = BaseApplication.getDaoSession().getCityLifestyleForecastDao();
+                CityAirNowStationDao cityAirNowStationDao = BaseApplication.getDaoSession().getCityAirNowStationDao();
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
                 HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase)).
                         doOnNext(weather -> {
@@ -144,8 +148,49 @@ public class CityManageService {
                             }
                         }).
                         doOnComplete(() -> {
-                            emitter.onNext(cityBase.getId());
+                            HeWeatherApiService.getInstance().fetchAirNow(Util.getCityName(cityBase)).doOnNext(air -> {
+                                if (air.airNow != null) {
+                                    cityBase.setAqi(air.airNow.aqi);
+                                    cityBase.setCo(air.airNow.co);
+                                    cityBase.setNo2(air.airNow.no2);
+                                    cityBase.setO3(air.airNow.o3);
+                                    cityBase.setPm10(air.airNow.pm10);
+                                    cityBase.setPm25(air.airNow.pm25);
+                                    cityBase.setSo2(air.airNow.so2);
+                                    cityBase.setAirQuality(air.airNow.airQuality);
+                                    cityBase.setMajorPollutants(air.airNow.main);
+                                    cityBaseDao.update(cityBase);
+                                }
+                                if (air.airNowStationEntities != null) {
+                                    cityAirNowStationDao.queryBuilder().where(CityAirNowStationDao.Properties.CityID.eq(mCityID))
+                                            .buildDelete().executeDeleteWithoutDetachingEntities();
+                                    air.airNowStationEntities.forEach(item -> {
+                                        CityAirNowStation cityAirNowStation = new CityAirNowStation();
+                                        cityAirNowStation.setCityID(mCityID);
+                                        cityAirNowStation.setAqi(item.aqi);
+                                        cityAirNowStation.setCo(item.co);
+                                        cityAirNowStation.setNo2(item.no2);
+                                        cityAirNowStation.setO3(item.o3);
+                                        cityAirNowStation.setPm10(item.pm10);
+                                        cityAirNowStation.setPm25(item.pm25);
+                                        cityAirNowStation.setSo2(item.so2);
+                                        cityAirNowStation.setAirQuality(item.airQuality);
+                                        cityAirNowStation.setMajorPollutants(item.main);
+                                        cityAirNowStation.setAirStation(item.airStation);
+                                        cityAirNowStation.setAirStationID(item.airStationID);
+                                        cityAirNowStation.setPubTime(item.getPubTime());
+                                        cityAirNowStation.setLatitude(item.latitude);
+                                        cityAirNowStation.setLongitude(item.longitude);
+                                        cityAirNowStationDao.insert(cityAirNowStation);
+                                    });
+                                }
+                            })
+                                    .doOnComplete(() -> {
+                                        emitter.onNext(cityBase.getId());
+                                    }).
+                                    subscribe();
                         }).
+
                         subscribe();
             }
         });
@@ -159,7 +204,7 @@ public class CityManageService {
      */
     public static Boolean isDisabled(String cityName) {
         CityBaseDao cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
-        if (cityBaseDao.loadAll().isEmpty()) return false;
+        if (cityBaseDao.loadAll().isEmpty() || TextUtils.isEmpty(cityName)) return false;
         return cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Location.eq(cityName),
                 CityBaseDao.Properties.IsLocation.eq(false)).buildCount().count() > 0;
     }

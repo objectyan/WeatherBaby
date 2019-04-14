@@ -97,12 +97,14 @@ public class MainActivity extends BaseActivity {
         wpafViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                imageLocation.setVisibility(View.GONE);
-                headerTitle.setText(R.string.loading);
-                CityInfo cityInfo = ((WeatherFragment) weatherPagerAdapter.getItem(position)).getCityInfo();
-                if (cityInfo != null) {
-                    imageLocation.setVisibility(cityInfo.isLocation() ? View.VISIBLE : View.GONE);
-                    headerTitle.setText(cityInfo.getCityName());
+                if (positionOffset == 0) {
+                    imageLocation.setVisibility(View.GONE);
+                    headerTitle.setText(R.string.loading);
+                    CityInfo cityInfo = ((WeatherFragment) weatherPagerAdapter.getItem(position)).getCityInfo();
+                    if (cityInfo != null) {
+                        imageLocation.setVisibility(cityInfo.isLocation() ? View.VISIBLE : View.GONE);
+                        headerTitle.setText(cityInfo.getCityName());
+                    }
                 }
             }
 

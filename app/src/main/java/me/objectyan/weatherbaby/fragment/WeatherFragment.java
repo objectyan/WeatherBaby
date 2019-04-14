@@ -166,7 +166,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-                if (cityBase.getUpdateTime() == null) {
+                if ((cityBase.getUpdateTime() == null || true) && Util.isNetworkConnected()) {
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
                     }).subscribe();
@@ -199,6 +199,16 @@ public class WeatherFragment extends Fragment {
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
             sunlightView.setSunSet(Util.getDateByTime(cityBase.getSunSet()));
             sunlightView.updateData();
+            todayTempAtmosphere.setText(cityBase.getAirQuality());
+            atmosphereChart.setDensity(cityBase.getAqi());
+            atmosphereChart.setValue(String.valueOf(cityBase.getAqi()));
+            atmosphereChart.setSubValue(cityBase.getAirQuality());
+            atmospherePM10.setText(String.valueOf(cityBase.getPm10()));
+            atmospherePM25.setText(String.valueOf(cityBase.getPm25()));
+            atmosphereCO.setText(String.valueOf(cityBase.getCo()));
+            atmosphereNO2.setText(String.valueOf(cityBase.getNo2()));
+            atmosphereO3.setText(String.valueOf(cityBase.getO3()));
+            atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
         }).subscribe();
     }
 }

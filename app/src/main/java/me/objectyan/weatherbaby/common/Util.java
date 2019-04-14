@@ -46,17 +46,14 @@ public class Util {
     /**
      * 检查网络是否连接
      *
-     * @param context
      * @return
      */
-    public static boolean isNetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null) {
-                return mNetworkInfo.isAvailable();
-            }
+    public static boolean isNetworkConnected() {
+        ConnectivityManager mConnectivityManager =
+                (ConnectivityManager) BaseApplication.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (mNetworkInfo != null) {
+            return mNetworkInfo.isAvailable() && mNetworkInfo.isConnectedOrConnecting() && mNetworkInfo.getState() == NetworkInfo.State.CONNECTED;
         }
         return false;
     }
@@ -355,5 +352,17 @@ public class Util {
         SharedPreferences.Editor editor = share.edit();
         editor.putLong(WeatherBabyConstants.SHARE_DEFAULT_CITY_ID, cityID);
         editor.apply();
+    }
+
+    public static String getTopCityByGroup() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getString(WeatherBabyConstants.SHARE_TOP_CITY_GROUP, "cn");
+    }
+
+    public static int getTopCityByNumber() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getInt(WeatherBabyConstants.SHARE_TOP_CITY_NUMBER, 15);
     }
 }
