@@ -1,5 +1,7 @@
 package me.objectyan.weatherbaby.adapter;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +43,12 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
         mCityID = cityID;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull WeatherForecastItem holder, int position) {
         CityDailyForecast cityDailyForecast = mDatas.get(position);
-        holder.todayTempCurrMax.setText(String.valueOf(cityDailyForecast.getMaximumTemperature()));
-        holder.todayTempCurrMin.setText(String.valueOf(cityDailyForecast.getMinimumTemperature()));
+        holder.todayTempCurrMax.setText(Util.getTempByUnit(cityDailyForecast.getMaximumTemperature()));
+        holder.todayTempCurrMin.setText(Util.getTempByUnit(cityDailyForecast.getMinimumTemperature()));
         holder.forecastItemIcWeather.setImageDrawable(Util.getHeWeatherIcon(Util.isDay() ? cityDailyForecast.getCondCodeDay() : cityDailyForecast.getCondCodeEvening()));
         holder.forecastItemDate.setText(Util.getDateByFormat(cityDailyForecast.getDate()));
     }
@@ -66,14 +69,10 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
         AppCompatImageView forecastItemIcWeather;
         @BindView(R.id.today_temp_curr_max)
         TextView todayTempCurrMax;
-        @BindView(R.id.today_temp_curr_max_unit)
-        TextView todayTempCurrMaxUnit;
         @BindView(R.id.today_temp_curr_to)
         TextView todayTempCurrTo;
         @BindView(R.id.today_temp_curr_min)
         TextView todayTempCurrMin;
-        @BindView(R.id.today_temp_curr_min_unit)
-        TextView todayTempCurrMinUnit;
         @BindView(R.id.forecast_item_date)
         TextView forecastItemDate;
 

@@ -44,8 +44,9 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
     private void setFragmentPositionMapForUpdate() {
         fragmentList.clear();
         for (CityBase item :
-                cityBaseDao.queryBuilder().orderDesc(CityBaseDao.Properties.IsDefault, CityBaseDao.Properties.Sort).build().list())
+                cityBaseDao.queryBuilder().orderDesc(CityBaseDao.Properties.IsDefault, CityBaseDao.Properties.Sort).build().list()) {
             fragmentList.add(WeatherFragment.newInstance(item.getId()));
+        }
     }
 
     public void refreshData() {
@@ -53,6 +54,12 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         notifyDataSetChanged();
     }
 
+    public void refreshSettingForData() {
+        for (Fragment fragment : fragmentList) {
+            WeatherFragment weatherFragment = (WeatherFragment) fragment;
+            weatherFragment.refreshData();
+        }
+    }
 
     @TargetApi(Build.VERSION_CODES.N)
     public int getDefaultItem(Long cityID) {

@@ -67,15 +67,6 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/today_temp_curr_max_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/Centigrade"
-                android:textColor="@color/colorTemp"
-                android:textSize="15sp" />
-
-            <TextView
                 android:id="@+id/today_temp_curr_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -93,13 +84,6 @@
                 android:text="11"
                 android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/today_temp_curr_min_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/Centigrade"
-                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout

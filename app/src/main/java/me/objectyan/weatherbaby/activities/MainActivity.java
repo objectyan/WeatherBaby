@@ -1,13 +1,17 @@
 package me.objectyan.weatherbaby.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -49,10 +53,57 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_main_settings) {
-            //startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        switch (item.getItemId()) {
+            case R.id.menu_setting_update_interval:
+                showSettingUpdateIntervalDialog();
+                break;
+            case R.id.menu_setting_temp_unit:
+                showSettingTempUnitDialog();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 弹出更新时间设置
+     */
+    private void showSettingUpdateIntervalDialog() {
+        Integer[] updateInterval = new Integer[]{1, 2, 6, 12};
+        AlertDialog.Builder singleChoiceDialog =
+                new AlertDialog.Builder(this);
+        singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_update_interval);
+        singleChoiceDialog.setSingleChoiceItems(R.array.settings_update_interval,
+                Arrays.binarySearch(updateInterval, Util.getSettingsUpdateInterval()),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Util.setSettingsUpdateInterval(updateInterval[which]);
+                        dialog.dismiss();
+                        weatherPagerAdapter.refreshSettingForData();
+                    }
+                });
+        singleChoiceDialog.show();
+    }
+
+    /**
+     * 弹出温度单位设置
+     */
+    private void showSettingTempUnitDialog() {
+        AlertDialog.Builder singleChoiceDialog =
+                new AlertDialog.Builder(this);
+        String[] tempUnits = getResources().getStringArray(R.array.settings_temp_unit);
+        singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_temp_unit);
+        singleChoiceDialog.setSingleChoiceItems(tempUnits,
+                Arrays.binarySearch(tempUnits, Util.getSettingsTempUnit()),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Util.setSettingsTempUnit(tempUnits[which]);
+                        dialog.dismiss();
+                        weatherPagerAdapter.refreshSettingForData();
+                    }
+                });
+        singleChoiceDialog.show();
     }
 
     @Override

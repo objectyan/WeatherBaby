@@ -35,6 +35,7 @@ public class CityBase {
     @NotNull
     private Boolean isLocation;
     private Date updateTime;
+    private Date publishTime;
     private String condCode;
     private String condTxt;
     private Double tempHigh;
@@ -62,15 +63,16 @@ public class CityBase {
     private Double co;
     private Double o3;
 
-    @Generated(hash = 1276293912)
+    @Generated(hash = 1111028127)
     public CityBase(Long id, String location, String cid, Double latitude,
                     Double longitude, String parentCity, String adminArea, String country,
                     Float timeZone, @NotNull Boolean isDefault, Double sendibleTemperature,
                     Double temperature, Integer cloud, @NotNull Integer sort,
-                    @NotNull Boolean isLocation, Date updateTime, String condCode,
-                    String condTxt, Double tempHigh, Double tempLow, String windDirection,
-                    String windPower, Double windSpeed, Double humidity, Double pressure,
-                    Double precipitation, Double visibility, Double ultravioletIndex,
+                    @NotNull Boolean isLocation, Date updateTime, Date publishTime,
+                    String condCode, String condTxt, Double tempHigh, Double tempLow,
+                    String windDirection, String windPower, Double windSpeed,
+                    Double humidity, Double pressure, Double precipitation,
+                    Double visibility, Double ultravioletIndex,
                     Double precipitationProbability, String sunRise, String sunSet,
                     String monthlyRise, String monthlySet, Double aqi,
                     String majorPollutants, String airQuality, Double pm10, Double pm25,
@@ -91,6 +93,7 @@ public class CityBase {
         this.sort = sort;
         this.isLocation = isLocation;
         this.updateTime = updateTime;
+        this.publishTime = publishTime;
         this.condCode = condCode;
         this.condTxt = condTxt;
         this.tempHigh = tempHigh;
@@ -249,6 +252,14 @@ public class CityBase {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Date getPublishTime() {
+        return this.publishTime;
+    }
+
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 
     public String getCondCode() {

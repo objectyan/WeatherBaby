@@ -43,7 +43,8 @@ public class CityManageService {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
                 HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase)).
                         doOnNext(weather -> {
-                            cityBase.setUpdateTime(weather.updateEntity.getUtcTime());
+                            cityBase.setUpdateTime(Util.getCurrentTimeByUTC());
+                            cityBase.setPublishTime(weather.updateEntity.getUtcTime());
                             cityBase.setLocation(weather.basic.Name);
                             cityBase.setAdminArea(weather.basic.adminArea);
                             cityBase.setCid(weather.basic.code);

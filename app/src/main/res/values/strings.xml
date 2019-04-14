@@ -62,5 +62,6 @@
         使用当前网络地址定位</string>
     <string name="city_already_exists_location">当前定位城市已添加</string>
     <string name="today_temp_air">空气</string>
-
+    <string name="toolbar_menu_settings_update_interval">更新间隔</string>
+    <string name="toolbar_menu_settings_temp_unit">温度单位</string>
 </resources>

@@ -139,7 +139,7 @@ public class Util {
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-              return null;
+                return null;
             }
             return locationManager.getLastKnownLocation(provider);
         } else {
@@ -365,5 +365,69 @@ public class Util {
         SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
                 WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
         return share.getInt(WeatherBabyConstants.SHARE_TOP_CITY_NUMBER, 15);
+    }
+
+    /**
+     * 获取更新时间
+     *
+     * @return
+     */
+    public static int getSettingsUpdateInterval() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getInt(WeatherBabyConstants.SHARE_SETTINGS_UPDATE_INTERVAL, 1);
+    }
+
+    /**
+     * 设置更新时间
+     *
+     * @param settingsUpdateInterval
+     */
+    public static void setSettingsUpdateInterval(int settingsUpdateInterval) {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putInt(WeatherBabyConstants.SHARE_SETTINGS_UPDATE_INTERVAL, settingsUpdateInterval);
+        editor.apply();
+    }
+
+    /**
+     * 获取温度单位
+     *
+     * @return
+     */
+    public static String getSettingsTempUnit() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getString(WeatherBabyConstants.SHARE_SETTINGS_TEMP_UNIT, BaseApplication.getAppContext().getString(R.string.Centigrade));
+    }
+
+    /**
+     * 设置温度单位
+     *
+     * @param settingsTempUnit
+     */
+    public static void setSettingsTempUnit(String settingsTempUnit) {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putString(WeatherBabyConstants.SHARE_SETTINGS_TEMP_UNIT, settingsTempUnit);
+        editor.apply();
+    }
+
+    /**
+     * 获取温度信息
+     */
+    public static String getTempByUnit(Double temp) {
+        String unit = getSettingsTempUnit();
+        return String.format("%s %s", getTemp(temp), unit);
+    }
+
+    public static String getTemp(Double temp) {
+        String unit = getSettingsTempUnit();
+        Double currentTemp = temp * 1.8 + 32;
+        if (unit.equals(BaseApplication.getAppContext().getString(R.string.Centigrade)))
+            currentTemp = temp;
+        return String.format("%.1f", currentTemp);
     }
 }

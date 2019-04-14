@@ -1,9 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_main_settings"
-        android:icon="@drawable/ic_toolbar_setting"
-        android:orderInCategory="100"
-        android:title="@string/toolbar_menu_settings"
-        app:showAsAction="always" />
+        android:id="@+id/menu_setting_update_interval"
+        android:title="@string/toolbar_menu_settings_update_interval" />
+
+    <item
+        android:id="@+id/menu_setting_temp_unit"
+        android:title="@string/toolbar_menu_settings_temp_unit" />
 </menu>

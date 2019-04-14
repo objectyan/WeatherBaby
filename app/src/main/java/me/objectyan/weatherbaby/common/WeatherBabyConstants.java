@@ -38,4 +38,14 @@ public class WeatherBabyConstants {
      * sharedPreferences属性 热门城市数量
      */
     public static final String SHARE_TOP_CITY_NUMBER = "TOP_CITY_NUMBER";
+
+    /**
+     * sharedPreferences属性 更新时间
+     */
+    public static final String SHARE_SETTINGS_UPDATE_INTERVAL = "SETTINGS_UPDATE_INTERVAL";
+
+    /**
+     * sharedPreferences属性 温度单位
+     */
+    public static final String SHARE_SETTINGS_TEMP_UNIT = "SETTINGS_TEMP_UNIT";
 }

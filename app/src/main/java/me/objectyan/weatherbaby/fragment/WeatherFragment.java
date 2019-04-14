@@ -51,14 +51,10 @@ public class WeatherFragment extends Fragment {
     TextView todayTempWeather;
     @BindView(R.id.today_temp_curr_max)
     TextView todayTempCurrMax;
-    @BindView(R.id.today_temp_curr_max_unit)
-    TextView todayTempCurrMaxUnit;
     @BindView(R.id.today_temp_curr_to)
     TextView todayTempCurrTo;
     @BindView(R.id.today_temp_curr_min)
     TextView todayTempCurrMin;
-    @BindView(R.id.today_temp_curr_min_unit)
-    TextView todayTempCurrMinUnit;
     @BindView(R.id.today_temp_atmosphere)
     TextView todayTempAtmosphere;
     @BindView(R.id.today_temp_early_warning)
@@ -175,6 +171,8 @@ public class WeatherFragment extends Fragment {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
                 if ((cityBase.getUpdateTime() == null ||
                         cityBase.getUpdateTime().getTime() < new Date().getTime() ||
+                        (new Date().getTime() - cityBase.getUpdateTime().getTime() > Util.getSettingsUpdateInterval() * 60 * 1000) ||
+                        (new Date().getTime() - cityBase.getPublishTime().getTime() > Util.getSettingsUpdateInterval() * 60 * 1000) ||
                         isRefresh) && Util.isNetworkConnected()) {
                     swipeWeatherLayout.setRefreshing(true);
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
@@ -189,12 +187,13 @@ public class WeatherFragment extends Fragment {
             Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
             Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
             Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
-            todayTempUpdateTime.setText(Util.utcToLocal(cityBase.getUpdateTime()));
-            todayTempCurr.setText(String.valueOf(cityBase.getTemperature()));
+            todayTempUpdateTime.setText(Util.utcToLocal(cityBase.getPublishTime()));
+            todayTempCurr.setText(Util.getTemp(cityBase.getTemperature()));
+            todayTempCurrUnit.setText(Util.getSettingsTempUnit());
             todayTempWeather.setText(cityBase.getCondTxt());
             fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
-            todayTempCurrMax.setText(String.valueOf(cityBase.getTempHigh()));
-            todayTempCurrMin.setText(String.valueOf(cityBase.getTempLow()));
+            todayTempCurrMax.setText(Util.getTempByUnit(cityBase.getTempHigh()));
+            todayTempCurrMin.setText(Util.getTempByUnit(cityBase.getTempLow()));
             windDirection.setText(cityBase.getWindDirection());
             windPower.setText(cityBase.getWindPower());
             windWiew.setSpeed(cityBase.getWindSpeed());
@@ -221,5 +220,9 @@ public class WeatherFragment extends Fragment {
             atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
             swipeWeatherLayout.setRefreshing(false);
         }).subscribe();
+    }
+
+    public void refreshData() {
+        initData(true);
     }
 }
