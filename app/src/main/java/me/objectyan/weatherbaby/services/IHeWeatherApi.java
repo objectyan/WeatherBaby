@@ -2,11 +2,13 @@ package me.objectyan.weatherbaby.services;
 
 import io.reactivex.Observable;
 import me.objectyan.weatherbaby.BuildConfig;
+import me.objectyan.weatherbaby.entities.caiyun.HourlyApi;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
 import me.objectyan.weatherbaby.entities.heweather.TopCityApi;
 import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import static java.lang.String.format;
@@ -49,4 +51,14 @@ public interface IHeWeatherApi {
      */
     @GET("https://search.heweather.net/top?key=" + BuildConfig.HeWeatherKey)
     Observable<TopCityApi> mTopCityInfo(@Query("group") String group, @Query("number") int number);
+
+    /**
+     * 彩云天气接口 获取小时天气
+     *
+     * @param longitude
+     * @param latitude
+     * @return
+     */
+    @GET("https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN/{longitude},{latitude}/hourly.json")
+    Observable<HourlyApi> mHourly(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
 }
