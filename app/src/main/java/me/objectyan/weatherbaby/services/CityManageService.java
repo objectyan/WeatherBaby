@@ -12,6 +12,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.entities.caiyun.HourlyKeyValue;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStation;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStationDao;
 import me.objectyan.weatherbaby.entities.database.CityBase;
@@ -187,7 +188,34 @@ public class CityManageService {
                                 }
                             })
                                     .doOnComplete(() -> {
-                                        emitter.onNext(cityBase.getId());
+                                        HeWeatherApiService.getInstance().fetchHourly(cityBase.getLongitude(), cityBase.getLatitude()).doOnNext(hourly -> {
+                                            if (hourly.temperature != null) {
+                                                cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID))
+                                                        .buildDelete().executeDeleteWithoutDetachingEntities();
+                                                for (int i = 0; i < hourly.temperature.size(); i++) {
+                                                    HourlyKeyValue<Double> item = hourly.temperature.get(i);
+                                                    CityHourlyForecast cityHourlyForecast = new CityHourlyForecast();
+                                                    cityHourlyForecast.setCityID(mCityID);
+                                                    cityHourlyForecast.setTemperature(item.value);
+                                                    cityHourlyForecast.setWindSpeed(hourly.wind.get(i).speed);
+                                                    cityHourlyForecast.setWindDirectionAngle(hourly.wind.get(i).direction);
+                                                    cityHourlyForecast.setTime(item.getTime());
+                                                    cityHourlyForecast.setDate(item.getDate());
+                                                    cityHourlyForecast.setDateTime(item.getLocalTime());
+                                                    cityHourlyForecast.setRelativeHumidity(hourly.humidity.get(i).value);
+                                                    cityHourlyForecast.setProbability(hourly.precipitation.get(i).value);
+                                                    cityHourlyForecast.setPressure(hourly.pres.get(i).value);
+                                                    cityHourlyForecast.setCloud(new Double(hourly.cloudrate.get(i).value * 100).intValue());
+                                                    cityHourlyForecast.setCondTxt(hourly.skycon.get(i).getCondTxt());
+                                                    cityHourlyForecast.setCondCode(hourly.skycon.get(i).getCondCode());
+                                                    cityHourlyForecastDao.insert(cityHourlyForecast);
+                                                }
+                                            }
+                                        })
+                                                .doOnComplete(() -> {
+                                                    emitter.onNext(cityBase.getId());
+                                                }).subscribe();
+//                                        emitter.onNext(cityBase.getId());
                                     }).
                                     subscribe();
                         }).

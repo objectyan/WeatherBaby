@@ -24,6 +24,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.WeatherForecastAdapter;
+import me.objectyan.weatherbaby.adapter.WeatherTimelineAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
@@ -62,7 +63,7 @@ public class WeatherFragment extends Fragment {
     @BindView(R.id.today_temp_update_time)
     TextView todayTempUpdateTime;
     @BindView(R.id.timeline_items)
-    LinearLayout timelineItems;
+    RecyclerView timelineItems;
     @BindView(R.id.forecast_items)
     RecyclerView forecastItems;
     @BindView(R.id.atmosphere_chart)
@@ -110,6 +111,7 @@ public class WeatherFragment extends Fragment {
     private CityLifestyleForecastDao cityLifestyleForecastDao;
 
     private WeatherForecastAdapter weatherForecastAdapter;
+    private WeatherTimelineAdapter weatherTimelineAdapter;
 
     public WeatherFragment() {
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
@@ -151,8 +153,11 @@ public class WeatherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
         weatherForecastAdapter = new WeatherForecastAdapter(mCityID);
+//        weatherTimelineAdapter = new WeatherTimelineAdapter(mCityID);
         forecastItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
         forecastItems.setAdapter(weatherForecastAdapter);
+//        timelineItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
+//        timelineItems.setAdapter(weatherTimelineAdapter);
         swipeWeatherLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

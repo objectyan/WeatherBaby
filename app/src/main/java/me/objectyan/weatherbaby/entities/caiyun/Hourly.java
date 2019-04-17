@@ -28,4 +28,8 @@ public class Hourly {
 
     @SerializedName("skycon")
     public List<HourlyKeyValue<String>> skycon;
+
+    @SerializedName("precipitation")
+    public List<HourlyKeyValue<Double>> precipitation;
+
 }

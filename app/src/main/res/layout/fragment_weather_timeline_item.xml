@@ -17,6 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:id="@+id/time"
             android:text="下午5:00"
             android:textSize="10sp" />
 
@@ -25,9 +26,11 @@
             android:layout_height="20dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
+            android:id="@+id/time_icon"
             app:srcCompat="@drawable/ic_weather_sunny" />
 
         <TextView
+            android:id="@+id/time_desc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

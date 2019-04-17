@@ -4,6 +4,8 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.util.Date;
+
 @Entity
 public class CityHourlyForecast {
     @Id(autoincrement = true)
@@ -11,6 +13,7 @@ public class CityHourlyForecast {
     private Long cityID;
     private String date;
     private String time;
+    private Date dateTime;
     private Double temperature;
     private String condCode;
     private String condTxt;
@@ -24,16 +27,16 @@ public class CityHourlyForecast {
     private Double dewPoint;
     private Integer cloud;
 
-    @Generated(hash = 600973195)
-    public CityHourlyForecast(Long id, Long cityID, String date, String time,
-                              Double temperature, String condCode, String condTxt,
-                              Double windDirectionAngle, String windDirection, String windPower,
-                              Double windSpeed, Double relativeHumidity, Double probability,
-                              Double pressure, Double dewPoint, Integer cloud) {
+    @Generated(hash = 2091677909)
+    public CityHourlyForecast(Long id, Long cityID, String date, String time, Date dateTime,
+                              Double temperature, String condCode, String condTxt, Double windDirectionAngle,
+                              String windDirection, String windPower, Double windSpeed, Double relativeHumidity,
+                              Double probability, Double pressure, Double dewPoint, Integer cloud) {
         this.id = id;
         this.cityID = cityID;
         this.date = date;
         this.time = time;
+        this.dateTime = dateTime;
         this.temperature = temperature;
         this.condCode = condCode;
         this.condTxt = condTxt;
@@ -178,5 +181,13 @@ public class CityHourlyForecast {
 
     public void setCloud(Integer cloud) {
         this.cloud = cloud;
+    }
+
+    public Date getDateTime() {
+        return this.dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 }

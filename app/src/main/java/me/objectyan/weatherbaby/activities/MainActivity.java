@@ -73,17 +73,17 @@ public class MainActivity extends BaseActivity {
         AlertDialog.Builder singleChoiceDialog =
                 new AlertDialog.Builder(this);
         singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_update_interval);
-        singleChoiceDialog.setSingleChoiceItems(R.array.settings_update_interval,
-                Arrays.binarySearch(updateInterval, Util.getSettingsUpdateInterval()),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Util.setSettingsUpdateInterval(updateInterval[which]);
-                        dialog.dismiss();
-                        weatherPagerAdapter.refreshSettingForData();
-                        startService(new Intent(getApplicationContext(), AutoUpdateService.class));
-                    }
-                });
+//        singleChoiceDialog.setSingleChoiceItems(R.array.settings_update_interval,
+//                Arrays.binarySearch(updateInterval, Util.getSettingsUpdateInterval()),
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Util.setSettingsUpdateInterval(updateInterval[which]);
+//                        dialog.dismiss();
+//                        weatherPagerAdapter.refreshSettingForData();
+//                        startService(new Intent(getApplicationContext(), AutoUpdateService.class));
+//                    }
+//                });
         singleChoiceDialog.show();
     }
 
@@ -93,18 +93,18 @@ public class MainActivity extends BaseActivity {
     private void showSettingTempUnitDialog() {
         AlertDialog.Builder singleChoiceDialog =
                 new AlertDialog.Builder(this);
-        String[] tempUnits = getResources().getStringArray(R.array.settings_temp_unit);
-        singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_temp_unit);
-        singleChoiceDialog.setSingleChoiceItems(tempUnits,
-                Arrays.binarySearch(tempUnits, Util.getSettingsTempUnit()),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Util.setSettingsTempUnit(tempUnits[which]);
-                        dialog.dismiss();
-                        weatherPagerAdapter.refreshSettingForData();
-                    }
-                });
+//        String[] tempUnits = getResources().getStringArray(R.array.settings_temp_unit);
+//        singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_temp_unit);
+//        singleChoiceDialog.setSingleChoiceItems(tempUnits,
+//                Arrays.binarySearch(tempUnits, Util.getSettingsTempUnit()),
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Util.setSettingsTempUnit(tempUnits[which]);
+//                        dialog.dismiss();
+//                        weatherPagerAdapter.refreshSettingForData();
+//                    }
+//                });
         singleChoiceDialog.show();
     }
 
