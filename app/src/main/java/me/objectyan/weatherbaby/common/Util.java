@@ -209,6 +209,22 @@ public class Util {
     }
 
     /**
+     * Local 转 UTC
+     *
+     * @param date
+     * @return
+     */
+    public static Date localToUTC(Date date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String gmtTime = sdf.format(new Date());
+        SimpleDateFormat localFormater = new SimpleDateFormat();//当地时间格式
+        localFormater.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return localFormater.parse(gmtTime);
+    }
+
+
+    /**
      * 获取和风天气图片
      *
      * @param weatherCode

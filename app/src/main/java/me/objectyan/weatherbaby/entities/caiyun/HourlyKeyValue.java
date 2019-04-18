@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class HourlyKeyValue<T> {
@@ -18,8 +20,9 @@ public class HourlyKeyValue<T> {
     public Double speed;
 
     public Date getLocalTime() throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
-        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);//小写的mm表示的是分钟
+        datetime = "2019-04-18 10:00";
+        Date shanghaiDate = sdf.parse(datetime);
         return sdf.parse(datetime);
     }
 
