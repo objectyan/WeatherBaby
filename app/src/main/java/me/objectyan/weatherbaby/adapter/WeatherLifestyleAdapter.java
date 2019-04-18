@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -74,6 +75,8 @@ public class WeatherLifestyleAdapter extends ArrayAdapter<CityLifestyleForecast>
         TextView lifestyleBrief;
         @BindView(R.id.lifestyle_name)
         TextView lifestyleName;
+        @BindView(R.id.lifestyle_layout)
+        LinearLayout lifestyleLayout;
 
         CityLifestyleForecast mCityLifestyleForecast;
 
@@ -83,6 +86,7 @@ public class WeatherLifestyleAdapter extends ArrayAdapter<CityLifestyleForecast>
             ButterKnife.bind(this, view);
             this.view = view;
             this.mCityLifestyleForecast = mCityLifestyleForecast;
+            lifestyleLayout.setOnClickListener(this);
         }
 
         @Override

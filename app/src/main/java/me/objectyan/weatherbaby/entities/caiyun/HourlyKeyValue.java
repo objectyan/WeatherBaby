@@ -19,7 +19,7 @@ public class HourlyKeyValue<T> {
 
     public Date getLocalTime() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         return sdf.parse(datetime);
     }
 

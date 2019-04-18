@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
     private void showSettingUpdateIntervalDialog() {
         Integer[] updateInterval = new Integer[]{1, 2, 6, 12};
         AlertDialog.Builder singleChoiceDialog =
-                new AlertDialog.Builder(this);
+                new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
         singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_update_interval);
         singleChoiceDialog.setSingleChoiceItems(R.array.settings_update_interval,
                 Arrays.binarySearch(updateInterval, Util.getSettingsUpdateInterval()),
@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity {
      */
     private void showSettingTempUnitDialog() {
         AlertDialog.Builder singleChoiceDialog =
-                new AlertDialog.Builder(this);
+                new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
         String[] tempUnits = getResources().getStringArray(R.array.settings_temp_unit);
         singleChoiceDialog.setTitle(R.string.toolbar_menu_settings_temp_unit);
         singleChoiceDialog.setSingleChoiceItems(tempUnits,
