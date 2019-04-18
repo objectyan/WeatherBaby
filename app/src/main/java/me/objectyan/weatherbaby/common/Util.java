@@ -430,4 +430,93 @@ public class Util {
             currentTemp = temp;
         return String.format("%.1f", currentTemp);
     }
+
+    /**
+     * 获取生活指数名称
+     *
+     * @param type
+     * @return
+     */
+    public static String getLifestyleName(String type) {
+        switch (type) {
+            case "comf":
+                return "舒适度指数";
+            case "cw":
+                return "洗车指数";
+            case "drsg":
+                return "穿衣指数";
+            case "flu":
+                return "感冒指数";
+            case "sport":
+                return "运动指数";
+            case "trav":
+                return "旅游指数";
+            case "uv":
+                return "紫外线指数";
+            case "air":
+                return "空气污染扩散条件指数";
+            case "ac":
+                return "空调开启指数";
+            case "ag":
+                return "过敏指数";
+            case "gl":
+                return "太阳镜指数";
+            case "mu":
+                return "化妆指数";
+            case "airc":
+                return "晾晒指数";
+            case "ptfc":
+                return "交通指数";
+            case "fsh":
+                return "钓鱼指数";
+            case "spi":
+                return "防晒指数";
+            default:
+                return type;
+        }
+    }
+
+    /**
+     * 获取生活指数图片
+     *
+     * @return
+     */
+    public static Integer getLifestyleIcon(String type) {
+        switch (type) {
+            case "comf":
+                return R.drawable.ic_lifestyle_comfortdegree;
+            case "cw":
+                return R.drawable.ic_lifestyle_carwash;
+            case "drsg":
+                return R.drawable.ic_lifestyle_dressing;
+            case "flu":
+                return R.drawable.ic_lifestyle_cold;
+            case "sport":
+                return R.drawable.ic_lifestyle_motion;
+            case "trav":
+                return R.drawable.ic_lifestyle_travel;
+            case "uv":
+                return R.drawable.ic_lifestyle_ultravioletrays;
+            case "air":
+                return R.drawable.ic_lifestyle_airpollution;
+            case "ac":
+                return R.drawable.ic_lifestyle_airconditioner;
+            case "ag":
+                return R.drawable.ic_lifestyle_allergy;
+            case "gl":
+                return R.drawable.ic_lifestyle_sunglasses;
+            case "mu":
+                return R.drawable.ic_lifestyle_makeup;
+            case "airc":
+                return R.drawable.ic_lifestyle_airing;
+            case "ptfc":
+                return R.drawable.ic_lifestyle_traffic;
+            case "fsh":
+                return R.drawable.ic_lifestyle_fishing;
+            case "spi":
+                return R.drawable.ic_lifestyle_sunscreen;
+            default:
+                return null;
+        }
+    }
 }

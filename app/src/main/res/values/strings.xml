@@ -70,4 +70,5 @@
     <string name="update_interval_two">2 小时</string>
     <string name="update_interval_six">6  小时</string>
     <string name="update_interval_twelve">12  小时</string>
+    <string name="Lifestyle">生活指数</string>
 </resources>

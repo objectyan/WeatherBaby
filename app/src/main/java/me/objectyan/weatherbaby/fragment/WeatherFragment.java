@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import org.greenrobot.greendao.query.Query;
@@ -24,6 +24,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.WeatherForecastAdapter;
+import me.objectyan.weatherbaby.adapter.WeatherLifestyleAdapter;
 import me.objectyan.weatherbaby.adapter.WeatherTimelineAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
@@ -102,6 +103,8 @@ public class WeatherFragment extends Fragment {
     SunlightView sunlightView;
     @BindView(R.id.swipe_weather_layout)
     SwipeRefreshLayout swipeWeatherLayout;
+    @BindView(R.id.gv_lifestyle_manage)
+    GridView gvLifestyleManage;
 
     private Long mCityID;
 
@@ -112,6 +115,7 @@ public class WeatherFragment extends Fragment {
 
     private WeatherForecastAdapter weatherForecastAdapter;
     private WeatherTimelineAdapter weatherTimelineAdapter;
+    private WeatherLifestyleAdapter weatherLifestyleAdapter;
 
     public WeatherFragment() {
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
@@ -154,6 +158,8 @@ public class WeatherFragment extends Fragment {
         ButterKnife.bind(this, view);
         weatherForecastAdapter = new WeatherForecastAdapter(mCityID);
         weatherTimelineAdapter = new WeatherTimelineAdapter(mCityID);
+        weatherLifestyleAdapter = new WeatherLifestyleAdapter(this.getContext(), R.layout.fragment_weather_lifestyle_item, mCityID);
+        gvLifestyleManage.setAdapter(weatherLifestyleAdapter);
         forecastItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
         forecastItems.setAdapter(weatherForecastAdapter);
         timelineItems.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -209,6 +215,7 @@ public class WeatherFragment extends Fragment {
             comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
             weatherForecastAdapter.updateData();
             weatherTimelineAdapter.updateData();
+            weatherLifestyleAdapter.updateData();
             sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
             sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
