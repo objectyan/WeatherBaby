@@ -64,4 +64,10 @@
     <string name="today_temp_air">空气</string>
     <string name="toolbar_menu_settings_update_interval">更新间隔</string>
     <string name="toolbar_menu_settings_temp_unit">温度单位</string>
+
+    <!-- 更新时间间隔 -->
+    <string name="update_interval_one">1 小时</string>
+    <string name="update_interval_two">2 小时</string>
+    <string name="update_interval_six">6  小时</string>
+    <string name="update_interval_twelve">12  小时</string>
 </resources>

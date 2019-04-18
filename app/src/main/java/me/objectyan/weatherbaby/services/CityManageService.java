@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -215,9 +216,8 @@ public class CityManageService {
                                                 .doOnComplete(() -> {
                                                     emitter.onNext(cityBase.getId());
                                                 }).subscribe();
-//                                        emitter.onNext(cityBase.getId());
-                                    }).
-                                    subscribe();
+                                    }).subscribe();
+
                         }).
 
                         subscribe();

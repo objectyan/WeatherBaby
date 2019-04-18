@@ -153,11 +153,11 @@ public class WeatherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         ButterKnife.bind(this, view);
         weatherForecastAdapter = new WeatherForecastAdapter(mCityID);
-//        weatherTimelineAdapter = new WeatherTimelineAdapter(mCityID);
+        weatherTimelineAdapter = new WeatherTimelineAdapter(mCityID);
         forecastItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
         forecastItems.setAdapter(weatherForecastAdapter);
-//        timelineItems.setLayoutManager(new LinearLayoutManager(view.getContext()));
-//        timelineItems.setAdapter(weatherTimelineAdapter);
+        timelineItems.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        timelineItems.setAdapter(weatherTimelineAdapter);
         swipeWeatherLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -208,6 +208,7 @@ public class WeatherFragment extends Fragment {
             comfortDegreePressure.setText(String.valueOf(cityBase.getPressure()));
             comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
             weatherForecastAdapter.updateData();
+            weatherTimelineAdapter.updateData();
             sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
             sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));

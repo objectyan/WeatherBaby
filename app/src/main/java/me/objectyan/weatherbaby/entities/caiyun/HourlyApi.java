@@ -10,5 +10,5 @@ import me.objectyan.weatherbaby.entities.heweather.AirNow;
 
 public class HourlyApi {
     @SerializedName("result")
-    public Hourly mHourly;
+    public HourlyResult mHourlyResult;
 }

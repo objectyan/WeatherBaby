@@ -45,7 +45,7 @@ public class WeatherTimelineAdapter extends RecyclerView.Adapter<WeatherTimeline
     public void onBindViewHolder(@NonNull WeatherTimelineItem holder, int position) {
         CityHourlyForecast cityHourlyForecast = mDatas.get(position);
         holder.time.setText(cityHourlyForecast.getTime());
-        holder.timeDesc.setText(String.valueOf(cityHourlyForecast.getTemperature()));
+        holder.timeDesc.setText(Util.getTempByUnit(cityHourlyForecast.getTemperature()));
         holder.timeIcon.setImageDrawable(Util.getHeWeatherIcon(cityHourlyForecast.getCondCode()));
     }
 

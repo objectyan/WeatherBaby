@@ -4,7 +4,19 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonSyntaxException;
+
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +54,8 @@ public class HeWeatherApiService {
     private static Retrofit sRetrofit = null;
     private static OkHttpClient sOkHttpClient = null;
     private static String TAG = "HeWeatherApiService";
+
+    private static Gson gson;
 
     private HeWeatherApiService() {
         initOkHttp();
@@ -92,8 +106,91 @@ public class HeWeatherApiService {
                 .baseUrl(IHeWeatherApi.HOST)
                 .client(sOkHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(buildGson()))
                 .build();
+    }
+
+    public static Gson buildGson() {
+        if (gson == null) {
+            gson = new GsonBuilder()
+                    .registerTypeAdapter(Integer.class, new IntegerDefault0Adapter())
+                    .registerTypeAdapter(int.class, new IntegerDefault0Adapter())
+                    .registerTypeAdapter(Double.class, new DoubleDefault0Adapter())
+                    .registerTypeAdapter(double.class, new DoubleDefault0Adapter())
+                    .registerTypeAdapter(Long.class, new LongDefault0Adapter())
+                    .registerTypeAdapter(long.class, new LongDefault0Adapter())
+                    .create();
+        }
+        return gson;
+    }
+
+    static class IntegerDefault0Adapter implements JsonSerializer<Integer>, JsonDeserializer<Integer> {
+        @Override
+        public Integer deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            try {
+                if (json.getAsString().equals("") || json.getAsString().equals("null")) {
+                    return 0;
+                }
+            } catch (Exception ignore) {
+            }
+            try {
+                return json.getAsInt();
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException(e);
+            }
+        }
+
+        @Override
+        public JsonElement serialize(Integer src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src);
+        }
+    }
+
+    static class DoubleDefault0Adapter implements JsonSerializer<Double>, JsonDeserializer<Double> {
+        @Override
+        public Double deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            try {
+                if (json.getAsString().equals("") || json.getAsString().equals("null")) {
+                    return 0d;
+                }
+            } catch (Exception ignore) {
+            }
+            try {
+                return json.getAsDouble();
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException(e);
+            }
+        }
+
+        @Override
+        public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src);
+        }
+    }
+
+    static class LongDefault0Adapter implements JsonSerializer<Long>, JsonDeserializer<Long> {
+        @Override
+        public Long deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
+            try {
+                if (json.getAsString().equals("") || json.getAsString().equals("null")) {
+                    return 0l;
+                }
+            } catch (Exception ignore) {
+            }
+            try {
+                return json.getAsLong();
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException(e);
+            }
+        }
+
+        @Override
+        public JsonElement serialize(Long src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src);
+        }
     }
 
     public static HeWeatherApiService getInstance() {
@@ -180,7 +277,12 @@ public class HeWeatherApiService {
                 .flatMap(weather -> {
                     return Observable.just(weather);
                 })
-                .map(weather -> weather.mHourly)
+                .map(weather -> {
+                    if (weather.mHourlyResult == null || weather.mHourlyResult.mHourly == null) {
+                        return new Hourly();
+                    }
+                    return weather.mHourlyResult.mHourly;
+                })
                 .doOnError(HeWeatherApiService::disposeFailureInfo)
                 .compose(Util.schedulersTransformer());
     }
