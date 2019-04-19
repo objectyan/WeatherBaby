@@ -153,12 +153,12 @@ public class Util {
      *
      * @return
      */
-    public static Date getCurrentTimeByUTC() {
-        Calendar cal = Calendar.getInstance(Locale.CHINA);
-        int zoneOffset = cal.get(java.util.Calendar.ZONE_OFFSET);
-        int dstOffset = cal.get(java.util.Calendar.DST_OFFSET);
-        cal.add(java.util.Calendar.MILLISECOND, -(zoneOffset + dstOffset));
-        return cal.getTime();
+    public static Date getCurrentTimeByUTC() throws ParseException {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        fmt.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
+        String utcTime = fmt.format(new Date());
+        fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return fmt.parse(utcTime);
     }
 
     /**
@@ -290,10 +290,26 @@ public class Util {
         String format = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
+        int currentYear = c.get(Calendar.YEAR);
+        int currentDays = c.get(Calendar.DAY_OF_YEAR);
+        int currentYearDays = currentYear % 4 == 0 ? 366 : 365;
         try {
             c.setTime(dateFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+        int year = c.get(Calendar.YEAR);
+        int days = c.get(Calendar.DAY_OF_YEAR);
+        int yearDays = year % 4 == 0 ? 366 : 365;
+        if (currentYear == year) {
+            switch (currentDays - days) {
+                case 1:
+                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_yesterday);
+                case 0:
+                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_today);
+                case -1:
+                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_tomorrow);
+            }
         }
         String month = String.valueOf(c.get(Calendar.MONTH) + 1);
         String day = String.valueOf(c.get(Calendar.DATE));
@@ -470,7 +486,7 @@ public class Util {
             case "uv":
                 return "紫外线指数";
             case "air":
-                return "空气污染扩散条件指数";
+                return "空气污染指数";
             case "ac":
                 return "空调开启指数";
             case "ag":

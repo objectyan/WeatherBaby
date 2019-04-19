@@ -22,6 +22,7 @@ import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityDailyForecast;
 import me.objectyan.weatherbaby.entities.database.CityDailyForecastDao;
+import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 
 public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecastAdapter.WeatherForecastItem> {

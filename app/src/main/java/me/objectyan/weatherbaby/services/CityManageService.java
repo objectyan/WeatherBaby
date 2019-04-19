@@ -83,6 +83,7 @@ public class CityManageService {
                                     cityDailyForecast.setCondTxtDay(item.condTxtDay);
                                     cityDailyForecast.setCondTxtEvening(item.condTxtNight);
                                     cityDailyForecast.setDate(item.date);
+                                    cityDailyForecast.setDateTime(item.getDateTime());
                                     cityDailyForecast.setMaximumTemperature(item.temperatureMax);
                                     cityDailyForecast.setMinimumTemperature(item.temperatureMin);
                                     cityDailyForecast.setMonthlyRise(item.monthlyRiseTime);

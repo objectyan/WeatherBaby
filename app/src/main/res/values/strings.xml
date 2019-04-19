@@ -71,4 +71,9 @@
     <string name="update_interval_six">6  小时</string>
     <string name="update_interval_twelve">12  小时</string>
     <string name="Lifestyle">生活指数</string>
+    <string name="weather_update_time">更新时间:%s</string>
+    <string name="weather_publish_time">发布时间:%s</string>
+    <string name="forecast_item_date_format_yesterday">昨天</string>
+    <string name="forecast_item_date_format_today">今天</string>
+    <string name="forecast_item_date_format_tomorrow">明天</string>
 </resources>

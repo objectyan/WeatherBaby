@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.entities.database;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
@@ -10,6 +11,8 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Property;
 
 import java.util.Date;
+
+import me.objectyan.weatherbaby.entities.database.converter.DatePropertyConverter;
 
 @Entity(indexes = {
         @Index(value = "isDefault DESC, sort DESC")
@@ -34,7 +37,9 @@ public class CityBase {
     private Integer sort;
     @NotNull
     private Boolean isLocation;
+    @Convert(converter = DatePropertyConverter.class, columnType = Long.class)
     private Date updateTime;
+    @Convert(converter = DatePropertyConverter.class, columnType = Long.class)
     private Date publishTime;
     private String condCode;
     private String condTxt;

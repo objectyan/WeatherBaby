@@ -1,11 +1,14 @@
 package me.objectyan.weatherbaby.entities.database;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.util.Date;
 
 import org.greenrobot.greendao.annotation.Generated;
+
+import me.objectyan.weatherbaby.entities.database.converter.DatePropertyConverter;
 
 @Entity
 public class CityAirNowStation {
@@ -21,6 +24,7 @@ public class CityAirNowStation {
     private Double so2;
     private Double co;
     private Double o3;
+    @Convert(converter = DatePropertyConverter.class, columnType = Long.class)
     private Date pubTime;
     private String airStation;
     private String airStationID;

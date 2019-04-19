@@ -7,11 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.time.ZoneId;
+import java.time.zone.ZoneRules;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -56,7 +61,12 @@ public class WeatherTimelineAdapter extends RecyclerView.Adapter<WeatherTimeline
     }
 
     public void updateData() {
-        mDatas = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).orderAsc(CityHourlyForecastDao.Properties.DateTime).list();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        mDatas = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID),
+                CityHourlyForecastDao.Properties.DateTime.ge(calendar.getTimeInMillis())).orderAsc(CityHourlyForecastDao.Properties.DateTime).list();
         notifyDataSetChanged();
     }
 

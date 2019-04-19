@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/city_manage"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -3,6 +3,11 @@ package me.objectyan.weatherbaby.entities.heweather;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class DailyForecastEntity extends BaseWeatherEntity implements Serializable {
     /**
@@ -58,6 +63,17 @@ public class DailyForecastEntity extends BaseWeatherEntity implements Serializab
      */
     @SerializedName("date")
     public String date;
+
+    public Date getDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);//小写的mm表示的是分钟
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 最高温度

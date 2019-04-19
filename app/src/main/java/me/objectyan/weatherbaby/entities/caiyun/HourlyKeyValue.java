@@ -21,7 +21,7 @@ public class HourlyKeyValue<T> {
 
     public Date getLocalTime() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);//小写的mm表示的是分钟
-        datetime = "2019-04-18 10:00";
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         Date shanghaiDate = sdf.parse(datetime);
         return sdf.parse(datetime);
     }

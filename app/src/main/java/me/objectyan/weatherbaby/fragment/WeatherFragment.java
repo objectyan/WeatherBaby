@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import org.greenrobot.greendao.query.Query;
@@ -39,6 +38,7 @@ import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 import me.objectyan.weatherbaby.services.CityManageService;
 import me.objectyan.weatherbaby.widget.ArcView;
+import me.objectyan.weatherbaby.widget.GridView;
 import me.objectyan.weatherbaby.widget.SunlightView;
 import me.objectyan.weatherbaby.widget.WindView;
 
@@ -63,6 +63,8 @@ public class WeatherFragment extends Fragment {
     TextView todayTempEarlyWarning;
     @BindView(R.id.today_temp_update_time)
     TextView todayTempUpdateTime;
+    @BindView(R.id.today_temp_publish_time)
+    TextView todayTempPublishTime;
     @BindView(R.id.timeline_items)
     RecyclerView timelineItems;
     @BindView(R.id.forecast_items)
@@ -104,7 +106,7 @@ public class WeatherFragment extends Fragment {
     @BindView(R.id.swipe_weather_layout)
     SwipeRefreshLayout swipeWeatherLayout;
     @BindView(R.id.gv_lifestyle_manage)
-    GridView gvLifestyleManage;
+    me.objectyan.weatherbaby.widget.GridView gvLifestyleManage;
 
     private Long mCityID;
 
@@ -198,7 +200,8 @@ public class WeatherFragment extends Fragment {
             Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
             Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
             Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
-            todayTempUpdateTime.setText(Util.utcToLocal(cityBase.getPublishTime()));
+            todayTempUpdateTime.setText(String.format(getString(R.string.weather_update_time), Util.utcToLocal(cityBase.getUpdateTime())));
+            todayTempPublishTime.setText(String.format(getString(R.string.weather_publish_time), Util.utcToLocal(cityBase.getPublishTime())));
             todayTempCurr.setText(Util.getTemp(cityBase.getTemperature()));
             todayTempCurrUnit.setText(Util.getSettingsTempUnit());
             todayTempWeather.setText(cityBase.getCondTxt());

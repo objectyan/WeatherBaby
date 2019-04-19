@@ -1,8 +1,13 @@
 package me.objectyan.weatherbaby.entities.database;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+
+import java.util.Date;
+
+import me.objectyan.weatherbaby.entities.database.converter.DatePropertyConverter;
 
 @Entity
 public class CityDailyForecast {
@@ -10,6 +15,8 @@ public class CityDailyForecast {
     private Long id;
     private Long cityID;
     private String date;
+    @Convert(converter = DatePropertyConverter.class, columnType = Long.class)
+    private Date dateTime;
     private String sunRise;
     private String sunSet;
     private String monthlyRise;
@@ -31,18 +38,17 @@ public class CityDailyForecast {
     private Double ultravioletIntensity;
     private Double visibility;
 
-    @Generated(hash = 2078776974)
-    public CityDailyForecast(Long id, Long cityID, String date, String sunRise,
-                             String sunSet, String monthlyRise, String monthlySet,
-                             Double maximumTemperature, Double minimumTemperature,
-                             String condCodeDay, String condCodeEvening, String condTxtDay,
-                             String condTxtEvening, Double windDirectionAngle, String windDirection,
-                             String windPower, Double windSpeed, Double relativeHumidity,
-                             Double precipitation, Double probability, Double pressure,
-                             Double ultravioletIntensity, Double visibility) {
+    @Generated(hash = 1104811522)
+    public CityDailyForecast(Long id, Long cityID, String date, Date dateTime, String sunRise,
+            String sunSet, String monthlyRise, String monthlySet, Double maximumTemperature,
+            Double minimumTemperature, String condCodeDay, String condCodeEvening, String condTxtDay,
+            String condTxtEvening, Double windDirectionAngle, String windDirection, String windPower,
+            Double windSpeed, Double relativeHumidity, Double precipitation, Double probability,
+            Double pressure, Double ultravioletIntensity, Double visibility) {
         this.id = id;
         this.cityID = cityID;
         this.date = date;
+        this.dateTime = dateTime;
         this.sunRise = sunRise;
         this.sunSet = sunSet;
         this.monthlyRise = monthlyRise;
@@ -251,5 +257,13 @@ public class CityDailyForecast {
 
     public void setVisibility(Double visibility) {
         this.visibility = visibility;
+    }
+
+    public Date getDateTime() {
+        return this.dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 }

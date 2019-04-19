@@ -1,10 +1,14 @@
 package me.objectyan.weatherbaby.entities.database;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.Date;
+
+import me.objectyan.weatherbaby.entities.database.converter.DatePropertyConverter;
 
 @Entity
 public class CityHourlyForecast {
@@ -13,6 +17,7 @@ public class CityHourlyForecast {
     private Long cityID;
     private String date;
     private String time;
+    @Convert(converter = DatePropertyConverter.class, columnType = Long.class)
     private Date dateTime;
     private Double temperature;
     private String condCode;

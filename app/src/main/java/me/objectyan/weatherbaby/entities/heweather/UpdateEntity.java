@@ -29,6 +29,7 @@ public class UpdateEntity implements Serializable {
      */
     public Date getLocalTime() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         return sdf.parse(localTime);
     }
 
