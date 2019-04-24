@@ -52,7 +52,7 @@ public class WeatherTimelineAdapter extends RecyclerView.Adapter<WeatherTimeline
         CityHourlyForecast cityHourlyForecast = mDatas.get(position);
         holder.time.setText(Util.dateToTimeSlot(cityHourlyForecast.getDateTime()));
         if (cityHourlyForecast.getProbability() > 0)
-            holder.probability.setText(String.format("%.2f cm", cityHourlyForecast.getProbability() * 1000));
+            holder.probability.setText(String.format("%.4f mm/h", cityHourlyForecast.getProbability()));
         else
             holder.probability.setText("");
         holder.timeDesc.setText(Util.getTempByUnit(cityHourlyForecast.getTemperature()));
