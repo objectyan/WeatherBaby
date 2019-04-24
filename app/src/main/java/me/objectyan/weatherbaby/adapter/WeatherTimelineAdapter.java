@@ -50,7 +50,11 @@ public class WeatherTimelineAdapter extends RecyclerView.Adapter<WeatherTimeline
     @Override
     public void onBindViewHolder(@NonNull WeatherTimelineItem holder, int position) {
         CityHourlyForecast cityHourlyForecast = mDatas.get(position);
-        holder.time.setText(cityHourlyForecast.getTime());
+        holder.time.setText(Util.dateToTimeSlot(cityHourlyForecast.getDateTime()));
+        if (cityHourlyForecast.getProbability() > 0)
+            holder.probability.setText(String.format("%.2f cm", cityHourlyForecast.getProbability() * 1000));
+        else
+            holder.probability.setText("");
         holder.timeDesc.setText(Util.getTempByUnit(cityHourlyForecast.getTemperature()));
         holder.timeIcon.setImageDrawable(Util.getHeWeatherIcon(cityHourlyForecast.getCondCode()));
     }
@@ -76,6 +80,8 @@ public class WeatherTimelineAdapter extends RecyclerView.Adapter<WeatherTimeline
         AppCompatImageView timeIcon;
         @BindView(R.id.time)
         TextView time;
+        @BindView(R.id.probability)
+        TextView probability;
         @BindView(R.id.time_desc)
         TextView timeDesc;
 

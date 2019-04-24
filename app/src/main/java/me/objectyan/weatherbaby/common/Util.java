@@ -301,19 +301,20 @@ public class Util {
         int year = c.get(Calendar.YEAR);
         int days = c.get(Calendar.DAY_OF_YEAR);
         int yearDays = year % 4 == 0 ? 366 : 365;
+        String week = getWeek(date);
         if (currentYear == year) {
             switch (currentDays - days) {
                 case 1:
-                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_yesterday);
+                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_yesterday);
                 case 0:
-                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_today);
+                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_today);
                 case -1:
-                    return BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_tomorrow);
+                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_tomorrow);
             }
         }
         String month = String.valueOf(c.get(Calendar.MONTH) + 1);
         String day = String.valueOf(c.get(Calendar.DATE));
-        return String.format(format, month, day, getWeek(date));
+        return String.format(format, month, day, week);
     }
 
     /**
@@ -550,5 +551,36 @@ public class Util {
             default:
                 return null;
         }
+    }
+
+    /**
+     * 日期转时间段
+     *
+     * @param date
+     * @return
+     */
+    public static String dateToTimeSlot(Date date) {
+        SimpleDateFormat sdfHour = new SimpleDateFormat("HH");
+        String slot = "";
+        int hour = Integer.parseInt(sdfHour.format(date));
+        if (2 < hour && hour <= 5) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_before_dawn);
+        } else if (5 < hour && hour <= 8) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_matinal);
+        } else if (8 < hour && hour <= 12) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_morning);
+        } else if (12 < hour && hour <= 14) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_noonday);
+        } else if (14 < hour && hour <= 18) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_afternoon);
+        } else if (18 < hour && hour <= 19) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_at_nightfall);
+        } else if (19 < hour && hour <= 22) {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_evening);
+        } else {
+            slot = BaseApplication.getAppContext().getString(R.string.time_slot_late_at_night);
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        return String.format("%s %s", slot, sdf.format(date));
     }
 }

@@ -22,11 +22,21 @@
             android:textColor="@color/colorTemp"
             android:textSize="10sp" />
 
+        <TextView
+            android:id="@+id/probability"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorTemp"
+            android:textSize="10sp" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/time_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_weather_sunny" />
 

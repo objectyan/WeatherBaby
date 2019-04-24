@@ -76,4 +76,12 @@
     <string name="forecast_item_date_format_yesterday">昨天</string>
     <string name="forecast_item_date_format_today">今天</string>
     <string name="forecast_item_date_format_tomorrow">明天</string>
+    <string name="time_slot_matinal">早晨</string>
+    <string name="time_slot_morning">上午</string>
+    <string name="time_slot_noonday">中午</string>
+    <string name="time_slot_afternoon">下午</string>
+    <string name="time_slot_at_nightfall">傍晚</string>
+    <string name="time_slot_evening">晚上</string>
+    <string name="time_slot_before_dawn">凌晨</string>
+    <string name="time_slot_late_at_night">深夜</string>
 </resources>
