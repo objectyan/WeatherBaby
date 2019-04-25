@@ -292,7 +292,6 @@ public class Util {
         Calendar c = Calendar.getInstance();
         int currentYear = c.get(Calendar.YEAR);
         int currentDays = c.get(Calendar.DAY_OF_YEAR);
-        int currentYearDays = currentYear % 4 == 0 ? 366 : 365;
         try {
             c.setTime(dateFormat.parse(date));
         } catch (ParseException e) {
@@ -302,15 +301,19 @@ public class Util {
         int days = c.get(Calendar.DAY_OF_YEAR);
         int yearDays = year % 4 == 0 ? 366 : 365;
         String week = getWeek(date);
-        if (currentYear == year) {
-            switch (currentDays - days) {
-                case 1:
-                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_yesterday);
-                case 0:
-                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_today);
-                case -1:
-                    week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_tomorrow);
-            }
+        if (currentYear > year) {
+            currentDays += yearDays;
+        }
+        switch (currentDays - days) {
+            case 1:
+                week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_yesterday);
+                break;
+            case 0:
+                week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_today);
+                break;
+            case -1:
+                week = BaseApplication.getAppContext().getString(R.string.forecast_item_date_format_tomorrow);
+                break;
         }
         String month = String.valueOf(c.get(Calendar.MONTH) + 1);
         String day = String.valueOf(c.get(Calendar.DATE));

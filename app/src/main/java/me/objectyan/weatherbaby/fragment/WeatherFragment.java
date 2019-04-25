@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -188,6 +189,7 @@ public class WeatherFragment extends Fragment {
                         (new Date().getTime() - cityBase.getPublishTime().getTime() > Util.getSettingsUpdateInterval() * 60 * 1000) ||
                         isRefresh) && Util.isNetworkConnected()) {
                     swipeWeatherLayout.setRefreshing(true);
+                    fillData();
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
                     }).subscribe();
@@ -196,46 +198,50 @@ public class WeatherFragment extends Fragment {
                 }
             }
         }).doOnNext(cityID -> {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(cityID)).unique();
-            Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
-            Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
-            Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
-            todayTempUpdateTime.setText(String.format(getString(R.string.weather_update_time), Util.utcToLocal(cityBase.getUpdateTime())));
-            todayTempPublishTime.setText(String.format(getString(R.string.weather_publish_time), Util.utcToLocal(cityBase.getPublishTime())));
-            todayTempCurr.setText(Util.getTemp(cityBase.getTemperature()));
-            todayTempCurrUnit.setText(Util.getSettingsTempUnit());
-            todayTempWeather.setText(cityBase.getCondTxt());
-            fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
-            todayTempCurrMax.setText(Util.getTempByUnit(cityBase.getTempHigh()));
-            todayTempCurrMin.setText(Util.getTempByUnit(cityBase.getTempLow()));
-            windDirection.setText(cityBase.getWindDirection());
-            windPower.setText(cityBase.getWindPower());
-            windWiew.setSpeed(cityBase.getWindSpeed());
-            comfortDegreeSendibleTemp.setText(String.valueOf(cityBase.getSendibleTemperature()));
-            comfortDegreeChart.setDensity(cityBase.getHumidity());
-            comfortDegreeUltravioletIntensity.setText(String.valueOf(cityBase.getUltravioletIndex()));
-            comfortDegreePressure.setText(String.valueOf(cityBase.getPressure()));
-            comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
-            weatherForecastAdapter.updateData();
-            weatherTimelineAdapter.updateData();
-            weatherLifestyleAdapter.updateData();
-            sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
-            sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
-            sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
-            sunlightView.setSunSet(Util.getDateByTime(cityBase.getSunSet()));
-            sunlightView.updateData();
-            todayTempAtmosphere.setText(cityBase.getAirQuality());
-            atmosphereChart.setDensity(cityBase.getAqi());
-            atmosphereChart.setValue(String.valueOf(cityBase.getAqi()));
-            atmosphereChart.setSubValue(cityBase.getAirQuality());
-            atmospherePM10.setText(String.valueOf(cityBase.getPm10()));
-            atmospherePM25.setText(String.valueOf(cityBase.getPm25()));
-            atmosphereCO.setText(String.valueOf(cityBase.getCo()));
-            atmosphereNO2.setText(String.valueOf(cityBase.getNo2()));
-            atmosphereO3.setText(String.valueOf(cityBase.getO3()));
-            atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
-            swipeWeatherLayout.setRefreshing(false);
+            fillData();
         }).subscribe();
+    }
+
+    private void fillData() {
+        CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+        Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
+        Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
+        Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
+        todayTempUpdateTime.setText(String.format(getString(R.string.weather_update_time), Util.utcToLocal(cityBase.getUpdateTime())));
+        todayTempPublishTime.setText(String.format(getString(R.string.weather_publish_time), Util.utcToLocal(cityBase.getPublishTime())));
+        todayTempCurr.setText(Util.getTemp(cityBase.getTemperature()));
+        todayTempCurrUnit.setText(Util.getSettingsTempUnit());
+        todayTempWeather.setText(cityBase.getCondTxt());
+        fragmentWeatherTimeline.setVisibility(cityHourlyForecastQuery.list().size() == 0 ? View.GONE : View.VISIBLE);
+        todayTempCurrMax.setText(Util.getTempByUnit(cityBase.getTempHigh()));
+        todayTempCurrMin.setText(Util.getTempByUnit(cityBase.getTempLow()));
+        windDirection.setText(cityBase.getWindDirection());
+        windPower.setText(cityBase.getWindPower());
+        windWiew.setSpeed(cityBase.getWindSpeed());
+        comfortDegreeSendibleTemp.setText(String.valueOf(cityBase.getSendibleTemperature()));
+        comfortDegreeChart.setDensity(cityBase.getHumidity());
+        comfortDegreeUltravioletIntensity.setText(String.valueOf(cityBase.getUltravioletIndex()));
+        comfortDegreePressure.setText(String.valueOf(cityBase.getPressure()));
+        comfortDegreeVisibility.setText(String.valueOf(cityBase.getVisibility()));
+        weatherForecastAdapter.updateData();
+        weatherTimelineAdapter.updateData();
+        weatherLifestyleAdapter.updateData();
+        sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
+        sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
+        sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));
+        sunlightView.setSunSet(Util.getDateByTime(cityBase.getSunSet()));
+        sunlightView.updateData();
+        todayTempAtmosphere.setText(cityBase.getAirQuality());
+        atmosphereChart.setDensity(cityBase.getAqi());
+        atmosphereChart.setValue(String.valueOf(cityBase.getAqi()));
+        atmosphereChart.setSubValue(cityBase.getAirQuality());
+        atmospherePM10.setText(String.valueOf(cityBase.getPm10()));
+        atmospherePM25.setText(String.valueOf(cityBase.getPm25()));
+        atmosphereCO.setText(String.valueOf(cityBase.getCo()));
+        atmosphereNO2.setText(String.valueOf(cityBase.getNo2()));
+        atmosphereO3.setText(String.valueOf(cityBase.getO3()));
+        atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
+        swipeWeatherLayout.setRefreshing(false);
     }
 
     public void refreshData() {
