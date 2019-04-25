@@ -120,6 +120,7 @@ public class MainActivity extends BaseActivity {
             actionBar.setDisplayShowTitleEnabled(false);
         }
         FragmentManager fm = getSupportFragmentManager();
+        // 各城市天气适配器
         weatherPagerAdapter = new WeatherPagerAdapter(fm);
         wpafViewpager.setAdapter(weatherPagerAdapter);
         wpafIndicator.setViewPager(wpafViewpager);

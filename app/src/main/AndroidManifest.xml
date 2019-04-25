@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
         android:name=".common.BaseApplication"
@@ -29,6 +30,12 @@
             android:name=".services.AutoUpdateService"
             android:enabled="true"
             android:exported="true" />
+
+        <service android:name="com.amap.api.location.APSService" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="98af9b6e200e32927ae75588d6f32d9b" />
 
         <activity
             android:name=".activities.AddCityActivity"

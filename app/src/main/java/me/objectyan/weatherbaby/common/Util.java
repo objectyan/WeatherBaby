@@ -10,10 +10,12 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -125,23 +127,21 @@ public class Util {
     public static Location getCurrentLocation() {
         LocationManager locationManager = (LocationManager) BaseApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE);
         // 返回所有已知的位置提供者的名称列表，包括未获准访问或调用活动目前已停用的。
-        String provider = null;
-        List<String> locationManagerAllProviders = locationManager.getAllProviders();
-        if (locationManagerAllProviders.contains(LocationManager.GPS_PROVIDER)) {
-            provider = LocationManager.GPS_PROVIDER; // GPS定位
-        } else if (locationManagerAllProviders.contains(LocationManager.NETWORK_PROVIDER)) {
-            provider = LocationManager.NETWORK_PROVIDER; // 网络定位
-        }
         Criteria criteria = new Criteria();
-        criteria.setCostAllowed(false);
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        criteria.setCostAllowed(true);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        String provider = locationManager.getBestProvider(criteria, true);
         if (provider != null) {
             if (ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
+                Util.showShort(R.string.toast_not_location);
                 return null;
             }
+            locationManager.requestLocationUpdates(300, 0, criteria, null);
             return locationManager.getLastKnownLocation(provider);
         } else {
             Util.showShort(R.string.toast_not_location);
@@ -169,13 +169,13 @@ public class Util {
      * @return
      */
     public static String getCityName(CityBase cityBase) {
-        if (!TextUtils.isEmpty(cityBase.getLocation())
-                && !cityBase.getLocation().equals(
-                BaseApplication.getAppContext().getString(R.string.current_location_addresss)))
-            return cityBase.getLocation();
+        if (cityBase.getIsLocation()) {
+            if (cityBase.getLatitude() != null && cityBase.getLongitude() != null)
+                return String.format("%f,%f", cityBase.getLongitude(), cityBase.getLatitude());
+            return "auto_ip";
+        }
         if (!TextUtils.isEmpty(cityBase.getCid())) return cityBase.getCid();
-        if (cityBase.getLatitude() != null && cityBase.getLongitude() != null)
-            return String.format("%d,%d", cityBase.getLongitude(), cityBase.getLatitude());
+        if (!TextUtils.isEmpty(cityBase.getLocation())) return cityBase.getLocation();
         return "auto_ip";
     }
 
