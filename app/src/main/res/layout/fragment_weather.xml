@@ -11,51 +11,13 @@
         android:layout_height="match_parent"
         android:scrollbars="none">
 
-        <LinearLayout
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerWeather"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <include
-                layout="@layout/fragment_weather_today"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+        </androidx.recyclerview.widget.RecyclerView>
 
-            <include
-                layout="@layout/fragment_weather_timeline"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_forecast"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_lifestyle"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_atmosphere"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_comfort_degree"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_wind"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-            <include
-                layout="@layout/fragment_weather_sunlight"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
     </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

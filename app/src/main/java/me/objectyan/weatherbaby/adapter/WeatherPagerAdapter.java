@@ -32,7 +32,6 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragmentList;
     private CityBaseDao cityBaseDao;
-    private Query<CityBase> cityBaseQuery;
 
     public WeatherPagerAdapter(FragmentManager fm) {
         super(fm);
