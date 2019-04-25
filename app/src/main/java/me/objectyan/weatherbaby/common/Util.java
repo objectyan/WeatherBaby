@@ -31,6 +31,7 @@ import java.util.TimeZone;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -126,10 +127,10 @@ public class Util {
         // 返回所有已知的位置提供者的名称列表，包括未获准访问或调用活动目前已停用的。
         String provider = null;
         List<String> locationManagerAllProviders = locationManager.getAllProviders();
-        if (locationManagerAllProviders.contains(LocationManager.NETWORK_PROVIDER)) {
-            provider = LocationManager.NETWORK_PROVIDER; // 网络定位
-        } else if (locationManagerAllProviders.contains(LocationManager.GPS_PROVIDER)) {
+        if (locationManagerAllProviders.contains(LocationManager.GPS_PROVIDER)) {
             provider = LocationManager.GPS_PROVIDER; // GPS定位
+        } else if (locationManagerAllProviders.contains(LocationManager.NETWORK_PROVIDER)) {
+            provider = LocationManager.NETWORK_PROVIDER; // 网络定位
         }
         Criteria criteria = new Criteria();
         criteria.setCostAllowed(false);

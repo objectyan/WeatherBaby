@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,10 +186,8 @@ public class WeatherFragment extends Fragment {
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
                 if ((cityBase.getUpdateTime() == null ||
                         cityBase.getUpdateTime().getTime() < new Date().getTime() ||
-                        (new Date().getTime() - cityBase.getUpdateTime().getTime() > Util.getSettingsUpdateInterval() * 60 * 1000) ||
                         (new Date().getTime() - cityBase.getPublishTime().getTime() > Util.getSettingsUpdateInterval() * 60 * 1000) ||
                         isRefresh) && Util.isNetworkConnected()) {
-                    swipeWeatherLayout.setRefreshing(true);
                     fillData();
                     CityManageService.refreshCityInfo(mCityID).doOnNext(cityID -> {
                         emitter.onNext(cityBase.getId());
@@ -197,9 +196,21 @@ public class WeatherFragment extends Fragment {
                     emitter.onNext(cityBase.getId());
                 }
             }
-        }).doOnNext(cityID -> {
-            fillData();
-        }).subscribe();
+        }).
+                doOnSubscribe(_a -> {
+                    swipeWeatherLayout.setRefreshing(true);
+                }).
+                doFinally(() -> {
+                    swipeWeatherLayout.setRefreshing(false);
+                }).
+                subscribe(data -> {
+                            swipeWeatherLayout.setRefreshing(false);
+                            fillData();
+                        },
+                        error -> {
+                            Util.showLong(error.toString());
+                        }
+                );
     }
 
     private void fillData() {
@@ -207,6 +218,7 @@ public class WeatherFragment extends Fragment {
         Query<CityDailyForecast> cityDailyForecastQuery = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build();
         Query<CityHourlyForecast> cityHourlyForecastQuery = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).build();
         Query<CityLifestyleForecast> cityLifestyleForecastQuery = cityLifestyleForecastDao.queryBuilder().where(CityLifestyleForecastDao.Properties.CityID.eq(mCityID)).build();
+        if (cityBase.getUpdateTime() == null) return;
         todayTempUpdateTime.setText(String.format(getString(R.string.weather_update_time), Util.utcToLocal(cityBase.getUpdateTime())));
         todayTempPublishTime.setText(String.format(getString(R.string.weather_publish_time), Util.utcToLocal(cityBase.getPublishTime())));
         todayTempCurr.setText(Util.getTemp(cityBase.getTemperature()));
@@ -241,7 +253,6 @@ public class WeatherFragment extends Fragment {
         atmosphereNO2.setText(String.valueOf(cityBase.getNo2()));
         atmosphereO3.setText(String.valueOf(cityBase.getO3()));
         atmosphereSO2.setText(String.valueOf(cityBase.getSo2()));
-        swipeWeatherLayout.setRefreshing(false);
     }
 
     public void refreshData() {
