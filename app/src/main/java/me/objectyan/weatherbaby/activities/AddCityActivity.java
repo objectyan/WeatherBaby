@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -172,13 +173,6 @@ public class AddCityActivity extends BaseActivity implements View.OnClickListene
 
         CityBase cityBase = Util.cityInfoToBase(cityInfo);
         if (cityInfo.isLocation()) {
-            Location location = Util.getCurrentLocation();
-            if (location == null) {
-                Util.showLong(R.string.no_location);
-            } else {
-                cityBase.setLatitude(location.getLatitude());
-                cityBase.setLongitude(location.getLongitude());
-            }
             cityBase.setLocation(getString(R.string.current_location_addresss));
             cityBase.setIsLocation(true);
         }

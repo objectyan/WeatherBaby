@@ -48,4 +48,24 @@ public class WeatherBabyConstants {
      * sharedPreferences属性 温度单位
      */
     public static final String SHARE_SETTINGS_TEMP_UNIT = "SETTINGS_TEMP_UNIT";
+
+    /**
+     * sharedPreferences属性 温度单位
+     */
+    public static final String SHARE_LOCATION_ADDRESS = "LOCATION_ADDRESS";
+
+    /**
+     * receiver 天气更新
+     */
+    public static final String RECEIVER_UPDATE_WEATHER = "me.objectyan.weatherbaby.receiver.updateweather";
+
+    /**
+     * 更新当前定位
+     */
+    public static final int RECEIVE_UPDATE_TYPE_LOCATION = 1;
+
+    /**
+     * 更新首页城市名称
+     */
+    public static final int RECEIVE_UPDATE_TYPE_CITY_NAMR = 2;
 }

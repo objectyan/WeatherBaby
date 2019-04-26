@@ -43,18 +43,17 @@ public class CityManageService {
                 CityLifestyleForecastDao cityLifestyleForecastDao = BaseApplication.getDaoSession().getCityLifestyleForecastDao();
                 CityAirNowStationDao cityAirNowStationDao = BaseApplication.getDaoSession().getCityAirNowStationDao();
                 CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
-                Log.e("Location Name", Util.getCityName(cityBase));
                 HeWeatherApiService.getInstance().fetchWeather(Util.getCityName(cityBase)).
                         doOnNext(weather -> {
                             cityBase.setUpdateTime(Util.getCurrentTimeByUTC());
                             cityBase.setPublishTime(weather.updateEntity.getUtcTime());
                             cityBase.setLocation(weather.basic.Name);
                             cityBase.setAdminArea(weather.basic.adminArea);
+                            cityBase.setParentCity(weather.basic.parentCity);
+                            cityBase.setCountry(weather.basic.countryName);
                             cityBase.setCid(weather.basic.code);
                             cityBase.setLatitude(Double.valueOf(weather.basic.latitude));
                             cityBase.setLongitude(Double.valueOf(weather.basic.longitude));
-                            cityBase.setParentCity(weather.basic.parentCity);
-                            cityBase.setCountry(weather.basic.countryName);
                             cityBase.setTimeZone(Float.valueOf(weather.basic.timeZone));
                             cityBase.setCondCode(weather.nowEntity.condCode);
                             cityBase.setCondTxt(weather.nowEntity.condTxt);

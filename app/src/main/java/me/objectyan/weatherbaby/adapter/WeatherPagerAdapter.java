@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
+
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
@@ -42,9 +43,10 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
 
     private void setFragmentPositionMapForUpdate() {
         fragmentList.clear();
+        int index = 0;
         for (CityBase item :
                 cityBaseDao.queryBuilder().orderDesc(CityBaseDao.Properties.IsDefault, CityBaseDao.Properties.Sort).build().list()) {
-            fragmentList.add(WeatherFragment.newInstance(item.getId()));
+            fragmentList.add(WeatherFragment.newInstance(item.getId(), index++));
         }
     }
 
@@ -57,6 +59,16 @@ public class WeatherPagerAdapter extends FragmentPagerAdapter {
         for (Fragment fragment : fragmentList) {
             WeatherFragment weatherFragment = (WeatherFragment) fragment;
             weatherFragment.refreshData();
+        }
+    }
+
+    public void refreshSettingForCityID(long cityID) {
+        for (Fragment fragment : fragmentList) {
+            WeatherFragment weatherFragment = (WeatherFragment) fragment;
+            if (weatherFragment.getCityID() == cityID) {
+                weatherFragment.refreshData();
+                return;
+            }
         }
     }
 

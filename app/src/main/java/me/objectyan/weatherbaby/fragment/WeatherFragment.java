@@ -1,6 +1,7 @@
 package me.objectyan.weatherbaby.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.adapter.CityWeatherAdapter;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
@@ -30,13 +32,16 @@ import me.objectyan.weatherbaby.services.CityManageService;
 
 public class WeatherFragment extends Fragment {
 
-    private static String ARG_CITYID = "ARG_CITYID";
+    private static final String ARG_POSITION = "ARG_POSITION";
+    private static final String ARG_CITYID = "ARG_CITYID";
     @BindView(R.id.swipe_weather_layout)
     SwipeRefreshLayout swipeWeatherLayout;
     @BindView(R.id.recyclerWeather)
     RecyclerView recyclerWeather;
 
     private Long mCityID;
+
+    private int mPosition;
 
     private CityBaseDao cityBaseDao;
 
@@ -64,12 +69,14 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-    public static WeatherFragment newInstance(Long cityID) {
+    public static WeatherFragment newInstance(Long cityID, int position) {
         WeatherFragment fragment = new WeatherFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_CITYID, cityID);
+        args.putLong(ARG_POSITION, position);
         fragment.setArguments(args);
         fragment.mCityID = cityID;
+        fragment.mPosition = position;
         return fragment;
     }
 
@@ -119,6 +126,11 @@ public class WeatherFragment extends Fragment {
                 subscribe(data -> {
                             cityWeatherAdapter.notifyDataSetChanged();
                             swipeWeatherLayout.setRefreshing(false);
+                            Intent intent = new Intent(WeatherBabyConstants.RECEIVER_UPDATE_WEATHER);
+                            intent.putExtra("Type", WeatherBabyConstants.RECEIVE_UPDATE_TYPE_CITY_NAMR);
+                            intent.putExtra("CityID", mCityID);
+                            intent.putExtra("CurrentPosition", mPosition);
+                            getContext().sendBroadcast(intent);
                         },
                         error -> {
                             Util.showLong(error.toString());

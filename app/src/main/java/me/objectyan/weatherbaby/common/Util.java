@@ -124,31 +124,6 @@ public class Util {
         return cityBase;
     }
 
-    public static Location getCurrentLocation() {
-        LocationManager locationManager = (LocationManager) BaseApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE);
-        // 返回所有已知的位置提供者的名称列表，包括未获准访问或调用活动目前已停用的。
-        Criteria criteria = new Criteria();
-        criteria.setCostAllowed(true);
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        String provider = locationManager.getBestProvider(criteria, true);
-        if (provider != null) {
-            if (ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(BaseApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                Util.showShort(R.string.toast_not_location);
-                return null;
-            }
-            locationManager.requestLocationUpdates(300, 0, criteria, null);
-            return locationManager.getLastKnownLocation(provider);
-        } else {
-            Util.showShort(R.string.toast_not_location);
-            return null;
-        }
-    }
-
     /**
      * 获取当前时间的UTC
      *
@@ -437,6 +412,30 @@ public class Util {
         SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
                 WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
         return share.getString(WeatherBabyConstants.SHARE_SETTINGS_TEMP_UNIT, BaseApplication.getAppContext().getString(R.string.Centigrade));
+    }
+
+    /**
+     * 获取定位地址
+     *
+     * @return
+     */
+    public static String getLocationAddress() {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        return share.getString(WeatherBabyConstants.SHARE_LOCATION_ADDRESS, null);
+    }
+
+    /**
+     * 设置定位地址
+     *
+     * @param locationAddress
+     */
+    public static void setLocationAddress(String locationAddress) {
+        SharedPreferences share = BaseApplication.getAppContext().getSharedPreferences(
+                WeatherBabyConstants.EXTRA_WEATHERBABY_SHARE, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = share.edit();
+        editor.putString(WeatherBabyConstants.SHARE_LOCATION_ADDRESS, locationAddress);
+        editor.apply();
     }
 
     /**

@@ -1,7 +1,11 @@
 package me.objectyan.weatherbaby.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +20,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
@@ -25,8 +30,10 @@ import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
 import me.objectyan.weatherbaby.fragment.WeatherFragment;
+import me.objectyan.weatherbaby.services.AutoLocationService;
 import me.objectyan.weatherbaby.services.AutoUpdateService;
 import me.relex.circleindicator.CircleIndicator;
 
@@ -46,6 +53,8 @@ public class MainActivity extends BaseActivity {
     private CityBaseDao cityBaseDao;
     private WeatherPagerAdapter weatherPagerAdapter;
 
+    private UpdateWeatherReceiver updateWeatherReceiver;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_header, menu);
@@ -63,6 +72,12 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(updateWeatherReceiver);
+        super.onDestroy();
     }
 
     /**
@@ -127,7 +142,12 @@ public class MainActivity extends BaseActivity {
         weatherPagerAdapter.registerDataSetObserver(wpafIndicator.getDataSetObserver());
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
         wpafViewpager.setCurrentItem(weatherPagerAdapter.getDefaultItem(Util.getDefaultCityID()));
+        updateWeatherReceiver = new UpdateWeatherReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WeatherBabyConstants.RECEIVER_UPDATE_WEATHER);
+        registerReceiver(updateWeatherReceiver, intentFilter);
         startService(new Intent(this, AutoUpdateService.class));
+        startService(new Intent(this, AutoLocationService.class));
     }
 
     @Override
@@ -152,13 +172,8 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffset == 0) {
-                    imageLocation.setVisibility(View.GONE);
-                    headerTitle.setText(R.string.loading);
                     CityInfo cityInfo = ((WeatherFragment) weatherPagerAdapter.getItem(position)).getCityInfo();
-                    if (cityInfo != null) {
-                        imageLocation.setVisibility(cityInfo.isLocation() ? View.VISIBLE : View.GONE);
-                        headerTitle.setText(cityInfo.getCityName());
-                    }
+                    setHeaderTitle(cityInfo.getId());
                 }
             }
 
@@ -172,6 +187,16 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private void setHeaderTitle(long cityID) {
+        imageLocation.setVisibility(View.GONE);
+        headerTitle.setText(R.string.loading);
+        CityBase cityBase = cityBaseDao.load(cityID);
+        if (cityBase != null) {
+            imageLocation.setVisibility(cityBase.getIsLocation() ? View.VISIBLE : View.GONE);
+            headerTitle.setText(cityBase.getLocation());
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -180,5 +205,26 @@ public class MainActivity extends BaseActivity {
         if (requestCode == WeatherBabyConstants.MAIN_REQUEST_CITY_MANAGE) {
             wpafViewpager.setCurrentItem(weatherPagerAdapter.getDefaultItem(Util.getDefaultCityID()));
         }
+    }
+
+    public class UpdateWeatherReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //拿到进度，更新UI
+            int type = intent.getIntExtra("Type", 0);
+            long cityID = intent.getLongExtra("CityID", 0);
+            switch (type) {
+                case WeatherBabyConstants.RECEIVE_UPDATE_TYPE_LOCATION:
+                    weatherPagerAdapter.refreshSettingForCityID(cityID);
+                    break;
+                case WeatherBabyConstants.RECEIVE_UPDATE_TYPE_CITY_NAMR:
+                    int position = intent.getIntExtra("CurrentPosition", 0);
+                    if (position == wpafViewpager.getCurrentItem())
+                        setHeaderTitle(cityID);
+                    break;
+            }
+        }
+
     }
 }
