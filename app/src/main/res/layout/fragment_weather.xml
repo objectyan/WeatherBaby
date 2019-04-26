@@ -6,18 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.WeatherFragment">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerWeather"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
+    </androidx.recyclerview.widget.RecyclerView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerWeather"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
