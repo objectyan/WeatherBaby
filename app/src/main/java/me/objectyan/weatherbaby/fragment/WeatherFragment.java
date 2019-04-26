@@ -91,8 +91,12 @@ public class WeatherFragment extends Fragment {
                 initData(true);
             }
         });
+        recyclerWeather.setItemViewCacheSize(200);
+        recyclerWeather.setDrawingCacheEnabled(true);
+        recyclerWeather.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerWeather.setLayoutManager(new LinearLayoutManager(this.getContext()));
         cityWeatherAdapter = new CityWeatherAdapter(mCityID);
+        cityWeatherAdapter.setHasStableIds(true);
         recyclerWeather.setAdapter(cityWeatherAdapter);
         initData(false);
         return view;

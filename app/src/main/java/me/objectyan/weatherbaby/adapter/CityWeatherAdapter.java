@@ -46,6 +46,8 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private CityHourlyForecastDao cityHourlyForecastDao;
     private CityLifestyleForecastDao cityLifestyleForecastDao;
 
+    private RecyclerView.RecycledViewPool mSharedPool = new RecyclerView.RecycledViewPool();
+
     public CityWeatherAdapter(Long mCityID) {
         this.mCityID = mCityID;
     }
