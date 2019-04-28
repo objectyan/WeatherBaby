@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextClock
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="bottom"
+                    android:format12Hour="hh:mm"
+                    android:format24Hour="HH:mm"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorTemp"
+                    android:textSize="30sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <TextClock
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="top"
+                    android:format12Hour="MM-dd EEEE"
+                    android:format24Hour="MM-dd EEEE"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorTemp"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="15dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <TextClock
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:format12Hour="a"
+                    android:format24Hour="a"
+                    android:textColor="@color/colorTemp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/weather_city_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="123"
+                    android:textColor="@color/colorTemp" />
+
+                <ImageView
+                    android:id="@+id/weather_city_location"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/ic_location" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/weather_city_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:srcCompat="@drawable/ic_weather_sunny" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/weather_city_temp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="100°C"
+                android:textColor="@color/colorTemp"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/weather_city_temp_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="11"
+                    android:textColor="@color/colorTemp"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/weather_city_temp_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="1dp"
+                    android:text="/"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/weather_city_temp_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="11"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

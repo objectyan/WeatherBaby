@@ -53,6 +53,7 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.amap.api:location:latest.integration'
+    implementation project(path: ':widget')
 }
 
 greendao {
