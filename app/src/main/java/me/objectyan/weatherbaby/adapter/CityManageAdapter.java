@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.objectyan.weatherbaby.R;
@@ -123,6 +124,7 @@ public class CityManageAdapter extends ArrayAdapter<CityInfo> {
         if (cityInfo.isAdd()) {
             viewHolder.cityAddLayout.setVisibility(View.VISIBLE);
             viewHolder.cityWeatherLayout.setVisibility(View.GONE);
+            viewHolder.cityLoadingLayout.setVisibility(View.GONE);
         } else {
             viewHolder.cityAddLayout.setVisibility(View.GONE);
             viewHolder.cityWeatherLayout.setVisibility(View.VISIBLE);
