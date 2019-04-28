@@ -1,5 +1,7 @@
 package me.objectyan.weatherbaby.entities.heweather;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -28,6 +30,7 @@ public class UpdateEntity implements Serializable {
      * @return
      */
     public Date getLocalTime() throws ParseException {
+        if (TextUtils.isEmpty(localTime)) return null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         return sdf.parse(localTime);
@@ -39,6 +42,7 @@ public class UpdateEntity implements Serializable {
      * @return
      */
     public Date getUtcTime() throws ParseException {
+        if (TextUtils.isEmpty(utcTime)) return null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");//小写的mm表示的是分钟
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         return sdf.parse(utcTime);

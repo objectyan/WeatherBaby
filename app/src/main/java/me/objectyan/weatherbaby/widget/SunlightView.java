@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import androidx.core.view.ViewCompat;
+
 import me.objectyan.weatherbaby.R;
 import me.objectyan.weatherbaby.common.BaseApplication;
 
@@ -185,19 +186,19 @@ public class SunlightView extends View {
     }
 
     public void setSunRise(Date sunRise) {
-        this.sunRise = sunRise;
+        this.sunRise = sunRise == null ? attr_beginDate : sunRise;
     }
 
     public void setSunSet(Date sunSet) {
-        this.sunSet = sunSet;
+        this.sunSet = sunSet == null ? attr_endDate : sunSet;
     }
 
     public void setMonthlyRise(Date monthlyRise) {
-        this.monthlyRise = monthlyRise;
+        this.monthlyRise = monthlyRise == null ? attr_beginDate : monthlyRise;
     }
 
     public void setMonthlySet(Date monthlySet) {
-        this.monthlySet = monthlySet;
+        this.monthlySet = monthlySet == null ? attr_endDate : monthlySet;
     }
 
     private Date sunRise;

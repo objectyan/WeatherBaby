@@ -227,6 +227,8 @@ public class HeWeatherApiService {
                         return Observable.error(new RuntimeException("/(ㄒoㄒ)/~~,API免费次数已用完"));
                     } else if ("unknown city".equals(status)) {
                         return Observable.error(new RuntimeException(String.format("API没有%s", location)));
+                    } else if ("unknown location".equals(status)) {
+                        return Observable.error(new RuntimeException("未知位置"));
                     }
                     return Observable.just(weather);
                 })
@@ -249,6 +251,8 @@ public class HeWeatherApiService {
                         return Observable.error(new RuntimeException("/(ㄒoㄒ)/~~,API免费次数已用完"));
                     } else if ("unknown city".equals(status)) {
                         return Observable.error(new RuntimeException(String.format("API没有%s", location)));
+                    } else if ("unknown location".equals(status)) {
+                        return Observable.error(new RuntimeException("未知位置"));
                     }
                     return Observable.just(weather);
                 })

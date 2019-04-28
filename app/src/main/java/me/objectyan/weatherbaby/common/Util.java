@@ -149,8 +149,8 @@ public class Util {
                 return String.format("%f,%f", cityBase.getLongitude(), cityBase.getLatitude());
             return "auto_ip";
         }
-        if (!TextUtils.isEmpty(cityBase.getCid())) return cityBase.getCid();
         if (!TextUtils.isEmpty(cityBase.getLocation())) return cityBase.getLocation();
+        if (!TextUtils.isEmpty(cityBase.getCid())) return cityBase.getCid();
         return "auto_ip";
     }
 
@@ -337,6 +337,7 @@ public class Util {
     }
 
     public static Date getDateByTime(String time) {
+        if (TextUtils.isEmpty(time)) return null;
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(time.split(":")[0]));
         c.set(Calendar.MINUTE, Integer.valueOf(time.split(":")[1]));

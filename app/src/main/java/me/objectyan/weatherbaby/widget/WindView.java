@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.core.view.ViewCompat;
+
 import me.objectyan.weatherbaby.R;
 
 public class WindView extends View {
@@ -140,7 +141,7 @@ public class WindView extends View {
     }
 
     public void setSpeed(Double speed) {
-        this.attr_speed = speed.floatValue();
+        this.attr_speed = (speed == null ? 0 : speed.floatValue());
         invalidate();
     }
 }

@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.services;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,8 +12,12 @@ import java.util.Date;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.functions.Function;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
+import me.objectyan.weatherbaby.common.WeatherBabyConstants;
 import me.objectyan.weatherbaby.entities.caiyun.HourlyKeyValue;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStation;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStationDao;
@@ -24,8 +29,13 @@ import me.objectyan.weatherbaby.entities.database.CityHourlyForecast;
 import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecast;
 import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
+import me.objectyan.weatherbaby.entities.heweather.Weather;
+import me.objectyan.weatherbaby.entities.heweather.WeatherApi;
 
 public class CityManageService {
+
+    private static String TAG = CityManageService.class.getSimpleName();
+
     /**
      * 更新城市天气信息
      *
@@ -220,7 +230,13 @@ public class CityManageService {
                                     }).subscribe();
 
                         }).
-                        subscribe();
+                        subscribe(data -> {
+
+                                },
+                                error -> {
+                                    Util.showLong(error.getLocalizedMessage());
+                                    Log.e(TAG, error.toString());
+                                });
             }
         });
     }
