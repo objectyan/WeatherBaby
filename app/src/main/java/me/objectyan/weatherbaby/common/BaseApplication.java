@@ -12,6 +12,7 @@ import org.greenrobot.greendao.database.Database;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import io.reactivex.plugins.RxJavaPlugins;
 import me.objectyan.weatherbaby.BuildConfig;
 import me.objectyan.weatherbaby.activities.MainActivity;

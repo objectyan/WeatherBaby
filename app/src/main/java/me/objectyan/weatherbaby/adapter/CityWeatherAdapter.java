@@ -18,9 +18,7 @@ import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.database.CityBase;
 import me.objectyan.weatherbaby.entities.database.CityBaseDao;
-import me.objectyan.weatherbaby.entities.database.CityDailyForecastDao;
 import me.objectyan.weatherbaby.entities.database.CityHourlyForecastDao;
-import me.objectyan.weatherbaby.entities.database.CityLifestyleForecastDao;
 import me.objectyan.weatherbaby.widget.ArcView;
 import me.objectyan.weatherbaby.widget.GridView;
 import me.objectyan.weatherbaby.widget.SunlightView;
@@ -42,9 +40,9 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
 
     private CityBaseDao cityBaseDao;
-    private CityDailyForecastDao cityDailyForecastDao;
     private CityHourlyForecastDao cityHourlyForecastDao;
-    private CityLifestyleForecastDao cityLifestyleForecastDao;
+    private CityBase cityBase;
+    private long cityHourlySize;
 
     private RecyclerView.RecycledViewPool mSharedPool = new RecyclerView.RecycledViewPool();
 
@@ -80,9 +78,8 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         cityBaseDao = BaseApplication.getDaoSession().getCityBaseDao();
-        cityDailyForecastDao = BaseApplication.getDaoSession().getCityDailyForecastDao();
         cityHourlyForecastDao = BaseApplication.getDaoSession().getCityHourlyForecastDao();
-        cityLifestyleForecastDao = BaseApplication.getDaoSession().getCityLifestyleForecastDao();
+        initData();
         switch (viewType) {
             case WEATHER_TODAY:
                 return new TodayViewHolder(
@@ -145,6 +142,16 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return 8;
     }
 
+    private void initData() {
+        cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+        cityHourlySize = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).count();
+    }
+
+    public void refreshing() {
+        initData();
+        notifyDataSetChanged();
+    }
+
     class TodayViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.today_temp_curr)
         TextView todayTempCurr;
@@ -173,7 +180,6 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
             if (cityBase.getUpdateTime() == null) return;
             todayTempUpdateTime.setText(String.format(mContext.getString(R.string.weather_update_time), Util.utcToLocal(cityBase.getUpdateTime())));
             todayTempPublishTime.setText(String.format(mContext.getString(R.string.weather_publish_time), Util.utcToLocal(cityBase.getPublishTime())));
@@ -202,7 +208,6 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            long cityHourlySize = cityHourlyForecastDao.queryBuilder().where(CityHourlyForecastDao.Properties.CityID.eq(mCityID)).count();
             fragmentWeatherTimeline.setVisibility(cityHourlySize == 0 ? View.GONE : View.VISIBLE);
             if (cityHourlySize > 0)
                 weatherTimelineAdapter.updateData();
@@ -266,7 +271,7 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+
             atmosphereChart.setDensity(cityBase.getAqi());
             atmosphereChart.setValue(String.valueOf(cityBase.getAqi()));
             atmosphereChart.setSubValue(cityBase.getAirQuality());
@@ -297,7 +302,7 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+
             comfortDegreeSendibleTemp.setText(String.valueOf(cityBase.getSendibleTemperature()));
             comfortDegreeChart.setDensity(cityBase.getHumidity());
             comfortDegreeUltravioletIntensity.setText(String.valueOf(cityBase.getUltravioletIndex()));
@@ -320,7 +325,7 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
+
             windDirection.setText(cityBase.getWindDirection());
             windPower.setText(cityBase.getWindPower());
             windView.setSpeed(cityBase.getWindSpeed());
@@ -337,7 +342,6 @@ public class CityWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         void bind() {
-            CityBase cityBase = cityBaseDao.queryBuilder().where(CityBaseDao.Properties.Id.eq(mCityID)).unique();
             sunlightView.setMonthlyRise(Util.getDateByTime(cityBase.getMonthlyRise()));
             sunlightView.setMonthlySet(Util.getDateByTime(cityBase.getMonthlySet()));
             sunlightView.setSunRise(Util.getDateByTime(cityBase.getSunRise()));

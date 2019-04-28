@@ -133,7 +133,7 @@ public class WeatherFragment extends Fragment {
                     }).
                     subscribe(data -> {
                                 Observable.timer(1, TimeUnit.MICROSECONDS, AndroidSchedulers.mainThread()).doOnNext(aLong -> {
-                                    cityWeatherAdapter.notifyDataSetChanged();
+                                    cityWeatherAdapter.refreshing();
                                     swipeWeatherLayout.setRefreshing(false);
                                 }).subscribe();
                                 Intent intent = new Intent(WeatherBabyConstants.RECEIVER_UPDATE_WEATHER);
