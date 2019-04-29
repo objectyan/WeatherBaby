@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -226,6 +228,33 @@ public class Util {
                 }
             }
         return BaseApplication.getAppContext().getDrawable(R.drawable.ic_disabled);
+    }
+
+    /**
+     * 获取和风天气图片
+     *
+     * @param weatherCode
+     * @return
+     */
+    public static Bitmap getHeWeatherBitmap(String weatherCode) {
+        if (!TextUtils.isEmpty(weatherCode))
+            try {
+                InputStream is = BaseApplication.getAppContext().getResources().getAssets().open(String.format("icon-heweather/%s.png", weatherCode));
+                return BitmapFactory.decodeStream(is);
+            } catch (IOException e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            } catch (OutOfMemoryError e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                if (e != null) {
+                    e.printStackTrace();
+                }
+            }
+        return BitmapFactory.decodeResource(BaseApplication.getAppContext().getResources(), R.drawable.ic_disabled);
     }
 
     /**

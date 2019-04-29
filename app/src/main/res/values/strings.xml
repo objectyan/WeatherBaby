@@ -84,4 +84,6 @@
     <string name="time_slot_evening">晚上</string>
     <string name="time_slot_before_dawn">凌晨</string>
     <string name="time_slot_late_at_night">深夜</string>
+
+    <string name="weather_app_widget_month_week">MM月dd日 EEEE</string>
 </resources>

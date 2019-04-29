@@ -236,6 +236,7 @@ public class CityManageService {
                                 error -> {
                                     Util.showLong(error.getLocalizedMessage());
                                     Log.e(TAG, error.toString());
+                                    emitter.onNext(cityBase.getId());
                                 });
             }
         });

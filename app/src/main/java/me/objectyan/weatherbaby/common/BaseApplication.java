@@ -69,4 +69,5 @@ public class BaseApplication extends Application {
     public static DaoSession getDaoSession() {
         return daoSession;
     }
+    
 }

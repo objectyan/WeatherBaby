@@ -10,7 +10,6 @@ android {
         targetSdkVersion android.targetSdkVersion
         versionCode android.versionCode
         versionName android.versionName
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "String", "$rootProject.ext.HeWeather.name", "\"$rootProject.ext.HeWeather.value\""
@@ -53,7 +52,6 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.amap.api:location:latest.integration'
-    implementation project(path: ':widget')
 }
 
 greendao {
