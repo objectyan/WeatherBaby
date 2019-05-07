@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -18,6 +19,7 @@ import io.reactivex.functions.Function;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.common.WeatherBabyConstants;
+import me.objectyan.weatherbaby.entities.caiyun.DailyAvg;
 import me.objectyan.weatherbaby.entities.caiyun.HourlyKeyValue;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStation;
 import me.objectyan.weatherbaby.entities.database.CityAirNowStationDao;
@@ -225,7 +227,50 @@ public class CityManageService {
                                             }
                                         })
                                                 .doOnComplete(() -> {
-                                                    emitter.onNext(cityBase.getId());
+                                                    HeWeatherApiService.getInstance().fetchDaily(cityBase.getLongitude(), cityBase.getLatitude()).doOnNext(daily -> {
+                                                        if (daily.temperature != null) {
+                                                            List<CityDailyForecast> data = cityDailyForecastDao.queryBuilder().where(CityDailyForecastDao.Properties.CityID.eq(mCityID)).build().list();
+                                                            for (int i = 0; i < daily.temperature.size(); i++) {
+                                                                DailyAvg dailyAvg = daily.temperature.get(i);
+                                                                if (data.stream().anyMatch(f -> f.getDate().equals(dailyAvg.date)))
+                                                                    continue;
+                                                                DailyAvg dailyAvgPre = daily.precipitation.get(i);
+                                                                DailyAvg dailyAvgHumidity = daily.humidity.get(i);
+                                                                DailyAvg dailyAvgVisibility = daily.visibility.get(i);
+                                                                DailyAvg dailyAvgUltraviolet = daily.ultraviolet.get(i);
+                                                                DailyAvg dailyAvgPres = daily.pres.get(i);
+                                                                HourlyKeyValue<String> skycon = daily.skycon.get(i);
+                                                                CityDailyForecast cityDailyForecast = new CityDailyForecast();
+                                                                cityDailyForecast.setCityID(mCityID);
+                                                                cityDailyForecast.setCondCodeDay(skycon.getCondCode());
+                                                                cityDailyForecast.setCondCodeEvening(skycon.getCondCode());
+                                                                cityDailyForecast.setCondTxtDay(skycon.getCondTxt());
+                                                                cityDailyForecast.setCondTxtEvening(skycon.getCondTxt());
+                                                                cityDailyForecast.setDate(dailyAvg.date);
+                                                                cityDailyForecast.setDateTime(dailyAvg.getLocalTime());
+                                                                cityDailyForecast.setMaximumTemperature(dailyAvg.max);
+                                                                cityDailyForecast.setMinimumTemperature(dailyAvg.min);
+                                                                cityDailyForecast.setPrecipitation(dailyAvgPre.avg);
+                                                                cityDailyForecast.setPressure(dailyAvgPres.avg);
+//                                                                cityDailyForecast.setProbability(item.precipitationProbability);
+//                                                                cityDailyForecast.setMonthlyRise(item.monthlyRiseTime);
+//                                                                cityDailyForecast.setMonthlySet(item.monthlySetTime);
+//                                                                cityDailyForecast.setMonthlySet(item.monthlySetTime);
+//                                                                cityDailyForecast.setSunRise(item.sunRiseTime);
+//                                                                cityDailyForecast.setSunSet(item.sunSetTime);
+                                                                cityDailyForecast.setRelativeHumidity(dailyAvgHumidity.avg);
+                                                                cityDailyForecast.setUltravioletIntensity(dailyAvgUltraviolet.index);
+                                                                cityDailyForecast.setVisibility(dailyAvgVisibility.avg);
+//                                                                cityDailyForecast.setWindDirection(item.windDirection);
+//                                                                cityDailyForecast.setWindDirectionAngle(item.windDirectionAngle);
+//                                                                cityDailyForecast.setWindPower(item.windPower);
+//                                                                cityDailyForecast.setWindSpeed(item.windSpeed);
+                                                                cityDailyForecastDao.insert(cityDailyForecast);
+                                                            }
+                                                        }
+                                                    }).doOnComplete(() -> {
+                                                        emitter.onNext(cityBase.getId());
+                                                    }).subscribe();
                                                 }).subscribe();
                                     }).subscribe();
 

@@ -13,6 +13,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "String", "$rootProject.ext.HeWeather.name", "\"$rootProject.ext.HeWeather.value\""
+        buildConfigField "String", "$rootProject.ext.CaiYunWeather.name", "\"$rootProject.ext.CaiYunWeather.value\""
         buildConfigField "String", "DataBaseName", "\"$rootProject.ext.DataBase.name\""
     }
     buildTypes {

@@ -29,6 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 import me.objectyan.weatherbaby.common.BaseApplication;
 import me.objectyan.weatherbaby.common.Util;
 import me.objectyan.weatherbaby.entities.CityInfo;
+import me.objectyan.weatherbaby.entities.caiyun.Daily;
 import me.objectyan.weatherbaby.entities.caiyun.Hourly;
 import me.objectyan.weatherbaby.entities.heweather.AirNow;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
@@ -286,6 +287,21 @@ public class HeWeatherApiService {
                         return new Hourly();
                     }
                     return weather.mHourlyResult.mHourly;
+                })
+                .doOnError(HeWeatherApiService::disposeFailureInfo)
+                .compose(Util.schedulersTransformer());
+    }
+
+    public Observable<Daily> fetchDaily(Double longitude, Double latitude) {
+        return sHeWeatherApi.mDaily(longitude, latitude)
+                .flatMap(weather -> {
+                    return Observable.just(weather);
+                })
+                .map(weather -> {
+                    if (weather.mDailyResult == null || weather.mDailyResult.mDaily == null) {
+                        return new Daily();
+                    }
+                    return weather.mDailyResult.mDaily;
                 })
                 .doOnError(HeWeatherApiService::disposeFailureInfo)
                 .compose(Util.schedulersTransformer());

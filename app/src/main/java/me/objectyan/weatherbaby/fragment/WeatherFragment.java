@@ -129,12 +129,14 @@ public class WeatherFragment extends Fragment {
                 }
             }).
                     doOnSubscribe(disposable -> {
-                        swipeWeatherLayout.setRefreshing(true);
+                        if (swipeWeatherLayout != null && !swipeWeatherLayout.isRefreshing())
+                            swipeWeatherLayout.setRefreshing(true);
                     }).
                     subscribe(data -> {
                                 Observable.timer(1, TimeUnit.MICROSECONDS, AndroidSchedulers.mainThread()).doOnNext(aLong -> {
                                     cityWeatherAdapter.refreshing();
-                                    swipeWeatherLayout.setRefreshing(false);
+                                    if (swipeWeatherLayout != null && swipeWeatherLayout.isRefreshing())
+                                        swipeWeatherLayout.setRefreshing(false);
                                 }).subscribe();
                                 Intent intent = new Intent(WeatherBabyConstants.RECEIVER_UPDATE_WEATHER);
                                 intent.putExtra("Type", WeatherBabyConstants.RECEIVE_UPDATE_TYPE_CITY_NAMR);

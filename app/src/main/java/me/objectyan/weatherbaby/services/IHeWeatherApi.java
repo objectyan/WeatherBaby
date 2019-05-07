@@ -2,6 +2,7 @@ package me.objectyan.weatherbaby.services;
 
 import io.reactivex.Observable;
 import me.objectyan.weatherbaby.BuildConfig;
+import me.objectyan.weatherbaby.entities.caiyun.DailyApi;
 import me.objectyan.weatherbaby.entities.caiyun.HourlyApi;
 import me.objectyan.weatherbaby.entities.heweather.AirNowApi;
 import me.objectyan.weatherbaby.entities.heweather.TopCityApi;
@@ -59,6 +60,17 @@ public interface IHeWeatherApi {
      * @param latitude
      * @return
      */
-    @GET("https://api.caiyunapp.com/v2/TAkhjf8d1nlSlspN/{longitude},{latitude}/hourly.json")
+    @GET("https://api.caiyunapp.com/v2/" + BuildConfig.CaiYunWeatherKey + "/{longitude},{latitude}/hourly.json")
     Observable<HourlyApi> mHourly(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
+
+    /**
+     * 彩云天气接口 获取天级预报
+     *
+     * @param longitude
+     * @param latitude
+     * @return
+     */
+    @GET("https://api.caiyunapp.com/v2/" + BuildConfig.CaiYunWeatherKey + "/{longitude},{latitude}/daily.json")
+    Observable<DailyApi> mDaily(@Path("longitude") Double longitude, @Path("latitude") Double latitude);
+
 }

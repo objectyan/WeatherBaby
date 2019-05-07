@@ -12,6 +12,11 @@ ext {
             value: "0adfab68ce9a4415821e74b18694dcb7"
     ]
 
+    CaiYunWeather = [
+            name : "CaiYunWeatherKey",
+            value: "TAkhjf8d1nlSlspN"
+    ]
+
     DataBase = [
             name   : "weather-baby-db",
             version: 2
